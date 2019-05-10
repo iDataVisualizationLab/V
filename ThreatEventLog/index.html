@@ -13,8 +13,6 @@
 
         .link {
             fill: none;
-            stroke: #9ecae1;
-            stroke-width: 1.5px;
         }
     </style>
 </head>
@@ -29,16 +27,7 @@
     let margin = {left: 10, top: 10, right: 0, bottom: 0}, svgWidth = 800, svgHeight = 800,
         width = svgWidth - margin.left - margin.right, height = svgHeight - margin.top - margin.bottom;
     let svg = d3.select("#graphDiv").append("svg").attr("width", svgWidth).attr("height", svgHeight);
-    svg.append("defs").append("marker")
-        .attr("id", 'arrowhead')
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 15)
-        .attr("refY", -1.5)
-        .attr("markerWidth", 4)
-        .attr("markerHeight", 4)
-        .attr("orient", "auto")
-        .append("path")
-        .attr("d", "M0,-5L10,0L0,5");
+
 
     let mainG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
 
@@ -49,15 +38,35 @@
         .on('tick', tick);
 
     d3.csv('data/104.12.0.0.csv').then(data => {
+        //Get deviceProducts
+        let deviceProducts = getDeviceProducts(data);
+        let deviceProductColor = getDeviceProductColor(deviceProducts);
+
+        //SVG defs for arrow  heads
+        svg.append("defs").selectAll("marker")
+            .data(deviceProducts)
+            .enter().append("marker")
+            .attr("id", d => 'marker' + deviceProducts.indexOf(d))
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 15)
+            .attr("refY", -1.5)
+            .attr("markerWidth", 4)
+            .attr("markerHeight", 4)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("d", "M0,-5L10,0L0,5");
+
         let graph = generateGraph(data);
         let nodes = graph.nodes;
         let links = graph.links;
+        let nodeRadiusScale = getNodeRadiusScale(nodes, 4, 30);
+        let linkStrokeWidthScale = getLinkStrokeWidthScale(links, 1, 5);
         //Restart the simulation layout
         simulation.nodes(nodes)
-            .force('link', d3.forceLink(links).id(d=>d.id))
+            .force('link', d3.forceLink(links).id(d => d.id))
             .force("charge", d3.forceManyBody())
-            .force("center", d3.forceCenter(width / 2, height / 2)).alphaTarget(0.1).restart()
-            .force();
+            .force("center", d3.forceCenter(width / 2, height / 2)).alphaTarget(0.3).restart();
+
         //Update the links
         link = link.data(links, d => d.index);
 
@@ -66,7 +75,9 @@
 
         //Enter any new links
         let enterLink = link.enter().append('path').attr('class', "link")
-            .attr("marker-end", "url(#arrowhead)");
+            .attr("marker-end", d => `url(#${'marker' + deviceProducts.indexOf(d[COL_DEVICE_PRODUCT])})`)
+            .attr("stroke", d => deviceProductColor(d[COL_DEVICE_PRODUCT]))
+            .attr("stroke-width", d=>linkStrokeWidthScale(d.threatCount));
 
         link = enterLink.merge(link);
         //Update the nodes
@@ -79,7 +90,7 @@
             .attr("cx", d => d.x)
             .attr("cy", d => d.y)
             .attr("r", d => {
-                return 4.5
+                return nodeRadiusScale(d.linkCount);
             })
             .style('fill', color)
             .call(d3.drag()
@@ -89,13 +100,16 @@
                 .on("end", dragended)
             );
         node = enterNode.merge(node);
+
     });
+
+
     function tick() {
         link.attr("d", linkArc);
         node.attr("cx", d => d.x).attr("cy", d => d.y);
     }
 
-    function color(d){
+    function color(d) {
         return 'steelblue';
     }
 
@@ -103,58 +117,97 @@
         let dx = d.target.x - d.source.x,
             dy = d.target.y - d.source.y,
             dr = Math.sqrt(dx * dx + dy * dy);
-            if(dr){
-                return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
-            }else{
-                dr = 20;
-                //M 100 100 a 50 50 0 1 0 0.00001 0
-                return "M" + d.source.x + " " + d.source.y + " A " + dr + " " + dr + " 0 1 0 " + (d.target.x-0.01) + " " + (d.target.y-0.01);
-
-            }
-
-
+        if (dr) {
+            return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+        } else {
+            dr = 20;
+            //M 100 100 a 50 50 0 1 0 0.00001 0
+            return "M" + d.source.x + " " + d.source.y + " A " + dr + " " + dr + " 0 1 0 " + (d.target.x - 0.1) + " " + (d.target.y - 0.1);
+        }
     }
 
     //<editor-fold desc="this section is for drag drop">
     function dragsubject() {
         return simulation.find(d3.event.x, d3.event.y);
     }
+
     function dragstarted() {
         if (!d3.event.active) simulation.alphaTarget(0.1).restart();
         d3.event.subject.fx = d3.event.subject.x;
         d3.event.subject.fy = d3.event.subject.y;
     }
+
     function dragged() {
         d3.event.subject.fx = d3.event.x;
         d3.event.subject.fy = d3.event.y;
     }
+
     function dragended() {
         if (!d3.event.active) simulation.alphaTarget(0);
         d3.event.subject.fx = null;
         d3.event.subject.fy = null;
     }
+
     //</editor-fold>
 
     //<editor-fold desc="This section is for data processing">
+    function getDeviceProducts(data) {
+        return Array.from(new Set(data.map(d => d[COL_DEVICE_PRODUCT])));
+    }
+
     function generateGraph(data) {
-        let nodes = [];
-        data.forEach(threatEvent => {
-            nodes.push(threatEvent[COL_SOURCE_ADDRESS]);
-            nodes.push(threatEvent[COL_DESTINATION_ADDRESS]);
-        });
-        nodes = Array.from(new Set(nodes));
-        nodes = nodes.map(d=>{
-            return {'id': d};
-        });
-        let nestedBySourceToTarget = d3.nest().key(d => d[COL_SOURCE_ADDRESS] + "," + d[COL_DESTINATION_ADDRESS]).entries(data);
-        let links = nestedBySourceToTarget.map(d => {
+        let nestedBySourceTargetProductName = d3.nest().key(d => d[COL_SOURCE_ADDRESS] + "," + d[COL_DESTINATION_ADDRESS] + "," + d[COL_DEVICE_PRODUCT]).entries(data);
+        debugger
+        let links = nestedBySourceTargetProductName.map(d => {
             return {
                 source: d.values[0][COL_SOURCE_ADDRESS],
                 target: d.values[0][COL_DESTINATION_ADDRESS],
-                threatEvents: d.values
+                threatEvents: d.values,
+                threatCount: d.values.length,
+                'Device Product': d.values[0][COL_DEVICE_PRODUCT]
             };
         });
+        let nestedLinkByNodes = {};
+        links.forEach(link=>{
+            if(!nestedLinkByNodes[link.source]){
+                nestedLinkByNodes[link.source] = [link];
+            }else{
+                nestedLinkByNodes[link.source].push(link);
+            }
+            if(!nestedLinkByNodes[link.target]){
+                nestedLinkByNodes[link.target] = [link];
+            }else{
+                nestedLinkByNodes[link.target].push(link);
+            };
+        });
+        let nodes = Object.keys(nestedLinkByNodes).map(d=>{
+            return {
+                id: d,
+                linkCount: nestedLinkByNodes[d].length
+            }
+        });
         return {nodes: nodes, links: links};
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="this section is for scaling">
+    function getDeviceProductColor(deviceProducts) {
+        return function (deviceProduct) {
+            return d3.schemeCategory10[deviceProducts.indexOf(deviceProduct)];
+        }
+    };
+    function getNodeRadiusScale(nodes, minR, maxR) {
+        let scale = d3.scalePow(2).domain(d3.extent(nodes.map(d=>d.linkCount))).range([minR, maxR]);
+        return function(linkCount){
+            return scale(linkCount);
+        }
+    }
+    function getLinkStrokeWidthScale(links, minWidth, maxWidth) {
+        let scale = d3.scaleLinear().domain(d3.extent(links.map(d=>d.threatCount))).range([minWidth, maxWidth]);
+        return function(threatCount){
+            return scale(threatCount);
+        }
     }
     //</editor-fold>
 
