@@ -5,6 +5,8 @@
     <title></title>
     <script src="lib/d3.js"></script>
     <style>
+        @import "lib/tooltip/tooltip.css";
+
         .node {
             cursor: pointer;
             stroke: #3182bd;
@@ -15,18 +17,60 @@
             fill: none;
         }
     </style>
+
 </head>
 <body>
+<script src="lib/tooltip/tooltip.js"></script>
 <div id="graphDiv"></div>
 <script>
+    let settings = {
+        node: {
+            minRadius: 4,
+            maxRadius: 30
+        },
+        link: {
+            minStrokeWidth: 1,
+            maxStrokeWidth: 5
+        },
+        legend: {
+            nodeRadius: 8,
+            height: 18,
+            linkSize: 16,
+            linkStrokeWidth: 2
+        }
+    };
     let COL_END_TIME = 'End Time', COL_NAME = 'Name', COL_DEVICE_ACTION = 'Device Action',
         COL_DEVICE_PRODUCT = 'Device Product', COL_DEVICE_VENDOR = 'Device Vendor',
         COL_SOURCE_ADDRESS = 'Source Address', COL_SOURCE_PORT = 'Source Port',
         COL_SOURCE_ZONE_NAME = 'Source Zone Name', COL_DESTINATION_ADDRESS = 'Destination Address',
         COL_DESTINATION_PORT = 'Destination Port', COL_DESTINATION_ZONE = 'Destination Zone Name';
-    let margin = {left: 10, top: 10, right: 0, bottom: 0}, svgWidth = 800, svgHeight = 800,
+    let margin = {left: 10, top: 10, right: 300, bottom: 0}, svgWidth = 800, svgHeight = 800,
         width = svgWidth - margin.left - margin.right, height = svgHeight - margin.top - margin.bottom;
     let svg = d3.select("#graphDiv").append("svg").attr("width", svgWidth).attr("height", svgHeight);
+
+    let legendG = svg.append('g').attr('transform', `translate(${svgWidth - margin.right}, ${margin.top})`);
+    //Draw the legend
+    let nodeColorLegendObj = {
+        'inside': 'steelblue',
+        'unknown': 'gray',
+        'outside': 'red'
+    };
+    let legendNodeG = legendG.append('g');
+    let legendNodeGs = legendNodeG.selectAll('.nodeLegendG').data(d3.entries(nodeColorLegendObj)).enter().append('g').attr('class', 'nodeLegendG').attr("transform", (d, i) => `translate(${0}, ${i * settings.legend.height})`);
+
+    legendNodeGs.append('circle')//Append circles
+        .attr('class', 'legendNode')
+        .attr('cx', -settings.legend.nodeRadius + 2)
+        .attr('cy', settings.legend.height / 2)
+        .attr("r", settings.legend.nodeRadius).attr('fill', d => d.value);
+    legendNodeGs.append('text').text(d=>d.key + " IPs").call(defineLegendText);
+        ;
+    function defineLegendText(theText){
+        theText.attr('x', 2*settings.legend.nodeRadius)
+            .attr('y', settings.legend.height/2)
+            .attr('alignment-baseline', 'middle')
+    }
+
 
 
     let mainG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
@@ -36,7 +80,7 @@
 
     let simulation = d3.forceSimulation()
         .on('tick', tick);
-
+    let nodeRadiusScale;
     d3.csv('data/104.12.0.0.csv').then(data => {
         //Get deviceProducts
         let deviceProducts = getDeviceProducts(data);
@@ -52,15 +96,28 @@
             .attr("refY", -1.5)
             .attr("markerWidth", 4)
             .attr("markerHeight", 4)
+            .attr('markerUnits', "strokeWidth")
             .attr("orient", "auto")
             .append("path")
             .attr("d", "M0,-5L10,0L0,5");
+        // svg.append("defs").append("marker")
+        //     .attr("id", 'markerLarge')
+        //     .attr("viewBox", "0 -5 10 10")
+        //     .attr("refX", 8)
+        //     .attr("refY", 0)
+        //     .attr("markerWidth", 10)
+        //     .attr("markerHeight", 10)
+        //     .attr('markerUnits', "userSpaceOnUse")
+        //     .attr("orient", "auto")
+        //     .append("path")
+        //     .attr("d", "M0,-5L10,0L0,5");
 
         let graph = generateGraph(data);
         let nodes = graph.nodes;
         let links = graph.links;
-        let nodeRadiusScale = getNodeRadiusScale(nodes, 4, 30);
-        let linkStrokeWidthScale = getLinkStrokeWidthScale(links, 1, 5);
+        nodeRadiusScale = getNodeRadiusScale(nodes, settings.node.minRadius, settings.node.maxRadius);
+        let linkStrokeWidthScale = getLinkStrokeWidthScale(links, settings.link.minStrokeWidth, settings.link.maxStrokeWidth);
+
         //Restart the simulation layout
         simulation.nodes(nodes)
             .force('link', d3.forceLink(links).id(d => d.id))
@@ -75,13 +132,31 @@
 
         //Enter any new links
         let enterLink = link.enter().append('path').attr('class', "link")
-            .attr("marker-end", d => `url(#${'marker' + deviceProducts.indexOf(d[COL_DEVICE_PRODUCT])})`)
+            .attr("marker-end", d => {
+                return `url(#${'marker' + deviceProducts.indexOf(d[COL_DEVICE_PRODUCT])})`
+                // if(linkStrokeWidthScale(d.threatCount) <= 3){
+                //     return `url(#${'marker' + deviceProducts.indexOf(d[COL_DEVICE_PRODUCT])})`
+                // }else{
+                //     return `url(#markerLarge)`
+                // }
+            })
             .attr("stroke", d => deviceProductColor(d[COL_DEVICE_PRODUCT]))
-            .attr("stroke-width", d=>linkStrokeWidthScale(d.threatCount));
+            .attr("stroke-width", d => linkStrokeWidthScale(d.threatCount));
+        //Draw legend for strokes.
+        let linkLegendG = legendG.append('g').attr("transform", `translate(0, ${settings.legend.height*d3.entries(nodeColorLegendObj).length})`);
+        let linkLegendGs = linkLegendG.selectAll('.linkLegendG').data(deviceProducts).enter().append('g').attr('class', 'linkLegendG').attr("transform", (d, i)=>`translate(${0}, ${i*settings.legend.height})`);
+        linkLegendGs.append('line')
+            .attr('y1', settings.legend.height/2).attr("y2", settings.legend.height/2)
+            .attr("x2", -settings.legend.linkSize).attr('stroke', deviceProductColor).attr("stroke-width", settings.legend.linkStrokeWidth);
+        linkLegendGs.append('text').text(d=>d).call(defineLegendText);
 
+        //Now move the legend group to the center.
+        legendG.attr("transform", `translate(${svgWidth-margin.right}, ${
+            (svgHeight - (d3.entries(nodeColorLegendObj).length + deviceProducts.length)*settings.legend.height)/2
+            })`);
         link = enterLink.merge(link);
         //Update the nodes
-        node = node.data(nodes, d => d.id).style("fill", color);
+        node = node.data(nodes, d => d.id)
         //Exit
         node.exit().remove();
         //enter any new nodes
@@ -92,7 +167,7 @@
             .attr("r", d => {
                 return nodeRadiusScale(d.linkCount);
             })
-            .style('fill', color)
+            .style('fill', nodeColor)
             .call(d3.drag()
                 .subject(dragsubject)
                 .on("start", dragstarted)
@@ -100,6 +175,12 @@
                 .on("end", dragended)
             );
         node = enterNode.merge(node);
+        node.on("mouseover", d => {
+            showTip(`IP: "${d.id}", links count: ${d.linkCount}`)
+        })
+            .on("mouseout", d => {
+                hideTip();
+            });
 
     });
 
@@ -109,20 +190,19 @@
         node.attr("cx", d => d.x).attr("cy", d => d.y);
     }
 
-    function color(d) {
-        return 'steelblue';
-    }
 
     function linkArc(d) {
         let dx = d.target.x - d.source.x,
             dy = d.target.y - d.source.y,
             dr = Math.sqrt(dx * dx + dy * dy);
+
+        let nodeR = nodeRadiusScale(d.source.linkCount);
         if (dr) {
-            return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+            return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + (d.target.x) + "," + (d.target.y);
         } else {
-            dr = 20;
             //M 100 100 a 50 50 0 1 0 0.00001 0
-            return "M" + d.source.x + " " + d.source.y + " A " + dr + " " + dr + " 0 1 0 " + (d.target.x - 0.1) + " " + (d.target.y - 0.1);
+            dr = 2 * nodeR;
+            return "M" + d.source.x + " " + d.source.y + " A " + dr + " " + dr / 2 + " 0 1 1" + (d.target.x - nodeR / 2) + " " + (d.target.y);
         }
     }
 
@@ -157,7 +237,7 @@
 
     function generateGraph(data) {
         let nestedBySourceTargetProductName = d3.nest().key(d => d[COL_SOURCE_ADDRESS] + "," + d[COL_DESTINATION_ADDRESS] + "," + d[COL_DEVICE_PRODUCT]).entries(data);
-        debugger
+
         let links = nestedBySourceTargetProductName.map(d => {
             return {
                 source: d.values[0][COL_SOURCE_ADDRESS],
@@ -168,22 +248,24 @@
             };
         });
         let nestedLinkByNodes = {};
-        links.forEach(link=>{
-            if(!nestedLinkByNodes[link.source]){
+        links.forEach(link => {
+            if (!nestedLinkByNodes[link.source]) {
                 nestedLinkByNodes[link.source] = [link];
-            }else{
+            } else {
                 nestedLinkByNodes[link.source].push(link);
             }
-            if(!nestedLinkByNodes[link.target]){
+            if (!nestedLinkByNodes[link.target]) {
                 nestedLinkByNodes[link.target] = [link];
-            }else{
+            } else {
                 nestedLinkByNodes[link.target].push(link);
-            };
+            }
+            ;
         });
-        let nodes = Object.keys(nestedLinkByNodes).map(d=>{
+        debugger
+        let nodes = Object.keys(nestedLinkByNodes).map(d => {
             return {
                 id: d,
-                linkCount: nestedLinkByNodes[d].length
+                linkCount: d3.sum(nestedLinkByNodes[d].map(links => links.threatCount))
             }
         });
         return {nodes: nodes, links: links};
@@ -197,18 +279,32 @@
             return d3.schemeCategory10[deviceProducts.indexOf(deviceProduct)];
         }
     };
+
+    function nodeColor(node) {
+        if (node.id.startsWith('104.12')) {
+            return 'steelblue';
+        } else if (node.id === "") {
+            return 'gray';
+        } else {
+            return 'red';//outsider
+        }
+    }
+
     function getNodeRadiusScale(nodes, minR, maxR) {
-        let scale = d3.scalePow(2).domain(d3.extent(nodes.map(d=>d.linkCount))).range([minR, maxR]);
-        return function(linkCount){
+        let scale = d3.scalePow(2).domain(d3.extent(nodes.map(d => d.linkCount))).range([minR, maxR]);
+        return function (linkCount) {
             return scale(linkCount);
         }
     }
+
     function getLinkStrokeWidthScale(links, minWidth, maxWidth) {
-        let scale = d3.scaleLinear().domain(d3.extent(links.map(d=>d.threatCount))).range([minWidth, maxWidth]);
-        return function(threatCount){
+        let scale = d3.scaleLinear().domain(d3.extent(links.map(d => d.threatCount))).range([minWidth, maxWidth]);
+        return function (threatCount) {
             return scale(threatCount);
         }
     }
+
+    // function getLinkStrokeWidthScaleForDeviceProduct()
     //</editor-fold>
 
 </script>
