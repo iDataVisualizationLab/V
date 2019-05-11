@@ -990,7 +990,7 @@ function bindKey(parent, group, enter, update, exit, data, key) {
       keyValues = new Array(groupLength),
       keyValue;
 
-  // Compute the key for each node.
+  // Compute the key for each nodeElements.
   // If multiple nodes have the same key, the duplicates are added to exit.
   for (i = 0; i < groupLength; ++i) {
     if (node = group[i]) {
@@ -1004,7 +1004,7 @@ function bindKey(parent, group, enter, update, exit, data, key) {
   }
 
   // Compute the key for each datum.
-  // If there a node associated with this key, join and add it to update.
+  // If there a nodeElements associated with this key, join and add it to update.
   // If there is not (or the key is a duplicate), add it to enter.
   for (i = 0; i < dataLength; ++i) {
     keyValue = keyPrefix + key.call(parent, data[i], i, data);
@@ -1050,9 +1050,9 @@ function selection_data(value, key) {
 
     bind(parent, group, enterGroup, updateGroup, exitGroup, data, key);
 
-    // Now connect the enter nodes to their following update node, such that
-    // appendChild can insert the materialized enter node before this node,
-    // rather than at the end of the parent node.
+    // Now connect the enter nodes to their following update nodeElements, such that
+    // appendChild can insert the materialized enter nodeElements before this nodeElements,
+    // rather than at the end of the parent nodeElements.
     for (var i0 = 0, i1 = 0, previous, next; i0 < dataLength; ++i0) {
       if (previous = enterGroup[i0]) {
         if (i0 >= i1) i1 = i0 + 1;
@@ -1237,9 +1237,9 @@ function selection_attr(name, value) {
 }
 
 function defaultView(node) {
-  return (node.ownerDocument && node.ownerDocument.defaultView) // node is a Node
-      || (node.document && node) // node is a Window
-      || node.defaultView; // node is a Document
+  return (node.ownerDocument && node.ownerDocument.defaultView) // nodeElements is a Node
+      || (node.document && node) // nodeElements is a Window
+      || node.defaultView; // nodeElements is a Document
 }
 
 function styleRemove(name) {
@@ -3378,7 +3378,7 @@ function tweenRemove(id, name) {
     var schedule$$1 = set$1(this, id),
         tween = schedule$$1.tween;
 
-    // If this node shared tween with the previous node,
+    // If this nodeElements shared tween with the previous nodeElements,
     // just assign the updated shared tween and we’re done!
     // Otherwise, copy-on-write.
     if (tween !== tween0) {
@@ -3403,7 +3403,7 @@ function tweenFunction(id, name, value) {
     var schedule$$1 = set$1(this, id),
         tween = schedule$$1.tween;
 
-    // If this node shared tween with the previous node,
+    // If this nodeElements shared tween with the previous nodeElements,
     // just assign the updated shared tween and we’re done!
     // Otherwise, copy-on-write.
     if (tween !== tween0) {
@@ -3682,7 +3682,7 @@ function onFunction(id, name, listener) {
     var schedule$$1 = sit(this, id),
         on = schedule$$1.on;
 
-    // If this node shared a dispatch with the previous node,
+    // If this nodeElements shared a dispatch with the previous nodeElements,
     // just assign the updated shared dispatch and we’re done!
     // Otherwise, copy-on-write.
     if (on !== on0) (on1 = (on0 = on).copy()).on(name, listener);
@@ -3812,7 +3812,7 @@ function styleMaybeRemove(id, name) {
         on = schedule$$1.on,
         listener = schedule$$1.value[key] == null ? remove || (remove = styleRemove$1(name)) : undefined;
 
-    // If this node shared a dispatch with the previous node,
+    // If this nodeElements shared a dispatch with the previous nodeElements,
     // just assign the updated shared dispatch and we’re done!
     // Otherwise, copy-on-write.
     if (on !== on0 || listener0 !== listener) (on1 = (on0 = on).copy()).on(event, listener0 = listener);
@@ -3910,7 +3910,7 @@ function transition_end() {
       var schedule$$1 = set$1(this, id),
           on = schedule$$1.on;
 
-      // If this node shared a dispatch with the previous node,
+      // If this nodeElements shared a dispatch with the previous nodeElements,
       // just assign the updated shared dispatch and we’re done!
       // Otherwise, copy-on-write.
       if (on !== on0) {
@@ -4886,7 +4886,7 @@ function chord() {
       x += dx;
     }
 
-    // Generate chords for each (non-empty) subgroup-subgroup link.
+    // Generate chords for each (non-empty) subgroup-subgroup linkElements.
     i = -1; while (++i < n) {
       j = i - 1; while (++j < n) {
         var source = subgroups[j * n + i],
@@ -6120,7 +6120,7 @@ function add(tree, x, y, d) {
   yp = +tree._y.call(null, node.data);
   if (x === xp && y === yp) return leaf.next = node, parent ? parent[i] = leaf : tree._root = leaf, tree;
 
-  // Otherwise, split the leaf node until the old and new point are separated.
+  // Otherwise, split the leaf nodeElements until the old and new point are separated.
   do {
     parent = parent ? parent[i] = new Array(4) : tree._root = new Array(4);
     if (right = x >= (xm = (x0 + x1) / 2)) x0 = xm; else x1 = xm;
@@ -6256,7 +6256,7 @@ function tree_find(x, y, radius) {
 
   while (q = quads.pop()) {
 
-    // Stop searching if this quadrant can’t contain a closer node.
+    // Stop searching if this quadrant can’t contain a closer nodeElements.
     if (!(node = q.node)
         || (x1 = q.x0) > x3
         || (y1 = q.y0) > y3
@@ -6324,7 +6324,7 @@ function tree_remove(d) {
   // If the tree is empty, initialize the root as a leaf.
   if (!node) return this;
 
-  // Find the leaf node for the point.
+  // Find the leaf nodeElements for the point.
   // While descending, also retain the deepest parent with a non-removed sibling.
   if (node.length) while (true) {
     if (right = x >= (xm = (x0 + x1) / 2)) x0 = xm; else x1 = xm;
@@ -11308,7 +11308,7 @@ function treeRoot(root) {
   return tree;
 }
 
-// Node-link tree diagram using the Reingold-Tilford "tidy" algorithm
+// Node-linkElements tree diagram using the Reingold-Tilford "tidy" algorithm
 function tree() {
   var separation = defaultSeparation$1,
       dx = 1,
@@ -11322,7 +11322,7 @@ function tree() {
     t.eachAfter(firstWalk), t.parent.m = -t.z;
     t.eachBefore(secondWalk);
 
-    // If a fixed node size is specified, scale x and y.
+    // If a fixed nodeElements size is specified, scale x and y.
     if (nodeSize) root.eachBefore(sizeNode);
 
     // If a fixed tree size is specified, scale x and y based on the extent.
@@ -11352,7 +11352,7 @@ function tree() {
   // Computes a preliminary x-coordinate for v. Before that, FIRST WALK is
   // applied recursively to the children of v, as well as the function
   // APPORTION. After spacing out the children by calling EXECUTE SHIFTS, the
-  // node v is placed to the midpoint of its outermost children.
+  // nodeElements v is placed to the midpoint of its outermost children.
   function firstWalk(v) {
     var children = v.children,
         siblings = v.parent.children,
@@ -11484,7 +11484,7 @@ function squarifyRatio(ratio, parent, x0, y0, x1, y1) {
   while (i0 < n) {
     dx = x1 - x0, dy = y1 - y0;
 
-    // Find the next non-empty node.
+    // Find the next non-empty nodeElements.
     do sumValue = nodes[i1++].value; while (!sumValue && i1 < n);
     minValue = maxValue = sumValue;
     alpha = Math.max(dy / dx, dx / dy) / (value * ratio);
@@ -16343,16 +16343,16 @@ function y$4(d) {
 }
 
 function RedBlackTree() {
-  this._ = null; // root node
+  this._ = null; // root nodeElements
 }
 
 function RedBlackNode(node) {
-  node.U = // parent node
+  node.U = // parent nodeElements
   node.C = // color - true for red, false for black
-  node.L = // left node
-  node.R = // right node
-  node.P = // previous node
-  node.N = null; // next node
+  node.L = // left nodeElements
+  node.R = // right nodeElements
+  node.P = // previous nodeElements
+  node.N = null; // next nodeElements
 }
 
 RedBlackTree.prototype = {
