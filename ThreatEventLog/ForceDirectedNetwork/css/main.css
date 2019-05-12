@@ -14,7 +14,7 @@ thead td{
 tbody td {
     border: 1px solid #dddddd;
     padding: 3px;
-    font-size: 10px;
+    font-size: 11px;
 }
 
 tr:nth-child(even) {

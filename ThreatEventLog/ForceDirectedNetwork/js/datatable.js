@@ -1,10 +1,7 @@
 function updateTable(tbl, rows) {
     tbl.innerHTML = '';
-    //Creating the header.
     let headers = Object.keys(rows[0]);
-    if(!rows[0]){
-        debugger
-    }
+
     let header = tbl.createTHead();
     let body = tbl.createTBody();
     let hRow = header.insertRow();
@@ -17,7 +14,13 @@ function updateTable(tbl, rows) {
         let row = body.insertRow();
         headers.forEach(hd => {
             let cell = row.insertCell();
+            if (hd === COL_DEVICE_ACTION) {
+                cell.style.color = deviceActionColors[rowDt[hd]];
+            }else if(hd===COL_SOURCE_ADDRESS || hd===COL_DESTINATION_ADDRESS){
+                cell.style.color = nodeColor({id: rowDt[hd]});
+            }
             cell.innerHTML = rowDt[hd];
+
         })
     });
 }
