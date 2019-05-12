@@ -1,6 +1,6 @@
 const timeArcSettings = {
     textHeight: 15,
-    transition:{
+    transition: {
         duration: 200
     }
 };
@@ -23,14 +23,16 @@ function brushTimeArcNode(node) {
     let relatedLinks = brushTimeArcLinksOfNodes(node);
     brushRelatedTimeArcNodes(relatedLinks);
 }
-function brushRelatedTimeArcNodes(relatedLinks){
+
+function brushRelatedTimeArcNodes(relatedLinks) {
     let relatedNodes = [];
-    relatedLinks.forEach(l=>{
+    relatedLinks.forEach(l => {
         relatedNodes.push(l.source);
         relatedNodes.push(l.target);
     });
     brushTimeArcNodes(relatedNodes);
 }
+
 function brushTimeArcNodes(nodes) {
     let allNodeIds = nodes.map(n => n.id);
     d3.selectAll('.tANodeElements').each(function () {
@@ -108,9 +110,12 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         .attr("transform", "translate(10)")
         .attr("text-anchor", 'start')
         .attr("alignment-baseline", 'middle')
-        .style('fill', nodeColor)
+        .style('fill', nodeColor);
 
     nodeElements = enterNode.merge(nodeElements);
+    nodeElements.on('mouseover', d => {
+        brushTimeArcNode(d);
+    });
 
     function tick(duration) {
         if (duration) {
@@ -185,6 +190,26 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
 
         //Update position
         linkElements.attr("d", d => arcPath(true, d));
+
+        //Add brushing
+        linkElements.on("mouseover", function (theLink) {
+            //Brush the link
+            d3.selectAll('.tALinkElements').attr("opacity", d => {
+                if (d !== theLink) {
+                    return 0.1;
+                } else {
+                    return 1.0;
+                }
+            });
+            //Brush the related nodes
+            d3.selectAll('.tANodeElements').attr("opacity", d=>{
+               if(d===theLink.source || d===theLink.target){
+                   return 1.0;
+               } else{
+                   return 0.1;
+               }
+            });
+        });
 
         //Draw the xAxis
         let xAxisG = theGroup.append('g');
@@ -264,8 +289,8 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             .attr("viewBox", "0 -5 10 10")
             .attr("refX", 10)
             .attr("refY", 0)
-            .attr("markerWidth", 4)
-            .attr("markerHeight", 4)
+            .attr("markerWidth", 3)
+            .attr("markerHeight", 3)
             .attr('markerUnits', "strokeWidth")
             .attr("orient", "auto")
             .attr('xoverflow', 'visible')
