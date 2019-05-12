@@ -75,7 +75,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             .attr("y1", d => d.y)
             .attr("y2", d => d.y)
             .attr('stroke-width', 1)
-            .attr('stroke', nodeColor);
+            .attr('stroke', 'black');
         nodeLines.exit().remove();
         nodeLines = enterNodeLines.merge(nodeLines);
 
