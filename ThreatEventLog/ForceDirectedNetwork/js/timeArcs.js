@@ -1,12 +1,15 @@
 const timeArcSettings = {
-    textHeight: 15
+    textHeight: 15,
+    transition:{
+        duration: 200
+    }
 };
 
 function brushTimeArcNode(node) {
     //Brush node text and node line
     d3.selectAll('.tANodeElements').each(function () {
         let sel = d3.select(this);
-        sel.attr("opacity", d => {
+        sel.transition().duration(timeArcSettings.transition.duration).attr("opacity", d => {
             if (d.id === node.id) {
                 return 1;
             } else {
@@ -32,7 +35,7 @@ function brushTimeArcNodes(nodes) {
     let allNodeIds = nodes.map(n => n.id);
     d3.selectAll('.tANodeElements').each(function () {
         let sel = d3.select(this);
-        sel.attr("opacity", d => {
+        sel.transition().duration(timeArcSettings.transition.duration).attr("opacity", d => {
             if (allNodeIds.indexOf(d.id) >= 0) {
                 return 1;
             } else {
@@ -46,7 +49,7 @@ function brushTimeArcLink(link) {
     //Join the three properties, source, target, type and compare
     d3.selectAll('.tALinkElements').each(function () {
         let sel = d3.select(this);
-        sel.attr("opacity", d => {
+        sel.transition().duration(timeArcSettings.transition.duration).attr("opacity", d => {
             if (combineProp(d) === combineProp(link)) {
                 return 1.0;
             } else {
@@ -66,7 +69,7 @@ function brushTimeArcLinksOfNodes(node) {
     let relatedLinks = [];
     d3.selectAll('.tALinkElements').each(function () {
         let sel = d3.select(this);
-        sel.attr("opacity", d => {
+        sel.transition().duration(timeArcSettings.transition.duration).attr("opacity", d => {
             if (d.source.id === node.id || d.target.id === node.id) {
                 relatedLinks.push(d);
                 return 1.0;
