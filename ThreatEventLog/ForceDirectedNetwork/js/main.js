@@ -31,14 +31,14 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     let nodes = getAllNodesFromLinks(links);
 
     let linkStrokeWidthScale = getLinkStrokeWidthScale(links, networkSettings.link.minStrokeWidth, networkSettings.link.maxStrokeWidth);
-    drawNetworkGraph(networkG, networkWidth, networkHeight, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onLinkMouseOverCallback);
+    drawNetworkGraph(networkG, networkWidth, networkHeight, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onNetworkLinkMouseOverCallback);
     let timeLinks = getLinksByColumns([COL_DEVICE_ACTION, COL_END_TIME], data);
     let timeNodes = nodes.map(n => {
         return Object.assign({}, n);
     });//Copy the nodes to avoid changing its x, y for the network.
     drawLinkLegends(legendG, deviceActions, deviceActionColor);
 
-    drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, timeNodes, timeLinks, deviceActions, deviceActionColor, linkStrokeWidthScale);
+    drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, timeNodes, timeLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack);
 
     function getLinkStrokeWidthScale(links, minWidth, maxWidth) {
         let scale = d3.scaleLinear().domain(d3.extent(links.map(d => d.threatCount))).range([minWidth, maxWidth]);
@@ -48,16 +48,20 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     }
 
     function onNodeMouseOverCallback(node){
-        filterByColumns(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.id, data);
+        filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.id, data);
         //Also brush the timeArc
         brushTimeArcNode(node);
     }
-    function onLinkMouseOverCallback(link){
+    function onNetworkLinkMouseOverCallback(link){
         let threatEvents = links.find(d=>d===link).threatEvents;
         updateTable(ipdatacsvTbl, threatEvents);
         brushTimeArcLink(link);
     }
-
+    function onTimeArcLinkMouseOverCallBack(link){
+        //Work with timeArc links.
+        let values = [link.target.id, link.source.id, link[COL_DEVICE_ACTION], link[COL_END_TIME]];
+        filterByColumnsAnd(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_DEVICE_ACTION, COL_END_TIME], values, data);
+    }
 });
 
 //<editor-fold desc="this section is for scaling">

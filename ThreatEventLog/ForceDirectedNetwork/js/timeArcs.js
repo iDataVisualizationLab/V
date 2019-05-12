@@ -1,7 +1,7 @@
 const timeArcSettings = {
     textHeight: 15,
     transition: {
-        duration: 200
+        duration: 500
     }
 };
 
@@ -83,13 +83,14 @@ function brushTimeArcLinksOfNodes(node) {
     return relatedLinks;//Return these to brush later.
 }
 
-function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale) {
+function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallBack, onTimeArcLinkMouseOverCallBack) {
     addArrowMarkers(theGroup, deviceActions, deviceActionColor);
     let contentGroup = theGroup.append('g').attr("transform", `translate(0, ${margin.top})`);
     let linksGroup = contentGroup.append('g');
-    let nodesGroup = contentGroup.append('g');
+    let nodeLinesGroup = contentGroup.append('g');
+    let textsGroup = contentGroup.append('g');
     let linkElements = linksGroup.selectAll('.tALinkElements'),
-        nodeElements = nodesGroup.selectAll('.tANodeElements');
+        nodeElements = textsGroup.selectAll('.tANodeElements');
     //Generate the best vertical location
     let simulation = d3.forceSimulation()
         .on('tick', tick)
@@ -106,8 +107,8 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
     //enter any new nodes
     let enterNode = nodeElements.enter()
         .append('text').text(d => d.id)
-        .attr("class", 'tANodeElements')
-        .attr("transform", "translate(10)")
+        .attr("class", 'tANodeElements tANodeTexts')
+        .attr("transform", "translate(16, 0)")
         .attr("text-anchor", 'start')
         .attr("alignment-baseline", 'middle')
         .style('fill', nodeColor);
@@ -115,6 +116,8 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
     nodeElements = enterNode.merge(nodeElements);
     nodeElements.on('mouseover', d => {
         brushTimeArcNode(d);
+        //Call also mouseover to connect with other views.
+        onNodeMouseOverCallBack(d);
     });
 
     function tick(duration) {
@@ -155,10 +158,10 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         //Transform all the nodes.
         tick(1000);
         //Draw the node line
-        let nodeLines = contentGroup.selectAll('.tANodeLines').data(nodes);
+        let nodeLines = nodeLinesGroup.selectAll('.tANodeLines').data(nodes);
         let enterNodeLines = nodeLines.enter()
             .append('line')
-            .attr("class", 'tANodeElements')
+            .attr("class", 'tANodeElements tANodeLines')
             .attr("x1", d => d.x)
             .attr("x2", d => d.minX)
             .attr("y1", d => d.y)
@@ -202,12 +205,27 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 }
             });
             //Brush the related nodes
-            d3.selectAll('.tANodeElements').attr("opacity", d=>{
-               if(d===theLink.source || d===theLink.target){
-                   return 1.0;
-               } else{
-                   return 0.1;
-               }
+            d3.selectAll('.tANodeElements').attr("opacity", function (d) {
+                if (d === theLink.source || d === theLink.target) {
+                    return 1.0;
+                } else {
+                    return 0.1;
+                }
+            });
+            //Bring the text to its location
+            d3.selectAll('.tANodeTexts').transition().duration(timeArcSettings.transition.duration).attr("x", function (d) {
+                if (d === theLink.source || d === theLink.target) {
+                    return `${xScale(theLink[COL_END_TIME])}`;
+                } else {
+                    return d.x;
+                }
+            });
+            //Send this event outside
+            onTimeArcLinkMouseOverCallBack(theLink);
+        }).on("mouseout", function (theLink) {
+            //Move the text of this node to its location
+            d3.selectAll('.tANodeTexts').transition().duration(timeArcSettings.transition.duration).attr("x", function (d) {
+                return d.x;
             });
         });
 
@@ -218,7 +236,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
 
         //Raise the two group
         nodeLines.raise();
-        nodeElements.raise();
+        d3.selectAll('.tANodeTexts').raise();
 
         function arcPath(leftHand, d) {
             let x1 = xScale(d[COL_END_TIME]),
@@ -231,7 +249,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 drx = dr,
                 dry = dr,
                 sweep = leftHand ? 0 : 1,
-                siblingCount = countSiblingLinks(d.source, d.target),
+                siblingCount = countSiblingLinks(d),
                 xRotation = 0,
                 largeArc = 0;
 
@@ -240,14 +258,14 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 largeArc = 1;
                 sweep = 0;
 
-                drx = 2.5 * d.source.radius;
-                dry = 2 * d.source.radius;
+                drx = 10;
+                dry = 8;
 
                 x1 = x1 + 1;
                 y1 = y1 + 1;
             }
-
             if (siblingCount > 1) {
+                debugger
                 let siblings = getSiblingLinks(d.source, d.target);
                 let arcScale = d3.scalePoint()
                     .domain(siblings)
@@ -259,15 +277,16 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;
         }
 
-        function countSiblingLinks(source, target) {
+        function countSiblingLinks(theLink) {
+            let source = theLink.source;
+            let target = theLink.target;
             let count = 0;
             for (let i = 0; i < links.length; ++i) {
-                if ((links[i].source.id == source.id && links[i].target.id == target.id) || (links[i].source.id == target.id && links[i].target.id == source.id))
+                if ((links[i].source.id == source.id && links[i].target.id == target.id) && links[i][COL_END_TIME] === theLink[COL_END_TIME])
                     count++;
             }
-            ;
             return count;
-        };
+        }
 
         function getSiblingLinks(source, target) {
             let siblings = [];

@@ -16,7 +16,6 @@ function drawNodeLegends(legendG) {
 }
 
 function drawLinkLegends(legendG, linkLegendData, colorScale) {
-    debugger
     //Draw legend for strokes.
     let linkLegendG = legendG.append('g').attr("transform", `translate(0, ${networkSettings.legend.height * d3.entries(nodeColorLegendObj).length})`);
     let linkLegendGs = linkLegendG.selectAll('.linkLegendG')
