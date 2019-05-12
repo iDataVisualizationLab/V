@@ -1,15 +1,67 @@
 const timeArcSettings = {
     textHeight: 15
 };
-function brushTimeArcNode(node){
+
+function brushTimeArcNode(node) {
     //Brush node text and node line
-    d3.selectAll('.tAnodeElements').each(function(){
+    d3.selectAll('.tANodeElements').each(function () {
         let sel = d3.select(this);
-        sel.attr("opacity", d=>{
-            if(d.id===node.id){
-                return 1
-            }else{
+        sel.attr("opacity", d => {
+            if (d.id === node.id) {
+                return 1;
+            } else {
                 return 0.1
+            }
+        });
+    });
+    //Find the connected nodes and brush them
+    //Find the connected links and brush them
+    //Brush its connected link
+    brushTimeArcLinksOfNodes(node);
+}
+
+function brushTimeArcNodes(nodes) {
+    let allNodeIds = nodes.map(n => n.id);
+    d3.selectAll('.tANodeElements').each(function () {
+        let sel = d3.select(this);
+        sel.attr("opacity", d => {
+            if (allNodeIds.indexOf(d.id) >= 0) {
+                return 1;
+            } else {
+                return 0.1
+            }
+        });
+    });
+}
+
+function brushTimeArcLink(link) {
+    //Join the three properties, source, target, type and compare
+    d3.selectAll('.tALinkElements').each(function () {
+        let sel = d3.select(this);
+        sel.attr("opacity", d => {
+            if (combineProp(d) === combineProp(link)) {
+                return 1.0;
+            } else {
+                return 0.1;
+            }
+        });
+    });
+    //brush the related nodes
+    brushTimeArcNodes([link.source, link.target]);
+
+    function combineProp(d) {
+        return `${d.source.id},${d.target.id},${d[COL_DEVICE_ACTION]}`;
+    }
+}
+
+function brushTimeArcLinksOfNodes(node) {
+    d3.selectAll('.tALinkElements').each(function () {
+        let sel = d3.select(this);
+        sel.attr("opacity", d => {
+            if (d.source.id === node.id || d.target.id === node.id) {
+                return 1.0;
+            } else {
+                return 0.1;
             }
         });
     });
@@ -18,8 +70,10 @@ function brushTimeArcNode(node){
 function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale) {
     addArrowMarkers(theGroup, deviceActions, deviceActionColor);
     let contentGroup = theGroup.append('g').attr("transform", `translate(0, ${margin.top})`);
-    let linkElements = contentGroup.selectAll('.tALinkElements'),
-        nodeElements = contentGroup.selectAll('.tAnodeElements');
+    let linksGroup = contentGroup.append('g');
+    let nodesGroup = contentGroup.append('g');
+    let linkElements = linksGroup.selectAll('.tALinkElements'),
+        nodeElements = nodesGroup.selectAll('.tANodeElements');
     //Generate the best vertical location
     let simulation = d3.forceSimulation()
         .on('tick', tick)
@@ -36,7 +90,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
     //enter any new nodes
     let enterNode = nodeElements.enter()
         .append('text').text(d => d.id)
-        .attr("class", 'tAnodeElements')
+        .attr("class", 'tANodeElements')
         .attr("transform", "translate(10)")
         .attr("text-anchor", 'start')
         .attr("alignment-baseline", 'middle')
@@ -85,7 +139,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         let nodeLines = contentGroup.selectAll('.tANodeLines').data(nodes);
         let enterNodeLines = nodeLines.enter()
             .append('line')
-            .attr("class", 'tAnodeElements')
+            .attr("class", 'tANodeElements')
             .attr("x1", d => d.x)
             .attr("x2", d => d.minX)
             .attr("y1", d => d.y)
@@ -122,6 +176,10 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         let xAxisG = theGroup.append('g');
         let xAxis = d3.axisTop(xScale);
         xAxisG.call(xAxis);
+
+        //Raise the two group
+        nodeLines.raise();
+        nodeElements.raise();
 
         function arcPath(leftHand, d) {
             let x1 = xScale(d[COL_END_TIME]),
@@ -217,5 +275,6 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             .attr('d', 'M0,-5L10,0L0,5')
             .attr("fill", markerColor(d => d));
     }
+
     //</editor-fold>
 }

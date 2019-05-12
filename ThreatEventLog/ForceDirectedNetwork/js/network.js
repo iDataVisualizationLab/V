@@ -32,7 +32,7 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
     simulation.nodes(nodes)
         .force('link', d3.forceLink(links).id(d => d.id))
         .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(width / 2, height / 2)).alphaTarget(0.3).restart()
+        .force("center", d3.forceCenter(width / 2, height / 2)).restart()
         .force("collide", d3.forceCollide(d => d.radius));
 
     //Update the links

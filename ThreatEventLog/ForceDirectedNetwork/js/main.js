@@ -2,7 +2,7 @@ const margin = {left: 20, top: 20, right: 120, bottom: 20},
     networkWidth = 400,
     networkHeight = 400,
     timeArcWidth = window.innerWidth - networkWidth - margin.left - margin.right,
-    timeArcHeight = 1000,
+    timeArcHeight = window.innerHeight - margin.top-margin.bottom - 150,
     svgWidth = networkWidth + timeArcWidth + margin.left + margin.right,
     svgHeight = Math.max(networkHeight, timeArcHeight) + margin.top + margin.bottom;
 
@@ -55,6 +55,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     function onLinkMouseOverCallback(link){
         let threatEvents = links.find(d=>d===link).threatEvents;
         updateTable(ipdatacsvTbl, threatEvents);
+        brushTimeArcLink(link);
     }
 
 });
