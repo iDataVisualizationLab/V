@@ -1,10 +1,22 @@
 const timeArcSettings = {
     textHeight: 15
 };
+function brushTimeArcNode(node){
+    //Brush node text and node line
+    d3.selectAll('.tAnodeElements').each(function(){
+        let sel = d3.select(this);
+        sel.attr("opacity", d=>{
+            if(d.id===node.id){
+                return 1
+            }else{
+                return 0.1
+            }
+        });
+    });
+}
 
 function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale) {
     addArrowMarkers(theGroup, deviceActions, deviceActionColor);
-
     let contentGroup = theGroup.append('g').attr("transform", `translate(0, ${margin.top})`);
     let linkElements = contentGroup.selectAll('.tALinkElements'),
         nodeElements = contentGroup.selectAll('.tAnodeElements');
@@ -24,6 +36,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
     //enter any new nodes
     let enterNode = nodeElements.enter()
         .append('text').text(d => d.id)
+        .attr("class", 'tAnodeElements')
         .attr("transform", "translate(10)")
         .attr("text-anchor", 'start')
         .attr("alignment-baseline", 'middle')
@@ -72,6 +85,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         let nodeLines = contentGroup.selectAll('.tANodeLines').data(nodes);
         let enterNodeLines = nodeLines.enter()
             .append('line')
+            .attr("class", 'tAnodeElements')
             .attr("x1", d => d.x)
             .attr("x2", d => d.minX)
             .attr("y1", d => d.y)
@@ -84,7 +98,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         //Now draw the arcs.
         //Update the links
         linkElements = linkElements.data(links, d => d.index);
-        debugger
+
         //Exit any old links
         linkElements.exit().remove();
 
@@ -166,8 +180,9 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             }
             return siblings;
         };
-
     }
+
+    //<editor-fold desc="This section is for the arrow marker">
     function addArrowMarkers(mainG, markerData, markerColor) {
         mainG.append("defs").selectAll("marker")
             .data(markerData)
@@ -202,4 +217,5 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             .attr('d', 'M0,-5L10,0L0,5')
             .attr("fill", markerColor(d => d));
     }
+    //</editor-fold>
 }

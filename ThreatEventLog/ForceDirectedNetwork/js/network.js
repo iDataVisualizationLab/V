@@ -78,7 +78,7 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
     nodeElements = enterNode.merge(nodeElements);
     nodeElements.on("mouseover", d => {
         showTip(`IP: "${d.id}", links count: ${d.linkCount}`);
-        onNodeMouseOverCallback(d.id);
+        onNodeMouseOverCallback(d);
     }).on("mouseout", () => {
         hideTip();
     });

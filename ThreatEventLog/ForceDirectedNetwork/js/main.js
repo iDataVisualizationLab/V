@@ -47,8 +47,10 @@ d3.csv('data/104.12.0.0.csv').then(data => {
         }
     }
 
-    function onNodeMouseOverCallback(value){
-        filterByColumns(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], value, data);
+    function onNodeMouseOverCallback(node){
+        filterByColumns(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.id, data);
+        //Also brush the timeArc
+        brushTimeArcNode(node);
     }
     function onLinkMouseOverCallback(link){
         let threatEvents = links.find(d=>d===link).threatEvents;
