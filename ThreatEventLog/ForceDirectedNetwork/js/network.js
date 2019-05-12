@@ -6,12 +6,6 @@ const networkSettings = {
     link: {
         minStrokeWidth: 1.5,
         maxStrokeWidth: 5
-    },
-    legend: {
-        nodeRadius: 8,
-        height: 18,
-        linkSize: 16,
-        linkStrokeWidth: 2
     }
 };
 
@@ -19,6 +13,7 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
     let linkElements = theGroup.selectAll('.linkElements'),
         nodeElements = theGroup.selectAll('.nodeElements');
     let nodeRadiusScale;
+    debugger
     addArrowMarkers(theGroup, deviceActions, deviceActionColor);
     nodeRadiusScale = getNodeRadiusScale(nodes, networkSettings.node.minRadius, networkSettings.node.maxRadius);
     //Calculate the node's radius

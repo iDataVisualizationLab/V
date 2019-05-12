@@ -64,16 +64,22 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     }
 });
 
+
 //<editor-fold desc="this section is for scaling">
+let deviceActionColors = {
+    'Permitted': 'green',
+    'none': 'gray',
+    '': 'steelblue'
+}
 function getDeviceActionColor(deviceActions) {
     return function (deviceAction) {
-        return d3.schemeCategory10[deviceActions.indexOf(deviceAction)];
+        return deviceActionColors[deviceAction];
     }
 };
 
 function nodeColor(node) {
     if (node.id.startsWith('104.12')) {
-        return 'steelblue';
+        return 'black';
     } else if (node.id === "unknown") {
         return 'gray';
     } else {

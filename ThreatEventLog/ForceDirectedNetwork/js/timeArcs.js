@@ -108,7 +108,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
     let enterNode = nodeElements.enter()
         .append('text').text(d => d.id)
         .attr("class", 'tANodeElements tANodeTexts')
-        .attr("transform", "translate(16, 0)")
+        .attr("transform", "translate(20, 0)")
         .attr("text-anchor", 'start')
         .attr("alignment-baseline", 'middle')
         .style('fill', nodeColor);
@@ -167,7 +167,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             .attr("y1", d => d.y)
             .attr("y2", d => d.y)
             .attr('stroke-width', 1)
-            .attr('stroke', 'black');
+            .attr('stroke', nodeColor);
         nodeLines.exit().remove();
         nodeLines = enterNodeLines.merge(nodeLines);
 

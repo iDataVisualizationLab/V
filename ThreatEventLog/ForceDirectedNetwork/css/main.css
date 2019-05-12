@@ -9,10 +9,12 @@ thead td{
     border: 1px solid #999999;
     background-color: #cdcdcd;
     padding: 8px;
+    font-size: 12px;
 }
 tbody td {
     border: 1px solid #dddddd;
-    padding: 8px;
+    padding: 3px;
+    font-size: 10px;
 }
 
 tr:nth-child(even) {
@@ -24,7 +26,7 @@ tr:nth-child(even) {
 .nodeElements {
     cursor: pointer;
     stroke: #3182bd;
-    stroke-width: 1.5px;
+    stroke-width: 0.5px;
 }
 
 .linkElements {
