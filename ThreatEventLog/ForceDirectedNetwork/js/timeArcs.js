@@ -112,11 +112,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         .style('fill', nodeColor);
 
     nodeElements = enterNode.merge(nodeElements);
-    nodeElements.on('mouseover', d => {
-        brushTimeArcNode(d);
-        //Call also mouseover to connect with other views.
-        onNodeMouseOverCallBack(d);
-    });
+
 
     function tick(duration) {
         if (duration) {
@@ -155,6 +151,14 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
 
         //Transform all the nodes.
         tick(1000);
+        setInterval(()=>{
+            //Now add mouseover event for the nodes, should do it here since when it is on force calculation we shouldn't activate this otherwise it would lead to wrong location.
+            nodeElements.on('mouseover', d => {
+                brushTimeArcNode(d);
+                //Call also mouseover to connect with other views.
+                onNodeMouseOverCallBack(d);
+            });
+        }, 1001);
         //Draw the node line
         let nodeLines = nodeLinesGroup.selectAll('.tANodeLines').data(nodes);
         let enterNodeLines = nodeLines.enter()
