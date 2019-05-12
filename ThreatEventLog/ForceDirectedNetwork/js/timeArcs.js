@@ -17,9 +17,17 @@ function brushTimeArcNode(node) {
     //Find the connected nodes and brush them
     //Find the connected links and brush them
     //Brush its connected link
-    brushTimeArcLinksOfNodes(node);
+    let relatedLinks = brushTimeArcLinksOfNodes(node);
+    brushRelatedTimeArcNodes(relatedLinks);
 }
-
+function brushRelatedTimeArcNodes(relatedLinks){
+    let relatedNodes = [];
+    relatedLinks.forEach(l=>{
+        relatedNodes.push(l.source);
+        relatedNodes.push(l.target);
+    });
+    brushTimeArcNodes(relatedNodes);
+}
 function brushTimeArcNodes(nodes) {
     let allNodeIds = nodes.map(n => n.id);
     d3.selectAll('.tANodeElements').each(function () {
@@ -55,16 +63,19 @@ function brushTimeArcLink(link) {
 }
 
 function brushTimeArcLinksOfNodes(node) {
+    let relatedLinks = [];
     d3.selectAll('.tALinkElements').each(function () {
         let sel = d3.select(this);
         sel.attr("opacity", d => {
             if (d.source.id === node.id || d.target.id === node.id) {
+                relatedLinks.push(d);
                 return 1.0;
             } else {
                 return 0.1;
             }
         });
     });
+    return relatedLinks;//Return these to brush later.
 }
 
 function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale) {
