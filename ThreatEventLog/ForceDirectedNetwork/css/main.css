@@ -31,8 +31,13 @@ tr:nth-child(even) {
     fill: none;
 }
 
+.tALinkElements {
+    fill: none;
+}
+
 .graphTitle {
     font-size: 20px;
     font-weight: bold;
 }
+
 /*</editor-fold>*/

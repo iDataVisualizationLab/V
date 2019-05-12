@@ -5,7 +5,7 @@ const timeArcSettings = {
 function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale) {
     let linkElements = theGroup.selectAll('.tALinkElements'),
         nodeElements = theGroup.selectAll('.tAnodeElements');
-
+    addArrowMarkers(theGroup, deviceActions, deviceActionColor);
     //Generate the best vertical location
     let simulation = d3.forceSimulation()
         .on('tick', tick)
@@ -61,8 +61,9 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             let eventTimes = nestedByNode[n.id].map(l => l[COL_END_TIME]);
             n.x = xScale(d3.max(eventTimes));
             n.minX = xScale(d3.min(eventTimes));
+            //Update the nodes y position
         });
-        debugger
+
         //Transform all the nodes.
         tick(1000);
         //Draw the node line
@@ -81,7 +82,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         //Now draw the arcs.
         //Update the links
         linkElements = linkElements.data(links, d => d.index);
-
+        debugger
         //Exit any old links
         linkElements.exit().remove();
 
@@ -89,21 +90,22 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         let enterLink = linkElements.enter().append('path').attr('class', "tALinkElements")
             .attr("marker-end", d => {
                 if (d.source === d.target) {
-                    return `url(#markerSelfLoop)`
+                    return `url(#markerSelfLoopTA)`
                 }
-                return `url(#marker${deviceActions.indexOf(d[COL_DEVICE_ACTION])})`
+                return `url(#markerTA${deviceActions.indexOf(d[COL_DEVICE_ACTION])})`
             })
             .attr("stroke", d => deviceActionColor(d[COL_DEVICE_ACTION]))
             .attr("stroke-width", d => linkStrokeWidthScale(d.threatCount));
 
         linkElements = enterLink.merge(linkElements);
+
         //Update position
-        // linkElements.attr("d", d => arcPath(true, d));
+        linkElements.attr("d", d => arcPath(true, d));
 
         function arcPath(leftHand, d) {
-            let x1 = leftHand ? d.source.x : d.target.x,
+            let x1 = xScale(d[COL_END_TIME]),
+                x2 = x1,
                 y1 = leftHand ? d.source.y : d.target.y,
-                x2 = leftHand ? d.target.x : d.source.x,
                 y2 = leftHand ? d.target.y : d.source.y,
                 dx = x2 - x1,
                 dy = y2 - y1,
@@ -158,5 +160,39 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             return siblings;
         };
 
+    }
+    function addArrowMarkers(mainG, markerData, markerColor) {
+        mainG.append("defs").selectAll("marker")
+            .data(markerData)
+            .enter().append("marker")
+            .attr("class", "markerTA")
+            .attr("id", d => 'markerTA' + markerData.indexOf(d))
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 5)
+            .attr("refY", 0)
+            .attr("markerWidth", 4)
+            .attr("markerHeight", 4)
+            .attr('markerUnits', "strokeWidth")
+            .attr("orient", "auto")
+            .attr('xoverflow', 'visible')
+            .append("path")
+            .attr('d', 'M0,-5L10,0L0,5')
+            .attr("fill", markerColor(d => d));
+
+        mainG.append("defs").selectAll("marker")
+            .data(markerData)
+            .enter().append("marker")
+            .attr("id", () => 'markerSelfLoopTA')
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 5)
+            .attr("refY", 0)
+            .attr("markerWidth", 3)
+            .attr("markerHeight", 3)
+            .attr('markerUnits', "strokeWidth")
+            .attr("orient", "auto")
+            .attr('xoverflow', 'visible')
+            .append("path")
+            .attr('d', 'M0,-5L10,0L0,5')
+            .attr("fill", markerColor(d => d));
     }
 }
