@@ -17,9 +17,7 @@ function brushTimeArcNode(node) {
             }
         });
     });
-    //Find the connected nodes and brush them
-    //Find the connected links and brush them
-    //Brush its connected link
+    //Brush its connected links
     let relatedLinks = brushTimeArcLinksOfNodes(node);
     brushRelatedTimeArcNodes(relatedLinks);
 }

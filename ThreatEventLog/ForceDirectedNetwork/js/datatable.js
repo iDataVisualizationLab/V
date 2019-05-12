@@ -14,12 +14,15 @@ function updateTable(tbl, rows) {
         let row = body.insertRow();
         headers.forEach(hd => {
             let cell = row.insertCell();
+            let text = rowDt[hd];
             if (hd === COL_DEVICE_ACTION) {
-                cell.style.color = deviceActionColors[rowDt[hd]];
+                cell.style.color = deviceActionColors[text];
             }else if(hd===COL_SOURCE_ADDRESS || hd===COL_DESTINATION_ADDRESS){
-                cell.style.color = nodeColor({id: rowDt[hd]});
+                cell.style.color = nodeColor({id: text});
+            }else if(hd===COL_END_TIME){
+                text = d3.timeFormat("%b %d %Y %H:%M:%S")(text);
             }
-            cell.innerHTML = rowDt[hd];
+            cell.innerHTML = text;
 
         })
     });
