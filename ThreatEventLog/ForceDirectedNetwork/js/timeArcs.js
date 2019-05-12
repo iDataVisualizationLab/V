@@ -3,9 +3,11 @@ const timeArcSettings = {
 };
 
 function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale) {
-    let linkElements = theGroup.selectAll('.tALinkElements'),
-        nodeElements = theGroup.selectAll('.tAnodeElements');
     addArrowMarkers(theGroup, deviceActions, deviceActionColor);
+
+    let contentGroup = theGroup.append('g').attr("transform", `translate(0, ${margin.top})`);
+    let linkElements = contentGroup.selectAll('.tALinkElements'),
+        nodeElements = contentGroup.selectAll('.tAnodeElements');
     //Generate the best vertical location
     let simulation = d3.forceSimulation()
         .on('tick', tick)
@@ -67,7 +69,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         //Transform all the nodes.
         tick(1000);
         //Draw the node line
-        let nodeLines = theGroup.selectAll('.tANodeLines').data(nodes);
+        let nodeLines = contentGroup.selectAll('.tANodeLines').data(nodes);
         let enterNodeLines = nodeLines.enter()
             .append('line')
             .attr("x1", d => d.x)
@@ -102,6 +104,11 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         //Update position
         linkElements.attr("d", d => arcPath(true, d));
 
+        //Draw the xAxis
+        let xAxisG = theGroup.append('g');
+        let xAxis = d3.axisTop(xScale);
+        xAxisG.call(xAxis);
+
         function arcPath(leftHand, d) {
             let x1 = xScale(d[COL_END_TIME]),
                 x2 = x1,
@@ -120,7 +127,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             // Self edge.
             if (x1 === x2 && y1 === y2) {
                 largeArc = 1;
-                sweep = 1;
+                sweep = 0;
 
                 drx = 2.5 * d.source.radius;
                 dry = 2 * d.source.radius;
@@ -168,7 +175,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             .attr("class", "markerTA")
             .attr("id", d => 'markerTA' + markerData.indexOf(d))
             .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 5)
+            .attr("refX", 10)
             .attr("refY", 0)
             .attr("markerWidth", 4)
             .attr("markerHeight", 4)

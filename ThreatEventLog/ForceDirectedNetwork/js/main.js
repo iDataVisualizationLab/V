@@ -1,14 +1,14 @@
-const margin = {left: 20, top: 20, right: 300, bottom: 20},
+const margin = {left: 20, top: 20, right: 120, bottom: 20},
     networkWidth = 400,
     networkHeight = 400,
-    timeArcWidth = 1300,
+    timeArcWidth = window.innerWidth - networkWidth - margin.left - margin.right,
     timeArcHeight = 1000,
     svgWidth = networkWidth + timeArcWidth + margin.left + margin.right,
     svgHeight = Math.max(networkHeight, timeArcHeight) + margin.top + margin.bottom;
 
 let svg = d3.select("#graphDiv").append("svg").attr("width", svgWidth).attr("height", svgHeight);
 //Title.
-let titleG = svg.append('g').attr('transform', `translate(${networkWidth/2 - margin.left}, ${margin.top})`);
+let titleG = svg.append('g').attr('transform', `translate(${(networkWidth- margin.left)/2 }, ${margin.top})`);
 titleG.append('text').text('104.12.0.0 Threat Event Log Visualization').attr('class', 'graphTitle').attr('text-anchor', 'middle');
 let legendG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top+networkHeight})`);
 drawNodeLegends(legendG);
