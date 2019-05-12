@@ -24,6 +24,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
             d[COL_SOURCE_ADDRESS] = 'unknown';
         }
     });
+
     let ipdatacsvTbl = document.getElementById('ipdatacsvTbl');
     let deviceActions = getDeviceActions(data);
     let deviceActionColor = getDeviceActionColor(deviceActions);

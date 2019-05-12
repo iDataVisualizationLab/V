@@ -94,13 +94,13 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
     //Generate the best vertical location
     let simulation = d3.forceSimulation()
         .on('tick', tick)
-        .on('end', endedCalculatingY);
+        .on('end', endedCalculatingY).alphaTarget(0.0009).restart();
     simulation.nodes(nodes)
         .force('link', d3.forceLink(links).id(d => d.id))
         .force("charge", d3.forceManyBody())
         .force("collide", d3.forceCollide(timeArcSettings.textHeight))
         .force("center", d3.forceCenter(width / 2, height / 2))
-        .force("x", d3.forceX(width / 2));
+        .force("x", d3.forceX(width / 2).strength(1));
     nodeElements = nodeElements.data(nodes, d => d.id);
     //Exit
     nodeElements.exit().remove();
