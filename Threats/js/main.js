@@ -15,7 +15,7 @@ drawNodeLegends(legendG);
 let mainG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
 let networkG = mainG.append('g').attr('transform', `translate(0, 0)`);
 let timeArcG = mainG.append('g').attr('transform', `translate(${networkWidth},0)`);
-
+let ipdatacsvTbl = document.getElementById('ipdatacsvTbl');
 
 d3.csv('data/104.12.0.0.csv').then(data => {
     data.forEach(d => {
@@ -25,21 +25,44 @@ d3.csv('data/104.12.0.0.csv').then(data => {
         }
     });
 
-    let ipdatacsvTbl = document.getElementById('ipdatacsvTbl');
+
     let deviceActions = getDeviceActions(data);
     let deviceActionColor = getDeviceActionColor(deviceActions);
     let links = getLinksByColumns([COL_DEVICE_ACTION], data);
     let nodes = getAllNodesFromLinks(links);
-
     let linkStrokeWidthScale = getLinkStrokeWidthScale(links, networkSettings.link.minStrokeWidth, networkSettings.link.maxStrokeWidth);
     drawNetworkGraph(networkG, networkWidth, networkHeight, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onNetworkLinkMouseOverCallback);
+    drawLinkLegends(legendG, deviceActions, deviceActionColor);
+    //links and nodes without combinations
     let timeLinks = getLinksByColumns([COL_DEVICE_ACTION, COL_END_TIME], data);
+    //Copy the nodes to avoid changing its x, y for the network.
     let timeNodes = nodes.map(n => {
         return Object.assign({}, n);
-    });//Copy the nodes to avoid changing its x, y for the network.
-    drawLinkLegends(legendG, deviceActions, deviceActionColor);
+    });
+    //links and nodes with combinations
+    let targetsOfUnknownOnly = getTargetsOfUnknownOnly(data);
+    let combinedNode = {id: 'combined', ips: []};
+    let tgoNodes = [];
+    timeNodes.forEach(n=>{
+        if(targetsOfUnknownOnly.indexOf(n.id)>=0){
+            combinedNode.ips.push(n);
+        }else{
+            tgoNodes.push(n);
+        }
+    });
+    //Add the combined node
+    tgoNodes.push(combinedNode);
+    let tgoLinks = timeLinks.map(d=>{
+        debugger
+        if(targetsOfUnknownOnly.indexOf(d.target)>=0){
+            d.targetId = d.target;//store it for future references.
+            d.target = 'combined';
+        }
+        return d;
+    });
 
-    drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, timeNodes, timeLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack);
+    // drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, timeNodes, timeLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack);
+    drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, tgoNodes, tgoLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack);
 
     //Reset it when clicking on the svg
     document.onclick = resetBrushing;

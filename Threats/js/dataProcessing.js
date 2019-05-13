@@ -55,4 +55,12 @@ function getAllNodesFromLinks(links) {
     });
     return nodes;
 }
+
+function getTargetsOfUnknownOnly(data){
+    debugger
+    let targetsOfOthers = _.uniq(data.filter(d=>d[COL_SOURCE_ADDRESS] !== 'unknown').map(d=>d[COL_DESTINATION_ADDRESS]));
+    let targetsOfUnknown = _.uniq(data.filter(d=>d[COL_SOURCE_ADDRESS] === 'unknown').map(d=>d[COL_DESTINATION_ADDRESS]));
+    let targetsOfUnknownOnly = _.difference(targetsOfUnknown, targetsOfOthers);
+    return targetsOfUnknownOnly;
+}
 //</editor-fold>

@@ -85,6 +85,8 @@ function resetBrushing(){
     d3.selectAll('.tANodeElements').transition().duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
     //Reset all links
     d3.selectAll('.tALinkElements').transition().duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
+    //Also clear the table.
+    updateTable(ipdatacsvTbl, []);
 }
 
 function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallBack, onTimeArcLinkMouseOverCallBack) {
@@ -165,6 +167,9 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 //Call also mouseover to connect with other views.
                 onNodeMouseOverCallBack(d);
             });
+            nodeElements.on('mouseout', ()=>{
+                resetBrushing();
+            });
         }, 1001);
         //Draw the node line
         let nodeLines = nodeLinesGroup.selectAll('.tANodeLines').data(nodes);
@@ -236,6 +241,8 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             d3.selectAll('.tANodeTexts').transition().duration(timeArcSettings.transition.duration).attr("x", function (d) {
                 return d.x;
             });
+            //Reset brushing
+            resetBrushing();
         });
 
         //Draw the xAxis
@@ -265,13 +272,13 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             // Self edge.
             if (x1 === x2 && y1 === y2) {
                 largeArc = 1;
-                sweep = 0;
+                sweep = 1;
 
                 drx = 6;
                 dry = 6;
 
-                x1 = x1 + 1;
-                y1 = y1;
+                x1 = x1;
+                y1 = y1-1;
             }
             if (siblingCount > 1) {
                 debugger
