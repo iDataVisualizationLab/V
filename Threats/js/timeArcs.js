@@ -241,8 +241,11 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             d3.selectAll('.tANodeTexts').transition().duration(timeArcSettings.transition.duration).attr("x", function (d) {
                 return d.x;
             });
-            //Reset brushing
-            resetBrushing();
+            setTimeout(()=>{
+                //Reset brushing only after they were brought back to their locations to avoid conflict of transitions.
+                resetBrushing();
+            }, timeArcSettings.transition.duration+1);
+
         });
 
         //Draw the xAxis
