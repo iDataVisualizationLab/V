@@ -41,6 +41,8 @@ d3.csv('data/104.12.0.0.csv').then(data => {
 
     drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, timeNodes, timeLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack);
 
+    //Reset it when clicking on the svg
+    document.onclick = resetBrushing;
     function getLinkStrokeWidthScale(links, minWidth, maxWidth) {
         let scale = d3.scaleLinear().domain(d3.extent(links.map(d => d.threatCount))).range([minWidth, maxWidth]);
         return function (threatCount) {
@@ -72,8 +74,8 @@ d3.csv('data/104.12.0.0.csv').then(data => {
 //<editor-fold desc="this section is for scaling">
 let deviceActionColors = {
     'Permitted': 'green',
-    'none': 'gray',
-    '': 'steelblue'
+    'none': 'steelblue',
+    '': '#ff7f0e'
 }
 
 function getDeviceActionColor(deviceActions) {

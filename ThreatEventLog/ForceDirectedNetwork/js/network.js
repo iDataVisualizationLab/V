@@ -4,7 +4,7 @@ const networkSettings = {
         maxRadius: 30
     },
     link: {
-        minStrokeWidth: 1.5,
+        minStrokeWidth: 1,
         maxStrokeWidth: 5
     }
 };
@@ -13,7 +13,7 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
     let linkElements = theGroup.selectAll('.linkElements'),
         nodeElements = theGroup.selectAll('.nodeElements');
     let nodeRadiusScale;
-    debugger
+
     addArrowMarkers(theGroup, deviceActions, deviceActionColor);
     nodeRadiusScale = getNodeRadiusScale(nodes, networkSettings.node.minRadius, networkSettings.node.maxRadius);
     //Calculate the node's radius
@@ -40,9 +40,9 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
     let enterLink = linkElements.enter().append('path').attr('class', "linkElements")
         .attr("marker-end", d => {
             if (d.source === d.target) {
-                return `url(#markerSelfLoop)`
+                return `url(#markerSelfLoop${deviceActions.indexOf(d[COL_DEVICE_ACTION])})`;
             }
-            return `url(#marker${deviceActions.indexOf(d[COL_DEVICE_ACTION])})`
+            return `url(#marker${deviceActions.indexOf(d[COL_DEVICE_ACTION])})`;
         })
         .attr("stroke", d => deviceActionColor(d[COL_DEVICE_ACTION]))
         .attr("stroke-width", d => linkStrokeWidthScale(d.threatCount));
@@ -187,12 +187,12 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
             .attr('xoverflow', 'visible')
             .append("path")
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr("fill", markerColor(d => d));
+            .attr("fill", markerColor);
 
         mainG.append("defs").selectAll("marker")
             .data(markerData)
             .enter().append("marker")
-            .attr("id", () => 'markerSelfLoop')
+            .attr("id", d => 'markerSelfLoop' + markerData.indexOf(d))
             .attr("viewBox", "0 -5 10 10")
             .attr("refX", 25)
             .attr("refY", -6)
@@ -203,6 +203,6 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
             .attr('xoverflow', 'visible')
             .append("path")
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr("fill", markerColor(d => d));
+            .attr("fill", markerColor);
     }
 }

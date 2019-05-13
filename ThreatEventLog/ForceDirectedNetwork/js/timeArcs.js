@@ -80,6 +80,12 @@ function brushTimeArcLinksOfNodes(node) {
     });
     return relatedLinks;//Return these to brush later.
 }
+function resetBrushing(){
+    //Reset nodes
+    d3.selectAll('.tANodeElements').transition().duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
+    //Reset all links
+    d3.selectAll('.tALinkElements').transition().duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
+}
 
 function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallBack, onTimeArcLinkMouseOverCallBack) {
     addArrowMarkers(theGroup, deviceActions, deviceActionColor);
@@ -109,6 +115,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         .attr("transform", "translate(20, 0)")
         .attr("text-anchor", 'start')
         .attr("alignment-baseline", 'middle')
+        .style('font-size', '11px')
         .style('fill', nodeColor);
 
     nodeElements = enterNode.merge(nodeElements);
@@ -184,9 +191,9 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         let enterLink = linkElements.enter().append('path').attr('class', "tALinkElements")
             .attr("marker-end", d => {
                 if (d.source === d.target) {
-                    return `url(#markerSelfLoopTA)`
+                    return `url(#markerSelfLoopTA${deviceActions.indexOf(d[COL_DEVICE_ACTION])})`;
                 }
-                return `url(#markerTA${deviceActions.indexOf(d[COL_DEVICE_ACTION])})`
+                return `url(#markerTA${deviceActions.indexOf(d[COL_DEVICE_ACTION])})`;
             })
             .attr("stroke", d => deviceActionColor(d[COL_DEVICE_ACTION]))
             .attr("stroke-width", d => linkStrokeWidthScale(d.threatCount));
@@ -260,11 +267,11 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 largeArc = 1;
                 sweep = 0;
 
-                drx = 10;
-                dry = 8;
+                drx = 6;
+                dry = 6;
 
                 x1 = x1 + 1;
-                y1 = y1 + 1;
+                y1 = y1;
             }
             if (siblingCount > 1) {
                 debugger
@@ -310,30 +317,30 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             .attr("viewBox", "0 -5 10 10")
             .attr("refX", 10)
             .attr("refY", 0)
-            .attr("markerWidth", 3)
-            .attr("markerHeight", 3)
+            .attr("markerWidth", 4)
+            .attr("markerHeight", 4)
             .attr('markerUnits', "strokeWidth")
             .attr("orient", "auto")
             .attr('xoverflow', 'visible')
             .append("path")
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr("fill", markerColor(d => d));
+            .attr("fill", markerColor);
 
         mainG.append("defs").selectAll("marker")
             .data(markerData)
             .enter().append("marker")
-            .attr("id", () => 'markerSelfLoopTA')
+            .attr("id", d => 'markerSelfLoopTA'+ markerData.indexOf(d))
             .attr("viewBox", "0 -5 10 10")
             .attr("refX", 5)
             .attr("refY", 0)
-            .attr("markerWidth", 3)
-            .attr("markerHeight", 3)
+            .attr("markerWidth", 4)
+            .attr("markerHeight", 4)
             .attr('markerUnits', "strokeWidth")
             .attr("orient", "auto")
             .attr('xoverflow', 'visible')
             .append("path")
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr("fill", markerColor(d => d));
+            .attr("fill", markerColor);
     }
 
     //</editor-fold>
