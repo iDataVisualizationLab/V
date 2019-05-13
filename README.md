@@ -1,3 +1,3 @@
 # V
 
-https://idatavisualizationlab.github.io/V/ThreatEventLog/
+https://idatavisualizationlab.github.io/V/Threats/
