@@ -6,7 +6,7 @@ const margin = {left: 0, top: 20, right: 120, bottom: 20},
     svgWidth = networkWidth + timeArcWidth + margin.left + margin.right,
     svgHeight = Math.max(networkHeight, timeArcHeight) + margin.top + margin.bottom;
 
-let svg = d3.select("#graphDiv").append("svg").attr("width", svgWidth).attr("height", svgHeight);
+let svg = d3.select("#graphDiv").append("svg").attr("width", svgWidth).attr("height", svgHeight).style('overflow-x', 'visible');
 //Title.
 let titleG = svg.append('g').attr('transform', `translate(${(networkWidth - margin.left) / 2}, ${margin.top})`);
 titleG.append('text').text('104.12.0.0 Threat Event Log Visualization').attr('class', 'graphTitle').attr('text-anchor', 'middle');
@@ -24,7 +24,6 @@ d3.csv('data/104.12.0.0.csv').then(data => {
             d[COL_SOURCE_ADDRESS] = 'unknown';
         }
     });
-
 
     let deviceActions = getDeviceActions(data);
     let deviceActionColor = getDeviceActionColor(deviceActions);
@@ -73,7 +72,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     tgoLinks = d3.entries(nestedBySTDT).map(r => {
         let value = r.value;
         let threatEvents = [];
-        value.map(v=>{
+        value.map(v => {
             threatEvents = threatEvents.concat(v['threatEvents']);
         });
         let link = {
@@ -84,8 +83,8 @@ d3.csv('data/104.12.0.0.csv').then(data => {
         }
         link[COL_DEVICE_ACTION] = value[0][COL_DEVICE_ACTION];
         link[COL_END_TIME] = value[0][COL_END_TIME];
-        if(link.target === 'combined'){
-            if(!link.targetIds) link.targetIds = [];
+        if (link.target === 'combined') {
+            if (!link.targetIds) link.targetIds = [];
             link.targetIds.push(link.targetId);
         }
         return link;
@@ -161,7 +160,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
 
     function onTimeArcLinkMouseOverCallBack(link) {
         //Work with timeArc links.
-        let threatEvents =tgoLinks.find(d=>d===link).threatEvents;
+        let threatEvents = tgoLinks.find(d => d === link).threatEvents;
         updateTable(ipdatacsvTbl, threatEvents);
     }
 
