@@ -9,7 +9,7 @@ const legendSettings = {
 let nodeColorLegendObj = {
     'inside': 'black',
     'unknown': 'gray',
-    'outside': 'red'
+    'outside': 'red',
 };
 
 function drawNodeLegends(legendG) {

@@ -112,7 +112,13 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
     nodeElements.exit().remove();
     //enter any new nodes
     let enterNode = nodeElements.enter()
-        .append('text').text(d => d.id)
+        .append('text').text(d => {
+            if(d.id!=='combined'){
+                return d.id;
+            }else{
+                return `${d.nodes.map(d=>d.id).join(', ')}`;
+            }
+        })
         .attr("class", 'tANodeElements tANodeTexts')
         .attr("transform", "translate(20, 0)")
         .attr("text-anchor", 'start')
@@ -180,7 +186,13 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             .attr("x2", d => d.minX)
             .attr("y1", d => d.y)
             .attr("y2", d => d.y)
-            .attr('stroke-width', 1)
+            .attr('stroke-width', d=>{
+                if(d.id!=='combined'){
+                    return 1;
+                }else{
+                    return 2;
+                }
+            })
             .attr('stroke', nodeColor);
         nodeLines.exit().remove();
         nodeLines = enterNodeLines.merge(nodeLines);

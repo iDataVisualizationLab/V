@@ -9,7 +9,7 @@ const networkSettings = {
     }
 };
 
-function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onLinkMouseOverCallback) {
+function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onLinkMouseOverCallback, onNodeMouseOutCallback, onLinkMouseOutCallback) {
     let linkElements = theGroup.selectAll('.linkElements'),
         nodeElements = theGroup.selectAll('.nodeElements');
     let nodeRadiusScale;
@@ -48,9 +48,12 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
         .attr("stroke-width", d => linkStrokeWidthScale(d.threatCount));
 
     linkElements = enterLink.merge(linkElements);
-    linkElements.on("mouseover", d=>{
+    linkElements.on("mouseover", d => {
         onLinkMouseOverCallback(d);
     });
+    linkElements.on("mouseout", d => {
+        onLinkMouseOutCallback(d);
+    })
     //Update the nodes
     nodeElements = nodeElements.data(nodes, d => d.id)
     //Exit
@@ -76,6 +79,8 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
         onNodeMouseOverCallback(d);
     }).on("mouseout", () => {
         hideTip();
+    }).on("mouseout", (d) => {
+        onNodeMouseOutCallback(d);
     });
 
     function arcPath(leftHand, d) {

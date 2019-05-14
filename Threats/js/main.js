@@ -1,6 +1,6 @@
 const margin = {left: 20, top: 20, right: 120, bottom: 20},
-    networkWidth = 400,
-    networkHeight = 400,
+    networkWidth = 450,
+    networkHeight = 450,
     timeArcWidth = window.innerWidth - networkWidth - margin.left - margin.right,
     timeArcHeight = window.innerHeight - margin.top - margin.bottom - 150,
     svgWidth = networkWidth + timeArcWidth + margin.left + margin.right,
@@ -10,7 +10,7 @@ let svg = d3.select("#graphDiv").append("svg").attr("width", svgWidth).attr("hei
 //Title.
 let titleG = svg.append('g').attr('transform', `translate(${(networkWidth - margin.left) / 2}, ${margin.top})`);
 titleG.append('text').text('104.12.0.0 Threat Event Log Visualization').attr('class', 'graphTitle').attr('text-anchor', 'middle');
-let legendG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top + networkHeight})`);
+let legendG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top + networkHeight + margin.top})`);
 drawNodeLegends(legendG);
 let mainG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
 let networkG = mainG.append('g').attr('transform', `translate(0, 0)`);
@@ -31,7 +31,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     let links = getLinksByColumns([COL_DEVICE_ACTION], data);
     let nodes = getAllNodesFromLinks(links);
     let linkStrokeWidthScale = getLinkStrokeWidthScale(links, networkSettings.link.minStrokeWidth, networkSettings.link.maxStrokeWidth);
-    drawNetworkGraph(networkG, networkWidth, networkHeight, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onNetworkLinkMouseOverCallback);
+    drawNetworkGraph(networkG, networkWidth, networkHeight, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onNetworkLinkMouseOverCallback, onNetworkNodeMouseOutCallback, onNetworkLinkMouseOutCallback);
     drawLinkLegends(legendG, deviceActions, deviceActionColor);
     //links and nodes without combinations
     let timeLinks = getLinksByColumns([COL_DEVICE_ACTION, COL_END_TIME], data);
@@ -41,12 +41,14 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     });
     //links and nodes with combinations
     let targetsOfUnknownOnly = getTargetsOfUnknownOnly(data);
+    //Remove (104.12.90.1)
+    targetsOfUnknownOnly = targetsOfUnknownOnly.filter(d => d != '104.12.90.1');
 
-    let combinedNode = {id: 'combined', ips: []};
+    let combinedNode = {id: 'combined', nodes: []};
     let tgoNodes = [];
     timeNodes.forEach(n => {
         if (targetsOfUnknownOnly.indexOf(n.id) >= 0) {
-            combinedNode.ips.push(n);
+            combinedNode.nodes.push(n);
         } else {
             tgoNodes.push(n);
         }
@@ -54,7 +56,6 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     //Add the combined node
     tgoNodes.push(combinedNode);
     let tgoLinks = timeLinks.map(d => {
-        debugger
         if (targetsOfUnknownOnly.indexOf(d.target) >= 0) {
             d.targetId = d.target;//store it for future references.
             d.target = 'combined';
@@ -90,9 +91,17 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     function onTimeArcLinkMouseOverCallBack(link) {
         //Work with timeArc links.
         let values = [link.source.id, link.target.id, link[COL_DEVICE_ACTION], link[COL_END_TIME]];
-
         filterByColumnsAnd(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_DEVICE_ACTION, COL_END_TIME], values, data);
     }
+
+    function onNetworkNodeMouseOutCallback() {
+        resetBrushing();
+    }
+
+    function onNetworkLinkMouseOutCallback() {
+        resetBrushing();
+    }
+
 });
 
 
@@ -114,6 +123,8 @@ function nodeColor(node) {
         return 'black';
     } else if (node.id === "unknown") {
         return 'gray';
+    } else if (node.id === "combined") {
+        return "black";
     } else {
         return 'red';//outsider
     }
