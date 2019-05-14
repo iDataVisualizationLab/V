@@ -2,7 +2,7 @@ const margin = {left: 20, top: 20, right: 120, bottom: 20},
     networkWidth = 450,
     networkHeight = 450,
     timeArcWidth = window.innerWidth - networkWidth - margin.left - margin.right,
-    timeArcHeight = window.innerHeight - margin.top - margin.bottom - 150,
+    timeArcHeight = window.innerHeight - margin.top - margin.bottom - 100,
     svgWidth = networkWidth + timeArcWidth + margin.left + margin.right,
     svgHeight = Math.max(networkHeight, timeArcHeight) + margin.top + margin.bottom;
 
