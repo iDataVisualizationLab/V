@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="d42cede2-ea0a-4872-8e02-2ad66063882e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Threats/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Threats/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Threats/js/network.js" beforeDir="false" afterPath="$PROJECT_DIR$/Threats/js/network.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Threats/js/timeArcs.js" beforeDir="false" afterPath="$PROJECT_DIR$/Threats/js/timeArcs.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -54,11 +56,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Threats/js/timeArcs.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="286" column="30" lean-forward="true" selection-start-line="286" selection-start-column="30" selection-end-line="286" selection-end-column="30" />
+            <state relative-caret-position="253">
+              <caret line="259" column="10" selection-start-line="259" selection-start-column="10" selection-end-line="259" selection-end-column="10" />
               <folding>
                 <element signature="e#24#93#0" />
                 <element signature="n#!!block;n#brushTimeArcNode#0" />
@@ -73,11 +75,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Threats/js/network.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="282">
-              <caret line="54" column="26" lean-forward="true" selection-start-line="54" selection-start-column="26" selection-end-line="54" selection-end-column="26" />
+            <state relative-caret-position="396">
+              <caret line="90" column="25" lean-forward="true" selection-start-line="90" selection-start-column="25" selection-end-line="90" selection-end-column="25" />
               <folding>
                 <element signature="n#!!block;n#addArrowMarkers#0;n#!!block;n#drawNetworkGraph#0" />
               </folding>
@@ -88,8 +90,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Threats/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="244">
-              <caret line="71" column="15" lean-forward="true" selection-start-line="71" selection-start-column="15" selection-end-line="71" selection-end-column="15" />
+            <state relative-caret-position="301">
+              <caret line="69" column="21" lean-forward="true" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -109,8 +111,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Threats/js/legends.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="603">
-              <caret line="32" column="17" selection-start-line="32" selection-start-column="17" selection-end-line="32" selection-end-column="17" />
+            <state relative-caret-position="278">
+              <caret line="28" column="15" lean-forward="true" selection-start-line="28" selection-start-column="15" selection-end-line="28" selection-end-column="15" />
             </state>
           </provider>
         </entry>
@@ -149,12 +151,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>simulation</find>
-      <find>rows</find>
-      <find>text</find>
-      <find>link</find>
-      <find>restart</find>
-      <find>arcPath</find>
       <find>deviceActionColor</find>
       <find>starts</find>
       <find>markerColor</find>
@@ -170,15 +166,21 @@
       <find>li</find>
       <find>isArray</find>
       <find>fill</find>
-      <find>mouseover</find>
       <find>on</find>
       <find>ti</find>
       <find>stroke</find>
       <find>resetBrushing</find>
       <find>defs</find>
       <find>mouseout</find>
-      <find>document</find>
       <find>nodeElement</find>
+      <find>onNodeMou</find>
+      <find>document</find>
+      <find>leftHand</find>
+      <find>combined</find>
+      <find>keep</find>
+      <find>mouseover</find>
+      <find>click</find>
+      <find>'</find>
     </findStrings>
     <replaceStrings>
       <replace>legendSettings</replace>
@@ -212,13 +214,13 @@
         <option value="$PROJECT_DIR$/ThreatEventLog/ForceDirectedNetwork/js/timeArcs.js" />
         <option value="$PROJECT_DIR$/ThreatEventLog/ForceDirectedNetwork/js/network.js" />
         <option value="$PROJECT_DIR$/Threats/js/dataProcessing.js" />
-        <option value="$PROJECT_DIR$/Threats/js/legends.js" />
         <option value="$PROJECT_DIR$/Threats/js/datatable.js" />
         <option value="$PROJECT_DIR$/Threats/index.html" />
         <option value="$PROJECT_DIR$/Threats/css/main.css" />
-        <option value="$PROJECT_DIR$/Threats/js/network.js" />
+        <option value="$PROJECT_DIR$/Threats/js/legends.js" />
         <option value="$PROJECT_DIR$/Threats/js/main.js" />
         <option value="$PROJECT_DIR$/Threats/js/timeArcs.js" />
+        <option value="$PROJECT_DIR$/Threats/js/network.js" />
       </list>
     </option>
   </component>
@@ -566,11 +568,25 @@
       <option name="project" value="LOCAL" />
       <updated>1557861058670</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="Changed sweeping">
+      <created>1557861147560</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1557861147560</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Click on nodes or links to keep the brushing.&#10;Will not keep again on next mouseover of another element.">
+      <created>1557863072315</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1557863072315</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="89391000" />
+    <option name="totallyTimeSpent" value="91972000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="7" y="23" width="2560" height="1417" extended-state="6" />
@@ -626,7 +642,8 @@
     <MESSAGE value="Change force directed layout" />
     <MESSAGE value="Changed self-loop end-marker orientation for the networkArc" />
     <MESSAGE value="Changed sweeping" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed sweeping" />
+    <MESSAGE value="Click on nodes or links to keep the brushing.&#10;Will not keep again on next mouseover of another element." />
+    <option name="LAST_COMMIT_MESSAGE" value="Click on nodes or links to keep the brushing.&#10;Will not keep again on next mouseover of another element." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/ThreatEventLog/TimeArcs/ForceDirectedNetwork/lib/tooltip/tooltip.css" />
@@ -665,23 +682,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Threats/js/legends.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="603">
-          <caret line="32" column="17" selection-start-line="32" selection-start-column="17" selection-end-line="32" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Threats/css/index.css" />
     <entry file="file://$PROJECT_DIR$/Threats/css/default.css">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Threats/demos.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="20" column="46" lean-forward="true" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="46" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Threats/css/main.css">
       <provider selected="true" editor-type-id="text-editor">
@@ -723,27 +726,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Threats/js/network.js">
+    <entry file="file://$PROJECT_DIR$/Threats/js/legends.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="282">
-          <caret line="54" column="26" lean-forward="true" selection-start-line="54" selection-start-column="26" selection-end-line="54" selection-end-column="26" />
-          <folding>
-            <element signature="n#!!block;n#addArrowMarkers#0;n#!!block;n#drawNetworkGraph#0" />
-          </folding>
+        <state relative-caret-position="278">
+          <caret line="28" column="15" lean-forward="true" selection-start-line="28" selection-start-column="15" selection-end-line="28" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Threats/demos.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="20" column="46" lean-forward="true" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="46" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Threats/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="244">
-          <caret line="71" column="15" lean-forward="true" selection-start-line="71" selection-start-column="15" selection-end-line="71" selection-end-column="15" />
+        <state relative-caret-position="301">
+          <caret line="69" column="21" lean-forward="true" selection-start-line="69" selection-start-column="21" selection-end-line="69" selection-end-column="21" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Threats/js/timeArcs.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="286" column="30" lean-forward="true" selection-start-line="286" selection-start-column="30" selection-end-line="286" selection-end-column="30" />
+        <state relative-caret-position="253">
+          <caret line="259" column="10" selection-start-line="259" selection-start-column="10" selection-end-line="259" selection-end-column="10" />
           <folding>
             <element signature="e#24#93#0" />
             <element signature="n#!!block;n#brushTimeArcNode#0" />
@@ -753,6 +760,16 @@
             <element signature="n#!!block;n#brushTimeArcLinksOfNodes#0" />
             <element signature="n#!!block;n#tick#0;n#!!block;n#drawTimeArc#0" />
             <element signature="e#11610#11669#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Threats/js/network.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="396">
+          <caret line="90" column="25" lean-forward="true" selection-start-line="90" selection-start-column="25" selection-end-line="90" selection-end-column="25" />
+          <folding>
+            <element signature="n#!!block;n#addArrowMarkers#0;n#!!block;n#drawNetworkGraph#0" />
           </folding>
         </state>
       </provider>

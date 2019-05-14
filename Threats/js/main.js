@@ -43,7 +43,6 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     let targetsOfUnknownOnly = getTargetsOfUnknownOnly(data);
     //Remove (104.12.90.1)
     //targetsOfUnknownOnly = targetsOfUnknownOnly.filter(d => d != '104.12.90.1');
-
     let combinedNode = {id: 'combined', nodes: []};
     let tgoNodes = [];
     timeNodes.forEach(n => {
@@ -68,7 +67,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
 
     //Reset it when clicking on the svg
     document.onclick = ()=>{
-        keep = false;
+        keep = !keep;
         resetBrushing();
     };
 
@@ -79,7 +78,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
            l.source = nodes.find(n=>n.id === l.source);
            l.target = nodes.find(n=>n.id === l.target);
         });
-        debugger
+
         let sortOrderValue = {
             outside: 1,
             targetOfOutside: 2,

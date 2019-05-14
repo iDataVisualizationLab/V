@@ -49,13 +49,10 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
 
     linkElements = enterLink.merge(linkElements);
     linkElements.on("mouseover", d => {
-        keep = false;
+
         onLinkMouseOverCallback(d);
     }).on("mouseout", d => {
         onLinkMouseOutCallback(d);
-    }).on("click", ()=>{
-       keep = true;
-       d3.event.stopPropagation();
     });
 
     //Update the nodes
@@ -79,15 +76,11 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
         );
     nodeElements = enterNode.merge(nodeElements);
     nodeElements.on("mouseover", d => {
-        keep=false;
         showTip(`IP: "${d.id}", threats count: ${d.linkCount}`);
         onNodeMouseOverCallback(d);
     }).on("mouseout", (d) => {
         hideTip();
         onNodeMouseOutCallback(d);
-    }).on("click", ()=>{
-        keep = true;
-        d3.event.stopPropagation();//Handled, otherwise it will propagate to the svg click (to reset all brushing)
     });
 
     function arcPath(leftHand, d) {

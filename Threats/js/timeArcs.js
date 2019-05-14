@@ -169,17 +169,12 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         setTimeout(() => {
             //Now add mouseover event for the nodes, should do it here since when it is on force calculation we shouldn't activate this otherwise it would lead to wrong location.
             nodeElements.on('mouseover', d => {
-                keep = false;
                 brushTimeArcNode(d);
                 //Call also mouseover to connect with other views.
                 onNodeMouseOverCallBack(d);
             });
             nodeElements.on('mouseout', () => {
                 resetBrushing();
-            });
-            nodeElements.on('click', () => {
-                keep = true;
-                d3.event.stopPropagation();
             });
         }, 1001);
         //Draw the node line
@@ -227,7 +222,6 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
 
         //Add brushing
         linkElements.on("mouseover", function (theLink) {
-            keep = false;
             //Brush the link
             d3.selectAll('.tALinkElements').attr("opacity", d => {
                 if (d !== theLink) {
@@ -263,10 +257,6 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 //Reset brushing only after they were brought back to their locations to avoid conflict of transitions.
                 resetBrushing();
             }, timeArcSettings.transition.duration + 1);
-        })
-        on('click', ()=>{
-            keep = true;
-            d3.event.stopPropagation();
         });
 
 
