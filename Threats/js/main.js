@@ -10,7 +10,7 @@ let svg = d3.select("#graphDiv").append("svg").attr("width", svgWidth).attr("hei
 //Title.
 let titleG = svg.append('g').attr('transform', `translate(${(networkWidth - margin.left) / 2}, ${margin.top})`);
 titleG.append('text').text('104.12.0.0 Threat Event Log Visualization').attr('class', 'graphTitle').attr('text-anchor', 'middle');
-let legendG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top + networkHeight + margin.top})`);
+let legendG = svg.append('g').attr('transform', `translate(${legendSettings.margin.left}, ${margin.top + networkHeight + margin.top})`);
 drawNodeLegends(legendG);
 let mainG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
 let networkG = mainG.append('g').attr('transform', `translate(0, 0)`);
@@ -81,7 +81,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
         if(node.id === 'combined'){
             filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.nodes.map(d=>d.id), data);
         }else{
-
+            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS],[node.id], data);
         }
         //Also brush the timeArc
         brushTimeArcNode(node);
