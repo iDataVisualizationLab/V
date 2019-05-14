@@ -82,12 +82,14 @@ function brushTimeArcLinksOfNodes(node) {
 }
 
 function resetBrushing() {
-    //Reset nodes
-    d3.selectAll('.tANodeElements').transition().duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
-    //Reset all links
-    d3.selectAll('.tALinkElements').transition().duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
-    //Also clear the table.
-    updateTable(ipdatacsvTbl, []);
+    if (!keep) {
+        //Reset nodes
+        d3.selectAll('.tANodeElements').transition().duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
+        //Reset all links
+        d3.selectAll('.tALinkElements').transition().duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
+        //Also clear the table.
+        updateTable(ipdatacsvTbl, []);
+    }
 }
 
 function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallBack, onTimeArcLinkMouseOverCallBack, orderFunction) {
@@ -173,6 +175,9 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             });
             nodeElements.on('mouseout', () => {
                 resetBrushing();
+            });
+            nodeElements.on('click', () => {
+
             });
         }, 1001);
         //Draw the node line
@@ -277,7 +282,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 dr = Math.sqrt(dx * dx + dy * dy),
                 drx = dr,
                 dry = dr,
-                sweep = leftHand ? 0 : 1,
+                sweep = y1 > y2 ? 0 : 1,
                 siblingCount = countSiblingLinks(d),
                 xRotation = 0,
                 largeArc = 0;
@@ -286,15 +291,12 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             if (x1 === x2 && y1 === y2) {
                 largeArc = 1;
                 sweep = 1;
-
                 drx = 4;
                 dry = 4;
-
                 x1 = x1;
                 y1 = y1 - 1;
             }
             if (siblingCount > 1) {
-
                 let siblings = getSiblingLinks(d.source, d.target);
                 let arcScale = d3.scalePoint()
                     .domain(siblings)
@@ -302,10 +304,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 drx = drx / (1 + (1 / siblingCount) * (arcScale(d[COL_DEVICE_ACTION]) - 1));
                 dry = dry / (1 + (1 / siblingCount) * (arcScale(d[COL_DEVICE_ACTION]) - 1));
             }
-            if (y1 > y2)
-                return "M" + x2 + "," + y2 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x1 + "," + y1;
-            else
-                return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;
+            return "M" + x2 + "," + y2 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x1 + "," + y1;
         }
 
         function countSiblingLinks(theLink) {

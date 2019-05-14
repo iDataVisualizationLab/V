@@ -16,7 +16,7 @@ let mainG = svg.append('g').attr('transform', `translate(${margin.left}, ${margi
 let networkG = mainG.append('g').attr('transform', `translate(0, 0)`);
 let timeArcG = mainG.append('g').attr('transform', `translate(${networkWidth},0)`);
 let ipdatacsvTbl = document.getElementById('ipdatacsvTbl');
-
+let keep = false;
 d3.csv('data/104.12.0.0.csv').then(data => {
     data.forEach(d => {
         d[COL_END_TIME] = new Date(d[COL_END_TIME]);
@@ -67,7 +67,10 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, tgoNodes, tgoLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack);
 
     //Reset it when clicking on the svg
-    document.onclick = resetBrushing;
+    document.onclick = ()=>{
+        keep = false;
+        resetBrushing();
+    };
 
     //function to give custom orders.
     function orderFunction(nodes, links, onComplete){
