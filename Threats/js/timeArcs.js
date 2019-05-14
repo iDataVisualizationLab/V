@@ -166,7 +166,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
 
         //Transform all the nodes.
         tick(1000);
-        setInterval(()=>{
+        setTimeout(()=>{
             //Now add mouseover event for the nodes, should do it here since when it is on force calculation we shouldn't activate this otherwise it would lead to wrong location.
             nodeElements.on('mouseover', d => {
                 brushTimeArcNode(d);
@@ -296,7 +296,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 y1 = y1-1;
             }
             if (siblingCount > 1) {
-                debugger
+
                 let siblings = getSiblingLinks(d.source, d.target);
                 let arcScale = d3.scalePoint()
                     .domain(siblings)
