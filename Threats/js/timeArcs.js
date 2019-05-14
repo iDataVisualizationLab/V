@@ -348,7 +348,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             .attr('xoverflow', 'visible')
             .append("path")
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr("fill", markerColor);
+            .attr("fill",  d=>d3.color(markerColor(d)).darker());
 
         mainG.append("defs").selectAll("marker")
             .data(markerData)
@@ -364,7 +364,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             .attr('xoverflow', 'visible')
             .append("path")
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr("fill", markerColor);
+            .attr("fill",  d=>d3.color(markerColor(d)).darker());
     }
 
     //</editor-fold>

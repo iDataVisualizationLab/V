@@ -25,7 +25,6 @@ tr:nth-child(even) {
 /*<editor-fold desc="This section is for force directed layout"*/
 .nodeElements {
     cursor: pointer;
-    stroke: #3182bd;
     stroke-width: 0.5px;
 }
 

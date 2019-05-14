@@ -191,15 +191,15 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
             .attr('xoverflow', 'visible')
             .append("path")
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr("fill", markerColor);
+            .attr("fill", d=>d3.color(markerColor(d)).darker());
 
         mainG.append("defs").selectAll("marker")
             .data(markerData)
             .enter().append("marker")
             .attr("id", d => 'markerSelfLoop' + markerData.indexOf(d))
             .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 25)
-            .attr("refY", -6)
+            .attr("refX", 20)
+            .attr("refY", -1.5)
             .attr("markerWidth", 3)
             .attr("markerHeight", 3)
             .attr('markerUnits', "strokeWidth")
@@ -207,6 +207,6 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
             .attr('xoverflow', 'visible')
             .append("path")
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr("fill", markerColor);
+            .attr("fill",  d=>d3.color(markerColor(d)).darker());
     }
 }
