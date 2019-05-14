@@ -61,22 +61,51 @@ d3.csv('data/104.12.0.0.csv').then(data => {
         }
         return d;
     });
+    //After combining nodes => some links are combined again (same time and same source as 'unknown').
+    debugger
+    let nestedBySTDT = {};
+    tgoLinks.forEach(l => {
+        let key = l.source + "," + l.target + "," + l[COL_DEVICE_ACTION] + ',' + l[COL_END_TIME];
+        if (!nestedBySTDT[key]) nestedBySTDT[key] = [];
+        nestedBySTDT[key].push(l);
+    });
+    //Now we need to redo the links again.
+    tgoLinks = d3.entries(nestedBySTDT).map(r => {
+        let value = r.value;
+        let threatEvents = [];
+        value.map(v=>{
+            threatEvents = threatEvents.concat(v['threatEvents']);
+        });
+        let link = {
+            source: value[0].source,
+            target: value[0].target,
+            threatEvents: threatEvents,
+            threatCount: threatEvents.length
+        }
+        link[COL_DEVICE_ACTION] = value[0][COL_DEVICE_ACTION];
+        link[COL_END_TIME] = value[0][COL_END_TIME];
+        if(link.target === 'combined'){
+            if(!link.targetIds) link.targetIds = [];
+            link.targetIds.push(link.targetId);
+        }
+        return link;
+    });
 
     // drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, tgoNodes, tgoLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack, orderFunction);
     drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, tgoNodes, tgoLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack);
 
     //Reset it when clicking on the svg
-    document.onclick = ()=>{
+    document.onclick = () => {
         keep = !keep;
         resetBrushing();
     };
 
     //function to give custom orders.
-    function orderFunction(nodes, links, onComplete){
+    function orderFunction(nodes, links, onComplete) {
         //Convert ID of sources and targets of links to object
-        links.forEach(l=>{
-           l.source = nodes.find(n=>n.id === l.source);
-           l.target = nodes.find(n=>n.id === l.target);
+        links.forEach(l => {
+            l.source = nodes.find(n => n.id === l.source);
+            l.target = nodes.find(n => n.id === l.target);
         });
 
         let sortOrderValue = {
@@ -86,26 +115,26 @@ d3.csv('data/104.12.0.0.csv').then(data => {
             targetsOfUnknownOnly: 4,
             others: 5
         }
-        let targetsOfOutsideIPs = links.filter(l=>l.source.id.startsWith('104.12')).map(d=>d.target.id);
+        let targetsOfOutsideIPs = links.filter(l => l.source.id.startsWith('104.12')).map(d => d.target.id);
 
-        nodes.forEach(n=>{
-            if(!n.id.startsWith('104.12')){
+        nodes.forEach(n => {
+            if (!n.id.startsWith('104.12')) {
                 n.orderValue = sortOrderValue.outside;
-            }
-            else if(targetsOfOutsideIPs.indexOf(n.id)>=0){
+            } else if (targetsOfOutsideIPs.indexOf(n.id) >= 0) {
                 n.orderValue = sortOrderValue.targetOfOutside;
-            }else if(n.id === 'unknown'){
+            } else if (n.id === 'unknown') {
                 n.orderValue = sortOrderValue.unknown;
             }
         });
         //Sort
-        nodes.sort((a, b)=>a.orderValue - b.orderValue);
+        nodes.sort((a, b) => a.orderValue - b.orderValue);
         //Now the y will be the index.
-        nodes.forEach((n, i)=>{
+        nodes.forEach((n, i) => {
             n.y = i;
         });
         onComplete();
     }
+
     function getLinkStrokeWidthScale(links, minWidth, maxWidth) {
         let scale = d3.scaleLinear().domain(d3.extent(links.map(d => d.threatCount))).range([minWidth, maxWidth]);
         return function (threatCount) {
@@ -115,10 +144,10 @@ d3.csv('data/104.12.0.0.csv').then(data => {
 
     function onNodeMouseOverCallback(node) {
         //If the node is a combination then we need to concatenate many values
-        if(node.id === 'combined'){
-            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.nodes.map(d=>d.id), data);
-        }else{
-            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS],[node.id], data);
+        if (node.id === 'combined') {
+            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.nodes.map(d => d.id), data);
+        } else {
+            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], [node.id], data);
         }
         //Also brush the timeArc
         brushTimeArcNode(node);
@@ -132,8 +161,8 @@ d3.csv('data/104.12.0.0.csv').then(data => {
 
     function onTimeArcLinkMouseOverCallBack(link) {
         //Work with timeArc links.
-        let values = [link.source.id, link.target.id==='combined'?link.targetId: link.target.id, link[COL_DEVICE_ACTION], link[COL_END_TIME]];
-        filterByColumnsAnd(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_DEVICE_ACTION, COL_END_TIME], values, data);
+        let threatEvents =tgoLinks.find(d=>d===link).threatEvents;
+        updateTable(ipdatacsvTbl, threatEvents);
     }
 
     function onNetworkNodeMouseOutCallback() {

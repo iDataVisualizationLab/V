@@ -49,7 +49,6 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
 
     linkElements = enterLink.merge(linkElements);
     linkElements.on("mouseover", d => {
-
         onLinkMouseOverCallback(d);
     }).on("mouseout", d => {
         onLinkMouseOutCallback(d);
