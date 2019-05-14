@@ -1,11 +1,11 @@
 const networkSettings = {
     node: {
         minRadius: 4,
-        maxRadius: 30
+        maxRadius: 10
     },
     link: {
         minStrokeWidth: 1,
-        maxStrokeWidth: 5
+        maxStrokeWidth: 3
     }
 };
 
