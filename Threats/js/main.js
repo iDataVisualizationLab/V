@@ -42,7 +42,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     //links and nodes with combinations
     let targetsOfUnknownOnly = getTargetsOfUnknownOnly(data);
     //Remove (104.12.90.1)
-    //targetsOfUnknownOnly = targetsOfUnknownOnly.filter(d => d != '104.12.90.1');
+    targetsOfUnknownOnly = targetsOfUnknownOnly.filter(d => d != '104.12.90.1');
 
     let combinedNode = {id: 'combined', nodes: []};
     let tgoNodes = [];
@@ -63,7 +63,6 @@ d3.csv('data/104.12.0.0.csv').then(data => {
         return d;
     });
 
-    // drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, timeNodes, timeLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack);
     drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, tgoNodes, tgoLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack);
 
     //Reset it when clicking on the svg
@@ -95,7 +94,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
 
     function onTimeArcLinkMouseOverCallBack(link) {
         //Work with timeArc links.
-        let values = [link.source.id, link.target.id, link[COL_DEVICE_ACTION], link[COL_END_TIME]];
+        let values = [link.source.id, link.target.id==='combined'?link.targetId: link.target.id, link[COL_DEVICE_ACTION], link[COL_END_TIME]];
         filterByColumnsAnd(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_DEVICE_ACTION, COL_END_TIME], values, data);
     }
 

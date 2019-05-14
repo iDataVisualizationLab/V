@@ -296,7 +296,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 y1 = y1-1;
             }
             if (siblingCount > 1) {
-                debugger
+
                 let siblings = getSiblingLinks(d.source, d.target);
                 let arcScale = d3.scalePoint()
                     .domain(siblings)
