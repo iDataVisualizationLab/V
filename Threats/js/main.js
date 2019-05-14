@@ -1,6 +1,6 @@
-const margin = {left: 20, top: 20, right: 120, bottom: 20},
-    networkWidth = 450,
-    networkHeight = 450,
+const margin = {left: 0, top: 20, right: 120, bottom: 20},
+    networkWidth = 500,
+    networkHeight = 500,
     timeArcWidth = window.innerWidth - networkWidth - margin.left - margin.right,
     timeArcHeight = window.innerHeight - margin.top - margin.bottom - 150,
     svgWidth = networkWidth + timeArcWidth + margin.left + margin.right,
@@ -42,7 +42,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     //links and nodes with combinations
     let targetsOfUnknownOnly = getTargetsOfUnknownOnly(data);
     //Remove (104.12.90.1)
-    targetsOfUnknownOnly = targetsOfUnknownOnly.filter(d => d != '104.12.90.1');
+    //targetsOfUnknownOnly = targetsOfUnknownOnly.filter(d => d != '104.12.90.1');
 
     let combinedNode = {id: 'combined', nodes: []};
     let tgoNodes = [];
