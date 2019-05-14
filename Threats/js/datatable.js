@@ -43,14 +43,18 @@ function filterByColumnsAnd(theTbl, columns, values, data) {
     updateTable(theTbl, filteredData);
 }
 
-function filterByColumnsOr(theTbl, columns, value, data) {
+function filterByColumnsOr(theTbl, columns, values, data) {
+    if (!Array.isArray(values)) {
+        values = [values];
+    }
     let filteredData = data.filter(row => {
-        for (let i = 0; i < columns.length; i++) {
-            let clm = columns[i];
-            if (row[clm] === value) {
-                return true;
+            for (let i = 0; i < columns.length; i++) {
+                let clm = columns[i];
+                if (values.indexOf(row[clm]) >= 0) {
+                    return true;
+                }
             }
-        }
-    });
+        });
+
     updateTable(theTbl, filteredData);
 }

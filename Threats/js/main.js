@@ -77,7 +77,12 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     }
 
     function onNodeMouseOverCallback(node) {
-        filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.id, data);
+        //If the node is a combination then we need to concatenate many values
+        if(node.id === 'combined'){
+            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.nodes.map(d=>d.id), data);
+        }else{
+
+        }
         //Also brush the timeArc
         brushTimeArcNode(node);
     }
