@@ -1,6 +1,10 @@
 const legendSettings = {
+    margin:{
+        left: 60
+    },
     nodeRadius: 8,
     height: 18,
+    width: 150,
     linkSize: 16,
     linkStrokeWidth: 2,
     titleHeight: 10,
@@ -9,7 +13,7 @@ const legendSettings = {
 let nodeColorLegendObj = {
     'inside': 'black',
     'unknown': 'gray',
-    'outside': 'red'
+    'outside': 'red',
 };
 
 function drawNodeLegends(legendG) {
@@ -28,7 +32,8 @@ function drawNodeLegends(legendG) {
 
 function drawLinkLegends(legendG, linkLegendData, colorScale) {
     //Draw legend for strokes.
-    let linkLegendG = legendG.append('g').attr("transform", `translate(0, ${legendSettings.height * d3.entries(nodeColorLegendObj).length + 3*legendSettings.titleHeight})`);
+    let linkLegendG = legendG.append('g').attr("transform", `translate(${legendSettings.width}, 0)`);
+    //.attr("transform", `translate(0, ${legendSettings.height * d3.entries(nodeColorLegendObj).length + 3*legendSettings.titleHeight})`);
 
     let legendLinkTitleG = linkLegendG.append('g');
     legendLinkTitleG.selectAll('text').data(['Device Actions']).enter().append('text').text(d=>d).style('font-size', legendSettings.titleFontSize).style('font-weight', 'bold');
