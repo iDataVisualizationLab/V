@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d42cede2-ea0a-4872-8e02-2ad66063882e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Threats/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/Threats/js/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Threats/js/timeArcs.js" beforeDir="false" afterPath="$PROJECT_DIR$/Threats/js/timeArcs.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -58,8 +57,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Threats/js/timeArcs.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="159">
-              <caret line="287" column="29" lean-forward="true" selection-start-line="287" selection-start-column="29" selection-end-line="287" selection-end-column="29" />
+            <state relative-caret-position="391">
+              <caret line="286" column="30" lean-forward="true" selection-start-line="286" selection-start-column="30" selection-end-line="286" selection-end-column="30" />
               <folding>
                 <element signature="e#24#93#0" />
                 <element signature="n#!!block;n#brushTimeArcNode#0" />
@@ -560,17 +559,24 @@
       <option name="project" value="LOCAL" />
       <updated>1557860200451</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Changed sweeping">
+      <created>1557861058670</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1557861058670</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="89313000" />
+    <option name="totallyTimeSpent" value="89391000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="7" y="23" width="2560" height="1417" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1330421" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1330421" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -584,7 +590,7 @@
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" visible="true" weight="0.32925898" />
       <window_info anchor="bottom" id="Terminal" order="10" />
-      <window_info active="true" anchor="bottom" id="Event Log" order="11" sideWeight="0.50039715" side_tool="true" visible="true" weight="0.32925898" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50039715" side_tool="true" visible="true" weight="0.32925898" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -619,7 +625,8 @@
     <MESSAGE value="Make marker color darker" />
     <MESSAGE value="Change force directed layout" />
     <MESSAGE value="Changed self-loop end-marker orientation for the networkArc" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed self-loop end-marker orientation for the networkArc" />
+    <MESSAGE value="Changed sweeping" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed sweeping" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/ThreatEventLog/TimeArcs/ForceDirectedNetwork/lib/tooltip/tooltip.css" />
@@ -735,8 +742,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Threats/js/timeArcs.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="287" column="29" lean-forward="true" selection-start-line="287" selection-start-column="29" selection-end-line="287" selection-end-column="29" />
+        <state relative-caret-position="391">
+          <caret line="286" column="30" lean-forward="true" selection-start-line="286" selection-start-column="30" selection-end-line="286" selection-end-column="30" />
           <folding>
             <element signature="e#24#93#0" />
             <element signature="n#!!block;n#brushTimeArcNode#0" />

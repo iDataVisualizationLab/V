@@ -282,7 +282,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 dr = Math.sqrt(dx * dx + dy * dy),
                 drx = dr,
                 dry = dr,
-                sweep = y1 > y2 ? 0 : 1,
+                sweep = y1 < y2 ? 0 : 1,
                 siblingCount = countSiblingLinks(d),
                 xRotation = 0,
                 largeArc = 0;
@@ -304,7 +304,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 drx = drx / (1 + (1 / siblingCount) * (arcScale(d[COL_DEVICE_ACTION]) - 1));
                 dry = dry / (1 + (1 / siblingCount) * (arcScale(d[COL_DEVICE_ACTION]) - 1));
             }
-            return "M" + x2 + "," + y2 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x1 + "," + y1;
+            return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;
         }
 
         function countSiblingLinks(theLink) {
