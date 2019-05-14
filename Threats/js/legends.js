@@ -1,4 +1,7 @@
 const legendSettings = {
+    titleMargin:{
+      left: 40
+    },
     margin:{
         left: 60
     },
@@ -8,7 +11,8 @@ const legendSettings = {
     linkSize: 16,
     linkStrokeWidth: 2,
     titleHeight: 10,
-    titleFontSize: 16
+    titleFontSize: 16,
+
 }
 let nodeColorLegendObj = {
     'inside': 'black',
@@ -17,14 +21,14 @@ let nodeColorLegendObj = {
 };
 
 function drawNodeLegends(legendG) {
-    let legendNodeTitleG = legendG.append('g');
+    let legendNodeTitleG = legendG.append('g').attr("transform", `translate(${legendSettings.titleMargin.left - legendSettings.margin.left},0)`);
     legendNodeTitleG.selectAll('text').data(['IP Addresses']).enter().append('text').text(d=>d).style('font-size', legendSettings.titleFontSize).style('font-weight', 'bold');
 
     let legendNodeG = legendG.append('g').attr("transform", `translate(0, ${legendSettings.titleHeight})`);
     let legendNodeGs = legendNodeG.selectAll('.nodeLegendG').data(d3.entries(nodeColorLegendObj)).enter().append('g').attr('class', 'nodeLegendG').attr("transform", (d, i) => `translate(${0}, ${i * legendSettings.height})`);
     legendNodeGs.append('circle')//Append circles
         .attr('class', 'legendNode')
-        .attr('cx', -legendSettings.nodeRadius + 2)
+        .attr('cx', -2*legendSettings.nodeRadius)
         .attr('cy', legendSettings.height / 2)
         .attr("r", legendSettings.nodeRadius).attr('fill', d => d.value);
     legendNodeGs.append('text').text(d => d.key).attr('fill', d=>nodeColorLegendObj[d.key]).call(defineLegendText);
@@ -35,7 +39,7 @@ function drawLinkLegends(legendG, linkLegendData, colorScale) {
     let linkLegendG = legendG.append('g').attr("transform", `translate(${legendSettings.width}, 0)`);
     //.attr("transform", `translate(0, ${legendSettings.height * d3.entries(nodeColorLegendObj).length + 3*legendSettings.titleHeight})`);
 
-    let legendLinkTitleG = linkLegendG.append('g');
+    let legendLinkTitleG = linkLegendG.append('g').attr("transform", `translate(${legendSettings.titleMargin.left - legendSettings.margin.left},0)`);
     legendLinkTitleG.selectAll('text').data(['Device Actions']).enter().append('text').text(d=>d).style('font-size', legendSettings.titleFontSize).style('font-weight', 'bold');
 
     let linkLegendContentG = linkLegendG.append('g').attr('transform', `translate(0, ${legendSettings.titleHeight})`);
