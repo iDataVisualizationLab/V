@@ -199,5 +199,4 @@ function nodeColor(node) {
         return 'red';//outsider
     }
 }
-
 //</editor-fold>
