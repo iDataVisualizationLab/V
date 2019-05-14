@@ -63,11 +63,47 @@ d3.csv('data/104.12.0.0.csv').then(data => {
         return d;
     });
 
+    // drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, tgoNodes, tgoLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack, orderFunction);
     drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, tgoNodes, tgoLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack);
 
     //Reset it when clicking on the svg
     document.onclick = resetBrushing;
 
+    //function to give custom orders.
+    function orderFunction(nodes, links, onComplete){
+        //Convert ID of sources and targets of links to object
+        links.forEach(l=>{
+           l.source = nodes.find(n=>n.id === l.source);
+           l.target = nodes.find(n=>n.id === l.target);
+        });
+        debugger
+        let sortOrderValue = {
+            outside: 1,
+            targetOfOutside: 2,
+            unknown: 3,
+            targetsOfUnknownOnly: 4,
+            others: 5
+        }
+        let targetsOfOutsideIPs = links.filter(l=>l.source.id.startsWith('104.12')).map(d=>d.target.id);
+
+        nodes.forEach(n=>{
+            if(!n.id.startsWith('104.12')){
+                n.orderValue = sortOrderValue.outside;
+            }
+            else if(targetsOfOutsideIPs.indexOf(n.id)>=0){
+                n.orderValue = sortOrderValue.targetOfOutside;
+            }else if(n.id === 'unknown'){
+                n.orderValue = sortOrderValue.unknown;
+            }
+        });
+        //Sort
+        nodes.sort((a, b)=>a.orderValue - b.orderValue);
+        //Now the y will be the index.
+        nodes.forEach((n, i)=>{
+            n.y = i;
+        });
+        onComplete();
+    }
     function getLinkStrokeWidthScale(links, minWidth, maxWidth) {
         let scale = d3.scaleLinear().domain(d3.extent(links.map(d => d.threatCount))).range([minWidth, maxWidth]);
         return function (threatCount) {
