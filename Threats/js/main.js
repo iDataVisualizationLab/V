@@ -41,20 +41,21 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     });
     //links and nodes with combinations
     let targetsOfUnknownOnly = getTargetsOfUnknownOnly(data);
+
     let combinedNode = {id: 'combined', ips: []};
     let tgoNodes = [];
-    timeNodes.forEach(n=>{
-        if(targetsOfUnknownOnly.indexOf(n.id)>=0){
+    timeNodes.forEach(n => {
+        if (targetsOfUnknownOnly.indexOf(n.id) >= 0) {
             combinedNode.ips.push(n);
-        }else{
+        } else {
             tgoNodes.push(n);
         }
     });
     //Add the combined node
     tgoNodes.push(combinedNode);
-    let tgoLinks = timeLinks.map(d=>{
+    let tgoLinks = timeLinks.map(d => {
         debugger
-        if(targetsOfUnknownOnly.indexOf(d.target)>=0){
+        if (targetsOfUnknownOnly.indexOf(d.target) >= 0) {
             d.targetId = d.target;//store it for future references.
             d.target = 'combined';
         }
@@ -66,6 +67,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
 
     //Reset it when clicking on the svg
     document.onclick = resetBrushing;
+
     function getLinkStrokeWidthScale(links, minWidth, maxWidth) {
         let scale = d3.scaleLinear().domain(d3.extent(links.map(d => d.threatCount))).range([minWidth, maxWidth]);
         return function (threatCount) {
