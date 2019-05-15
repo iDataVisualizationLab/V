@@ -176,9 +176,6 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             nodeElements.on('mouseout', () => {
                 resetBrushing();
             });
-            nodeElements.on('click', () => {
-
-            });
         }, 1001);
         //Draw the node line
         let nodeLines = nodeLinesGroup.selectAll('.tANodeLines').data(nodes);
@@ -260,8 +257,8 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 //Reset brushing only after they were brought back to their locations to avoid conflict of transitions.
                 resetBrushing();
             }, timeArcSettings.transition.duration + 1);
-
         });
+
 
         //Draw the xAxis
         let xAxisG = theGroup.append('g');
@@ -282,7 +279,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 dr = Math.sqrt(dx * dx + dy * dy),
                 drx = dr,
                 dry = dr,
-                sweep = y1 > y2 ? 0 : 1,
+                sweep = y1 < y2 ? 0 : 1,
                 siblingCount = countSiblingLinks(d),
                 xRotation = 0,
                 largeArc = 0;
@@ -304,7 +301,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 drx = drx / (1 + (1 / siblingCount) * (arcScale(d[COL_DEVICE_ACTION]) - 1));
                 dry = dry / (1 + (1 / siblingCount) * (arcScale(d[COL_DEVICE_ACTION]) - 1));
             }
-            return "M" + x2 + "," + y2 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x1 + "," + y1;
+            return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;
         }
 
         function countSiblingLinks(theLink) {

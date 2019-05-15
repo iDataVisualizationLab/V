@@ -50,10 +50,10 @@ function drawNetworkGraph(theGroup, width, height, nodes, links, deviceActions, 
     linkElements = enterLink.merge(linkElements);
     linkElements.on("mouseover", d => {
         onLinkMouseOverCallback(d);
-    });
-    linkElements.on("mouseout", d => {
+    }).on("mouseout", d => {
         onLinkMouseOutCallback(d);
-    })
+    });
+
     //Update the nodes
     nodeElements = nodeElements.data(nodes, d => d.id)
     //Exit
