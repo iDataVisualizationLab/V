@@ -1,37 +1,59 @@
-const COL_END_TIME = 'End Time',
-    COL_DEVICE_ACTION = 'Device Action',
-    COL_SOURCE_ADDRESS = 'Source Address',
-    COL_DESTINATION_ADDRESS = 'Destination Address';
 //<editor-fold desc="This section is for data processing">
-function getDeviceActions(data) {
-    return Array.from(new Set(data.map(d => d[COL_DEVICE_ACTION])));
+function getLinkTypes(data, columns) {
+    return Array.from(new Set(data.map(d => columns.map(clm=>d[clm]).join(","))));
 }
-function getLinksByColumns(columns, data) {
-    function nestKey(d) {
-        let key = d[COL_SOURCE_ADDRESS] + "," + d[COL_DESTINATION_ADDRESS] + ",";
-        columns.forEach(clm => {
-            key += d[clm];
+function getLinksByColumns(data, sourceClm, targetClm, typeColumns) {
+    let nestKey = nestKeyOfColumns([sourceClm, targetClm].concat(typeColumns));
+    let nestedBySourceTargetLinkProp = d3.nest().key(nestKey).entries(data);
+    let links = nestedBySourceTargetLinkProp.map(d => {
+        let item = {
+            source: d.values[0][sourceClm],
+            target: d.values[0][targetClm],
+            threatEvents: d.values,
+            threatCount: d.values.length,
+        };
+
+        let typeData = [];
+        typeColumns.forEach(clm=>{
+            item[clm] = d.values[0][clm];
+            typeData.push(d.values[0][clm]);
         });
-        return key;
+
+        item.type = typeData.join(",");
+        return item;
+    });
+    return links;
+}
+function nestKeyOfColumns(columns){
+    return function(d){
+        return columns.map(clm=>d[clm]).join(',');
     }
+
+}
+function getLinksByColumnsAtTime(data, sourceClm, targetClm, timeClm, typeColumns){
+    let nestKey = nestKeyOfColumns([sourceClm, targetClm, timeClm].concat(typeColumns));//Also nested by time here since different time we need different link though they are the same for everything
 
     let nestedBySourceTargetLinkProp = d3.nest().key(nestKey).entries(data);
 
     let links = nestedBySourceTargetLinkProp.map(d => {
         let item = {
-            source: d.values[0][COL_SOURCE_ADDRESS],
-            target: d.values[0][COL_DESTINATION_ADDRESS],
+            source: d.values[0][sourceClm],
+            target: d.values[0][targetClm],
             threatEvents: d.values,
             threatCount: d.values.length,
         };
-        columns.forEach(clm=>{
-            item[clm] = d.values[0][clm];
+
+        let typeData = [];
+        typeColumns.forEach(clm=>{
+            typeData.push(d.values[0][clm]);
         });
+        item.type = typeData.join(",");
+        //Add the time property
+        item.time = d.values[0][timeClm];
         return item;
     });
     return links;
 }
-
 function getAllNodesFromLinks(links) {
     let nestedLinkByNodes = {};
     links.forEach(link => {
@@ -54,12 +76,5 @@ function getAllNodesFromLinks(links) {
         }
     });
     return nodes;
-}
-
-function getTargetsOfUnknownOnly(data){
-    let targetsOfOthers = _.uniq(data.filter(d=>d[COL_SOURCE_ADDRESS] !== 'unknown').map(d=>d[COL_DESTINATION_ADDRESS]));
-    let targetsOfUnknown = _.uniq(data.filter(d=>d[COL_SOURCE_ADDRESS] === 'unknown').map(d=>d[COL_DESTINATION_ADDRESS]));
-    let targetsOfUnknownOnly = _.difference(targetsOfUnknown, targetsOfOthers);
-    return targetsOfUnknownOnly;
 }
 //</editor-fold>

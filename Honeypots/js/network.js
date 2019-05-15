@@ -30,11 +30,11 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     let enterLink = linkElements.enter().append('path').attr('class', "linkElements")
         .attr("marker-end", d => {
             if (d.source === d.target) {
-                return `url(#markerSelfLoop${linkTypes.indexOf(d[COL_DEVICE_ACTION])})`;
+                return `url(#markerSelfLoop${linkTypes.indexOf(d.type)})`;
             }
-            return `url(#marker${linkTypes.indexOf(d[COL_DEVICE_ACTION])})`;
+            return `url(#marker${linkTypes.indexOf(d.type)})`;
         })
-        .attr("stroke", d => linkTypeColor(d[COL_DEVICE_ACTION]))
+        .attr("stroke", d => linkTypeColor(d.type))
         .attr("stroke-width", d => linkStrokeWidthScale(d.threatCount));
 
     linkElements = enterLink.merge(linkElements);
@@ -104,8 +104,8 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             let arcScale = d3.scalePoint()
                 .domain(siblings)
                 .range([1, siblingCount]);
-            drx = drx / (1 + (1 / siblingCount) * (arcScale(d[COL_DEVICE_ACTION]) - 1));
-            dry = dry / (1 + (1 / siblingCount) * (arcScale(d[COL_DEVICE_ACTION]) - 1));
+            drx = drx / (1 + (1 / siblingCount) * (arcScale(d['type']) - 1));
+            dry = dry / (1 + (1 / siblingCount) * (arcScale(d['type']) - 1));
         }
 
         return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;
@@ -125,7 +125,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         let siblings = [];
         for (let i = 0; i < links.length; ++i) {
             if ((links[i].source.id == source.id && links[i].target.id == target.id) || (links[i].source.id == target.id && links[i].target.id == source.id))
-                siblings.push(links[i][COL_DEVICE_ACTION]);
+                siblings.push(links[i]['type']);
         }
         return siblings;
     };

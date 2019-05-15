@@ -60,15 +60,14 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
     nodeElements = enterNode.merge(nodeElements);
 
     function endedCalculatingY() {
-        // let yScale = d3.scaleLinear().domain(d3.extent(nodes.map(n => n.y))).range([0, height]);
         let yScale = d3.scaleLinear().domain([0, nodes.length]).range([0, height]);
-        //Sort the nodes by its x location
+        //Sort the nodes by its y location
         nodes.sort((a, b) => a.y - b.y);
         //Change all the y location
         nodes.forEach((n, i) => {
             n.y = yScale(i);
         });
-        let xScale = d3.scaleTime().domain(d3.extent(links.map(l => l[COL_END_TIME]))).range([0, width]);
+        let xScale = d3.scaleTime().domain(d3.extent(links.map(l => l['time']))).range([0, width]);
         let nestedByNode = {};
         //initialize the object
         nodes.forEach(n => {
@@ -80,7 +79,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
         });
         //Calculate the location for each node as its min time (first time appear)
         nodes.forEach(n => {
-            let eventTimes = nestedByNode[n.id].map(l => l[COL_END_TIME]);
+            let eventTimes = nestedByNode[n.id].map(l => l['time']);
             n.x = xScale(d3.max(eventTimes));
             n.minX = xScale(d3.min(eventTimes));
             //Update the nodes y position
@@ -130,11 +129,11 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
         let enterLink = linkElements.enter().append('path').attr('class', "tALinkElements")
             .attr("marker-end", d => {
                 if (d.source === d.target) {
-                    return `url(#markerSelfLoopTA${linkTypes.indexOf(d[COL_DEVICE_ACTION])})`;
+                    return `url(#markerSelfLoopTA${linkTypes.indexOf(d['type'])})`;
                 }
-                return `url(#markerTA${linkTypes.indexOf(d[COL_DEVICE_ACTION])})`;
+                return `url(#markerTA${linkTypes.indexOf(d['type'])})`;
             })
-            .attr("stroke", d => linkTypeColor(d[COL_DEVICE_ACTION]))
+            .attr("stroke", d => linkTypeColor(d['type']))
             .attr("stroke-width", d => linkStrokeWidthScale(d.threatCount));
 
         linkElements = enterLink.merge(linkElements);
@@ -163,7 +162,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             //Bring the text to its location
             d3.selectAll('.tANodeTexts').transition().duration(timeArcSettings.transition.duration).attr("x", function (d) {
                 if (d === theLink.source || d === theLink.target) {
-                    return `${xScale(theLink[COL_END_TIME])}`;
+                    return `${xScale(theLink['time'])}`;
                 } else {
                     return d.x;
                 }
@@ -192,7 +191,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
         d3.selectAll('.tANodeTexts').raise();
 
         function arcPath(leftHand, d) {
-            let x1 = xScale(d[COL_END_TIME]),
+            let x1 = xScale(d['time']),
                 x2 = x1,
                 y1 = leftHand ? d.source.y : d.target.y,
                 y2 = leftHand ? d.target.y : d.source.y,
@@ -220,8 +219,8 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
                 let arcScale = d3.scalePoint()
                     .domain(siblings)
                     .range([1, siblingCount]);
-                drx = drx / (1 + (1 / siblingCount) * (arcScale(d[COL_DEVICE_ACTION]) - 1));
-                dry = dry / (1 + (1 / siblingCount) * (arcScale(d[COL_DEVICE_ACTION]) - 1));
+                drx = drx / (1 + (1 / siblingCount) * (arcScale(d['type']) - 1));
+                dry = dry / (1 + (1 / siblingCount) * (arcScale(d['type']) - 1));
             }
             return "M" + x1 + "," + y1 + "A" + drx + ", " + dry + " " + xRotation + ", " + largeArc + ", " + sweep + " " + x2 + "," + y2;
         }
@@ -231,7 +230,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             let target = theLink.target;
             let count = 0;
             for (let i = 0; i < links.length; ++i) {
-                if ((links[i].source.id == source.id && links[i].target.id == target.id) && links[i][COL_END_TIME] === theLink[COL_END_TIME])
+                if ((links[i].source.id == source.id && links[i].target.id == target.id) && links[i]['time'] === theLink['time'])
                     count++;
             }
             return count;
@@ -241,7 +240,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             let siblings = [];
             for (let i = 0; i < links.length; ++i) {
                 if ((links[i].source.id == source.id && links[i].target.id == target.id) || (links[i].source.id == target.id && links[i].target.id == source.id))
-                    siblings.push(links[i][COL_DEVICE_ACTION]);
+                    siblings.push(links[i]['type']);
             }
             return siblings;
         };
@@ -363,7 +362,7 @@ function brushTimeArcLink(link, duration) {
     brushTimeArcNodes([link.source, link.target], duration);
 
     function combineProp(d) {
-        return `${d.source.id},${d.target.id},${d[COL_DEVICE_ACTION]}`;
+        return `${d.source.id},${d.target.id},${d['type']}`;
     }
 }
 

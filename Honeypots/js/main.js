@@ -17,23 +17,179 @@ let networkG = mainG.append('g').attr('transform', `translate(0, 0)`);
 let timeArcG = mainG.append('g').attr('transform', `translate(${networkWidth},0)`);
 let ipdatacsvTbl = document.getElementById('ipdatacsvTbl');
 let keep = false;
-d3.csv('data/104.12.0.0.csv').then(data => {
-    data.forEach(d => {
-        d[COL_END_TIME] = new Date(d[COL_END_TIME]);
-        if (d[COL_SOURCE_ADDRESS] === '') {
-            d[COL_SOURCE_ADDRESS] = 'unknown';
-        }
-    });
+let fileName = "data/104.12.0.0.csv";
+// let fileName = "data/honeypot/20110401.txt";
 
-    let deviceActions = getDeviceActions(data);
-    let deviceActionColor = getDeviceActionColor(deviceActions);
-    let links = getLinksByColumns([COL_DEVICE_ACTION], data);
-    let nodes = getAllNodesFromLinks(links);
+//COMMON SETTINGS
+let nwMinStrokeWidth = 1,
+    nwMaxStrokeWidth = 3,
+    nwMinRadius = 4,
+    nwMaxRadius = 10,
+    timeArcTransitionDuration = 500;
+
+if (fileName === 'data/104.12.0.0.csv') {
+    d3.csv(fileName).then(data => {
+        data.forEach(d => {
+            d['End Time'] = new Date(d['End Time']);
+            if (d['Source Address'] === '') {
+                d['Source Address'] = 'unknown';
+            }
+        });
+
+        let deviceActionColors = {
+            'Permitted': 'green',
+            'none': 'steelblue',
+            '': '#ff7f0e'
+        }
+
+        const COL_TIME = 'End Time',
+            COL_LINK_TYPE = 'Device Action',
+            COL_SOURCE_ADDRESS = 'Source Address',
+            COL_DESTINATION_ADDRESS = 'Destination Address';
+
+        //<editor-fold desc="This section is to calculate the nodes and links for the Network">
+        let links = getLinksByColumns(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, [COL_LINK_TYPE]);
+        let nodes = getAllNodesFromLinks(links);
+        //</editor-fold>
+
+        let {linkTypes, linkTypeColor, colorColumns, colors, formatColumns, formats, linkStrokeWidthScale, nodeColor, networkSettings} = getNetworkSettings(data, links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, deviceActionColors);
+        drawNetworkGraph(networkG, nodes, links, networkSettings);
+        drawLinkLegends(legendG, linkTypes, linkTypeColor);
+
+        //<editor-fold desc="This section is to calculate nodes and links for the timeArc">
+        //links and nodes without combinations
+        let timeLinks = getLinksByColumnsAtTime(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, [COL_LINK_TYPE]);
+        //Copy the nodes to avoid changing its x, y for the network.
+        let timeNodes = nodes.map(n => {
+            return Object.assign({}, n);
+        });
+        //links and nodes with combinations
+        let targetsOfUnknownOnly = getTargetsOfUnknownOnly(data);
+        //Remove (104.12.90.1)
+        //targetsOfUnknownOnly = targetsOfUnknownOnly.filter(d => d != '104.12.90.1');
+        let combinedNode = {id: 'combined', nodes: []};
+        let tgoNodes = [];
+        timeNodes.forEach(n => {
+            if (targetsOfUnknownOnly.indexOf(n.id) >= 0) {
+                combinedNode.nodes.push(n);
+            } else {
+                tgoNodes.push(n);
+            }
+        });
+
+        //Add the combined node
+        tgoNodes.push(combinedNode);
+        let tgoLinks = timeLinks.map(d => {
+            if (targetsOfUnknownOnly.indexOf(d.target) >= 0) {
+                d.targetId = d.target;//store it for future references.
+                d.target = 'combined';
+            }
+            return d;
+        });
+
+        //After combining nodes => some links are combined again (same time and same source as 'unknown').
+        let nestedBySTDT = {};
+        tgoLinks.forEach(l => {
+            let key = l.source + "," + l.target + "," + l['type'] + ',' + l['time'];
+            if (!nestedBySTDT[key]) nestedBySTDT[key] = [];
+            nestedBySTDT[key].push(l);
+        });
+        //Now we need to redo the links again.
+        tgoLinks = d3.entries(nestedBySTDT).map(r => {
+            let value = r.value;
+            let threatEvents = [];
+            value.map(v => {
+                threatEvents = threatEvents.concat(v['threatEvents']);
+            });
+            let link = {
+                source: value[0].source,
+                target: value[0].target,
+                time: value[0].time,
+                type: value[0].type,
+                threatEvents: threatEvents,
+                threatCount: threatEvents.length,
+
+            }
+            if (link.target === 'combined') {
+                if (!link.targetIds) link.targetIds = [];
+                link.targetIds.push(link.targetId);
+            }
+            return link;
+        });
+
+        function getTargetsOfUnknownOnly(data) {
+            let targetsOfOthers = _.uniq(data.filter(d => d[COL_SOURCE_ADDRESS] !== 'unknown').map(d => d[COL_DESTINATION_ADDRESS]));
+            let targetsOfUnknown = _.uniq(data.filter(d => d[COL_SOURCE_ADDRESS] === 'unknown').map(d => d[COL_DESTINATION_ADDRESS]));
+            let targetsOfUnknownOnly = _.difference(targetsOfUnknown, targetsOfOthers);
+            return targetsOfUnknownOnly;
+        }
+
+        //</editor-fold>
+
+        const timeArcSettings = getTimeArcSettings(data, tgoLinks, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, linkTypes, linkTypeColor, nodeColor, linkStrokeWidthScale, colorColumns, colors, formatColumns, formats);
+        drawTimeArc(timeArcG, tgoNodes, tgoLinks, timeArcSettings);
+        //Reset it when clicking on the svg
+        document.onclick = () => {
+            keep = !keep;
+            resetBrushing(timeArcSettings.transition.duration);
+        };
+
+    });
+} else {
+    d3.text(fileName).then(data => {
+        let cols = ["duration", "service", "source_bytes", "destination_bytes", "count", "same_srv_rate", "serror_rate", "srv_serror_rate", "dst_host_count",
+            "dst_host_srv_count", "dst_host_same_src_port_rate", "dst_host_serror_rate", "dst_host_srv_serror_rate", "flag", "ids_detection", "malware_detection",
+            "ashula_detection", "label", "source_ip_address", "source_port_number", "destination_ip_address", "destination_port_number", "start_time", "protocol"];
+        data = d3.tsvParseRows(data);
+        data = data.map(d => {
+            let item = {};
+            cols.forEach((col, i) => {
+                item[col] = d[i];
+                if (col === "start_time") item[col] = new Date("Apr 11, 2014 " + item[col]);
+            });
+            return item;
+        });
+
+        let labelColors = {
+            '1': 'green',
+            '-1': '#ff7f0e',
+            '-2': 'red'
+        }
+        const COL_TIME = 'start_time',
+            COL_LINK_TYPE = 'label',
+            COL_SOURCE_ADDRESS = "source_ip_address",
+            COL_DESTINATION_ADDRESS = "destination_ip_address";
+
+        //<editor-fold desc="This section is to calculate the nodes and links for the Network">
+        let links = getLinksByColumns(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, [COL_LINK_TYPE]);
+        let nodes = getAllNodesFromLinks(links);
+        //</editor-fold>
+
+        let {linkTypes, linkTypeColor, colorColumns, colors, formatColumns, formats, linkStrokeWidthScale, nodeColor, networkSettings} = getNetworkSettings(data, links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, labelColors);
+
+        drawNetworkGraph(networkG, nodes, links, networkSettings);
+        drawLinkLegends(legendG, linkTypes, linkTypeColor);
+
+    });
+}
+
+function getNetworkSettings(data, links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, linkTypeColorObj) {
+    let linkTypes = Array.from(new Set(links.map(l => l['type'])));
+    let linkTypeColor = getLinkTypeColor(linkTypeColorObj);
+    //Data for the table
+    let colorColumns = [COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS],
+        colors = [linkTypeColor, nodeColorFromId, nodeColorFromId],
+        formatColumns = [COL_TIME],
+        formats = [d3.timeFormat("%b %d %Y %H:%M:%S")];
+
     //Setup data for the network
-    let nwMinStrokeWidth = 1,
-        nwMaxStrokeWidth = 3,
-        nwMinRadius = 4,
-        nwMaxRadius = 10;
+    function getLinkStrokeWidthScale(links, minWidth, maxWidth) {
+        let scale = d3.scaleLinear().domain(d3.extent(links.map(d => d.threatCount))).range([minWidth, maxWidth]);
+        return function (threatCount) {
+            return scale(threatCount);
+        }
+    }
+
     let linkStrokeWidthScale = getLinkStrokeWidthScale(links, nwMinStrokeWidth, nwMaxStrokeWidth);
     const networkSettings = {
         node: {
@@ -44,77 +200,85 @@ d3.csv('data/104.12.0.0.csv').then(data => {
             minStrokeWidth: nwMinStrokeWidth,
             maxStrokeWidth: nwMaxStrokeWidth
         },
+        transition: {
+            duration: 500
+        },
         width: networkWidth,
         height: networkHeight,
         nodeTypeColor: nodeColor,
-        linkTypes: deviceActions,
-        linkTypeColor: deviceActionColor,
+        linkTypes: linkTypes,
+        linkTypeColor: linkTypeColor,
         linkStrokeWidthScale: linkStrokeWidthScale,
         onNodeMouseOverCallback: onNodeMouseOverCallback,
         onLinkMouseOverCallback: onNetworkLinkMouseOverCallback,
         onNodeMouseOutCallback: onNetworkNodeMouseOutCallback,
         onLinkMouseOutCallback: onNetworkLinkMouseOutCallback
     };
-    drawNetworkGraph(networkG, nodes, links, networkSettings);
-    drawLinkLegends(legendG, deviceActions, deviceActionColor);
-    //links and nodes without combinations
-    let timeLinks = getLinksByColumns([COL_DEVICE_ACTION, COL_END_TIME], data);
-    //Copy the nodes to avoid changing its x, y for the network.
-    let timeNodes = nodes.map(n => {
-        return Object.assign({}, n);
-    });
-    //links and nodes with combinations
-    let targetsOfUnknownOnly = getTargetsOfUnknownOnly(data);
-    //Remove (104.12.90.1)
-    //targetsOfUnknownOnly = targetsOfUnknownOnly.filter(d => d != '104.12.90.1');
-    let combinedNode = {id: 'combined', nodes: []};
-    let tgoNodes = [];
-    timeNodes.forEach(n => {
-        if (targetsOfUnknownOnly.indexOf(n.id) >= 0) {
-            combinedNode.nodes.push(n);
+
+    function onNodeMouseOverCallback(node) {
+        //If the node is a combination then we need to concatenate many values
+        if (node.id === 'combined') {
+            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.nodes.map(d => d.id), data, colorColumns, colors, formatColumns, formats);
         } else {
-            tgoNodes.push(n);
+            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], [node.id], data, colorColumns, colors, formatColumns, formats);
         }
-    });
-    //Add the combined node
-    tgoNodes.push(combinedNode);
-    let tgoLinks = timeLinks.map(d => {
-        if (targetsOfUnknownOnly.indexOf(d.target) >= 0) {
-            d.targetId = d.target;//store it for future references.
-            d.target = 'combined';
+        //Also brush the timeArc
+        brushTimeArcNode(node, timeArcTransitionDuration);
+    }
+
+    function onNetworkLinkMouseOverCallback(link) {
+        let threatEvents = links.find(d => d === link).threatEvents;
+        updateTable(ipdatacsvTbl, threatEvents, colorColumns, colors, formatColumns, formats);
+        brushTimeArcLink(link, timeArcTransitionDuration);
+    }
+
+    function onNetworkNodeMouseOutCallback() {
+        resetBrushing(timeArcTransitionDuration);
+    }
+
+    function onNetworkLinkMouseOutCallback() {
+        resetBrushing(timeArcTransitionDuration);
+    }
+
+    //<editor-fold desc="this section is for scaling">
+    function getLinkTypeColor(linkTypeColorObj) {
+        return function (type) {
+            return linkTypeColorObj[type];
         }
-        return d;
-    });
-    //After combining nodes => some links are combined again (same time and same source as 'unknown').
-    debugger
-    let nestedBySTDT = {};
-    tgoLinks.forEach(l => {
-        let key = l.source + "," + l.target + "," + l[COL_DEVICE_ACTION] + ',' + l[COL_END_TIME];
-        if (!nestedBySTDT[key]) nestedBySTDT[key] = [];
-        nestedBySTDT[key].push(l);
-    });
-    //Now we need to redo the links again.
-    tgoLinks = d3.entries(nestedBySTDT).map(r => {
-        let value = r.value;
-        let threatEvents = [];
-        value.map(v => {
-            threatEvents = threatEvents.concat(v['threatEvents']);
-        });
-        let link = {
-            source: value[0].source,
-            target: value[0].target,
-            threatEvents: threatEvents,
-            threatCount: threatEvents.length
+    };
+
+    function nodeColor(node) {
+        return nodeColorFromId(node.id);
+    }
+
+    function nodeColorFromId(value) {
+        if (value.startsWith('104.12')) {
+            return 'black';
+        } else if (value === "unknown") {
+            return 'gray';
+        } else if (value === "combined") {
+            return "black";
+        } else {
+            return 'red';//outsider
         }
-        link[COL_DEVICE_ACTION] = value[0][COL_DEVICE_ACTION];
-        link[COL_END_TIME] = value[0][COL_END_TIME];
-        if (link.target === 'combined') {
-            if (!link.targetIds) link.targetIds = [];
-            link.targetIds.push(link.targetId);
-        }
-        return link;
-    });
-    //Setup data for the timeArcs
+    }
+
+    //</editor-fold>
+    return {
+        linkTypes,
+        linkTypeColor,
+        colorColumns,
+        colors,
+        formatColumns,
+        formats,
+        linkStrokeWidthScale,
+        nodeColor,
+        networkSettings
+    };
+}
+
+function getTimeArcSettings(data, timeArcLinks, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, linkTypes, linkTypeColor, nodeColor, linkStrokeWidthScale, colorColumns, colors, formatColumns, formats) {
+//Setup data for the timeArcs
     const timeArcSettings = {
         textHeight: 15,
         transition: {
@@ -122,87 +286,33 @@ d3.csv('data/104.12.0.0.csv').then(data => {
         },
         width: timeArcWidth,
         height: timeArcHeight,
-        linkTypes: deviceActions,
-        linkTypeColor: deviceActionColor,
+        linkTypes: linkTypes,
+        linkTypeColor: linkTypeColor,
         nodeTypeColor: nodeColor,
         linkStrokeWidthScale: linkStrokeWidthScale,
-        onNodeMouseOverCallBack: onNodeMouseOverCallback,
+        onNodeMouseOverCallBack: onTimeArcNodeMouseOverCallback,
         onLinkMouseOverCallBack: onTimeArcLinkMouseOverCallBack,
         orderFunction: forceDirectedLayout
     };
-    drawTimeArc(timeArcG, tgoNodes, tgoLinks, timeArcSettings);
 
-    //Reset it when clicking on the svg
-    document.onclick = () => {
-        keep = !keep;
-        resetBrushing(timeArcSettings.transition.duration);
-    };
-
-
-    function getLinkStrokeWidthScale(links, minWidth, maxWidth) {
-        let scale = d3.scaleLinear().domain(d3.extent(links.map(d => d.threatCount))).range([minWidth, maxWidth]);
-        return function (threatCount) {
-            return scale(threatCount);
-        }
-    }
-
-    function onNodeMouseOverCallback(node) {
+    function onTimeArcNodeMouseOverCallback(node) {
         //If the node is a combination then we need to concatenate many values
         if (node.id === 'combined') {
-            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.nodes.map(d => d.id), data);
+            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.nodes.map(d => d.id), data, colorColumns, colors, formatColumns, formats);
         } else {
-            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], [node.id], data);
+            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], [node.id], data, colorColumns, colors, formatColumns, formats);
         }
         //Also brush the timeArc
-        brushTimeArcNode(node, timeArcSettings.transition.duration);
-    }
-
-    function onNetworkLinkMouseOverCallback(link) {
-        let threatEvents = links.find(d => d === link).threatEvents;
-        updateTable(ipdatacsvTbl, threatEvents);
-        brushTimeArcLink(link, timeArcSettings.transition.duration);
+        brushTimeArcNode(node, timeArcTransitionDuration);
     }
 
     function onTimeArcLinkMouseOverCallBack(link) {
         //Work with timeArc links.
-        let threatEvents = tgoLinks.find(d => d === link).threatEvents;
-        updateTable(ipdatacsvTbl, threatEvents);
+        let threatEvents = timeArcLinks.find(d => d === link).threatEvents;
+        updateTable(ipdatacsvTbl, threatEvents, colorColumns, colors, formatColumns, formats);
     }
 
-    function onNetworkNodeMouseOutCallback() {
-        resetBrushing(timeArcSettings.transition.duration);
-    }
-
-    function onNetworkLinkMouseOutCallback() {
-        resetBrushing(timeArcSettings.transition.duration);
-    }
-
-});
-
-
-//<editor-fold desc="this section is for scaling">
-let deviceActionColors = {
-    'Permitted': 'green',
-    'none': 'steelblue',
-    '': '#ff7f0e'
+    return timeArcSettings;
 }
 
-function getDeviceActionColor(deviceActions) {
-    return function (deviceAction) {
-        return deviceActionColors[deviceAction];
-    }
-};
 
-function nodeColor(node) {
-    if (node.id.startsWith('104.12')) {
-        return 'black';
-    } else if (node.id === "unknown") {
-        return 'gray';
-    } else if (node.id === "combined") {
-        return "black";
-    } else {
-        return 'red';//outsider
-    }
-}
-
-//</editor-fold>

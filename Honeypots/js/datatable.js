@@ -1,8 +1,7 @@
-function updateTable(tbl, rows) {
+function updateTable(tbl, rows, colorColumns, colors, formatColums, formats) {
     tbl.innerHTML = '';
     if (rows && rows.length > 0) {
         let headers = Object.keys(rows[0]);
-
         let header = tbl.createTHead();
         let body = tbl.createTBody();
         let hRow = header.insertRow();
@@ -16,34 +15,25 @@ function updateTable(tbl, rows) {
             headers.forEach(hd => {
                 let cell = row.insertCell();
                 let text = rowDt[hd];
-                if (hd === COL_DEVICE_ACTION) {
-                    cell.style.color = deviceActionColors[text];
-                } else if (hd === COL_SOURCE_ADDRESS || hd === COL_DESTINATION_ADDRESS) {
-                    cell.style.color = nodeColor({id: text});
-                } else if (hd === COL_END_TIME) {
-                    text = d3.timeFormat("%b %d %Y %H:%M:%S")(text);
+                if (colorColumns) {
+                    let idx = colorColumns.indexOf(hd);
+                    if (idx >= 0) {
+                        cell.style.color = colors[idx](text);
+                    }
+                }
+                if (formatColums) {
+                    let idx = formatColums.indexOf(hd);
+                    if (idx >= 0) {
+                        text = formats[idx](text);
+                    }
                 }
                 cell.innerHTML = text;
             });
         });
     }
-
 }
 
-function filterByColumnsAnd(theTbl, columns, values, data) {
-    let filteredData = data.filter(row => {
-        for (let i = 0; i < columns.length; i++) {
-            let clm = columns[i];
-            if (row[clm] !== values[i]) {
-                return false;
-            }
-        }
-        return true;
-    });
-    updateTable(theTbl, filteredData);
-}
-
-function filterByColumnsOr(theTbl, columns, values, data) {
+function filterByColumnsOr(theTbl, columns, values, data, colorColumns, colors, formatColumns, formats) {
     let filteredData = data.filter(row => {
         for (let i = 0; i < columns.length; i++) {
             let clm = columns[i];
@@ -53,5 +43,5 @@ function filterByColumnsOr(theTbl, columns, values, data) {
         }
     });
 
-    updateTable(theTbl, filteredData);
+    updateTable(theTbl, filteredData, colorColumns, colors, formatColumns, formats);
 }
