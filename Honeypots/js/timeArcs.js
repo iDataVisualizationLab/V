@@ -55,7 +55,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
         .attr("text-anchor", 'start')
         .attr("alignment-baseline", 'middle')
         .style('font-size', '11px')
-        .style('fill', nodeColor);
+        .style('fill', d=>nodeColor(d.id));
 
     nodeElements = enterNode.merge(nodeElements);
 
@@ -97,7 +97,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             nodeElements.on('mouseout', () => {
                 resetBrushing(timeArcSettings.transition.duration);
             });
-        }, 1001);
+        }, 2000);
         //Draw the node line
         let nodeLines = nodeLinesGroup.selectAll('.tANodeLines').data(nodes);
         let enterNodeLines = nodeLines.enter()
@@ -114,7 +114,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
                     return 2;
                 }
             })
-            .attr('stroke', nodeColor);
+            .attr('stroke', d=>nodeColor(d.id));
         nodeLines.exit().remove();
         nodeLines = enterNodeLines.merge(nodeLines);
 
@@ -134,7 +134,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
                 return `url(#markerTA${linkTypes.indexOf(d['type'])})`;
             })
             .attr("stroke", d => linkTypeColor(d['type']))
-            .attr("stroke-width", d => linkStrokeWidthScale(d.threatCount));
+            .attr("stroke-width", d => linkStrokeWidthScale(d.dataCount));
 
         linkElements = enterLink.merge(linkElements);
 

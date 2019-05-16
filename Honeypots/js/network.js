@@ -8,7 +8,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     nodeRadiusScale = getNodeRadiusScale(nodes, networkSettings.node.minRadius, networkSettings.node.maxRadius);
     //Calculate the node's radius
     nodes.forEach(n => {
-        n.radius = nodeRadiusScale(n.linkCount);
+        n.radius = nodeRadiusScale(n.dataCount);
     });
 
     let simulation = d3.forceSimulation()
@@ -35,7 +35,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             return `url(#marker${linkTypes.indexOf(d.type)})`;
         })
         .attr("stroke", d => linkTypeColor(d.type))
-        .attr("stroke-width", d => linkStrokeWidthScale(d.threatCount));
+        .attr("stroke-width", d => linkStrokeWidthScale(d.dataCount));
 
     linkElements = enterLink.merge(linkElements);
     linkElements.on("mouseover", d => {
@@ -54,9 +54,9 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         .attr("cx", d => d.x)
         .attr("cy", d => d.y)
         .attr("r", d => {
-            return nodeRadiusScale(d.linkCount);
+            return nodeRadiusScale(d.dataCount);
         })
-        .style('fill', nodeTypeColor)
+        .style('fill', d=>nodeTypeColor(d.id))
         .call(d3.drag()
             .subject(dragsubject)
             .on("start", dragstarted)
@@ -65,7 +65,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         );
     nodeElements = enterNode.merge(nodeElements);
     nodeElements.on("mouseover", d => {
-        showTip(`IP: "${d.id}", threats count: ${d.linkCount}`);
+        showTip(`IP: "${d.id}", threats count: ${d.dataCount}`);
         onNodeMouseOverCallback(d);
     }).on("mouseout", (d) => {
         hideTip();
@@ -160,9 +160,9 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     //</editor-fold>
 
     function getNodeRadiusScale(nodes, minR, maxR) {
-        let scale = d3.scalePow(2).domain(d3.extent(nodes.map(d => d.linkCount))).range([minR, maxR]);
-        return function (linkCount) {
-            return scale(linkCount);
+        let scale = d3.scalePow(2).domain(d3.extent(nodes.map(d => d.dataCount))).range([minR, maxR]);
+        return function (dataCount) {
+            return scale(dataCount);
         }
     }
 
