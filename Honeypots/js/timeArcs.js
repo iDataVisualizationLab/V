@@ -55,7 +55,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
         .attr("text-anchor", 'start')
         .attr("alignment-baseline", 'middle')
         .style('font-size', '11px')
-        .style('fill', d=>nodeColor(d.id));
+        .style('fill', d => nodeColor(d.id));
 
     nodeElements = enterNode.merge(nodeElements);
 
@@ -114,7 +114,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
                     return 2;
                 }
             })
-            .attr('stroke', d=>nodeColor(d.id));
+            .attr('stroke', d => nodeColor(d.id));
         nodeLines.exit().remove();
         nodeLines = enterNodeLines.merge(nodeLines);
 

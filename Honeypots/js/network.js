@@ -1,10 +1,20 @@
 function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
-    let width = networkSettings.width, height=networkSettings.height, nodeTypeColor = networkSettings.nodeTypeColor,linkTypes = networkSettings.linkTypes, linkTypeColor = networkSettings.linkTypeColor, linkStrokeWidthScale= networkSettings.linkStrokeWidthScale, onNodeMouseOverCallback = networkSettings.onNodeMouseOverCallback, onLinkMouseOverCallback = networkSettings.onLinkMouseOverCallback, onNodeMouseOutCallback = networkSettings.onNodeMouseOutCallback, onLinkMouseOutCallback = networkSettings.onLinkMouseOutCallback;
-    let linkElements = theGroup.selectAll('.linkElements'),
-        nodeElements = theGroup.selectAll('.nodeElements');
+    let width = networkSettings.width, height = networkSettings.height, nodeTypeColor = networkSettings.nodeTypeColor,
+        linkTypes = networkSettings.linkTypes, linkTypeColor = networkSettings.linkTypeColor,
+        linkStrokeWidthScale = networkSettings.linkStrokeWidthScale,
+        onNodeMouseOverCallback = networkSettings.onNodeMouseOverCallback,
+        onLinkMouseOverCallback = networkSettings.onLinkMouseOverCallback,
+        onNodeMouseOutCallback = networkSettings.onNodeMouseOutCallback,
+        onLinkMouseOutCallback = networkSettings.onLinkMouseOutCallback;
     let nodeRadiusScale;
 
-    addArrowMarkers(theGroup, linkTypes, linkTypeColor);
+    //Add a clippath
+    theGroup.append("defs").append("clipPath").attr("id", "theNetworkGraphCP").append("rect").attr("x", 0).attr("y", 0).attr("width", width).attr("height", height);
+    theGroup.attr("clip-path", "url(#theNetworkGraphCP)");
+    let contentGroup = theGroup.append("g");
+    let linkElements = contentGroup.selectAll('.linkElements'),
+        nodeElements = contentGroup.selectAll('.nodeElements');
+    addArrowMarkers(contentGroup, linkTypes, linkTypeColor);
     nodeRadiusScale = getNodeRadiusScale(nodes, networkSettings.node.minRadius, networkSettings.node.maxRadius);
     //Calculate the node's radius
     nodes.forEach(n => {
@@ -56,7 +66,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         .attr("r", d => {
             return nodeRadiusScale(d.dataCount);
         })
-        .style('fill', d=>nodeTypeColor(d.id))
+        .style('fill', d => nodeTypeColor(d.id))
         .call(d3.drag()
             .subject(dragsubject)
             .on("start", dragstarted)
@@ -131,8 +141,9 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     };
 
     function tick() {
-        linkElements.attr("d", d => arcPath(true, d));
+        // nodeElements.attr("cx", d => d.x=boundX(d.x)).attr("cy", d => d.y=boundY(d.y));
         nodeElements.attr("cx", d => d.x).attr("cy", d => d.y);
+        linkElements.attr("d", d => arcPath(true, d));
     }
 
     //<editor-fold desc="this section is for drag drop">
@@ -181,7 +192,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             .attr('xoverflow', 'visible')
             .append("path")
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr("fill", d=>d3.color(markerColor(d)).darker());
+            .attr("fill", d => d3.color(markerColor(d)).darker());
 
         mainG.append("defs").selectAll("marker")
             .data(markerData)
@@ -197,6 +208,52 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             .attr('xoverflow', 'visible')
             .append("path")
             .attr('d', 'M0,-5L10,0L0,5')
-            .attr("fill",  d=>d3.color(markerColor(d)).darker());
+            .attr("fill", d => d3.color(markerColor(d)).darker());
     }
+
+    //<editor-fold desc="This section is for handling the zoom and of the whole plot">
+    //Handling drag
+    let dragHandler = d3.drag()
+        .on("start", dragStart)
+        .on("drag", dragDrag)
+        .on("end", dragEnd);
+
+    dragHandler(contentGroup);
+
+    function dragStart(d) {
+        d.fx = d.x;
+        d.fy = d.y;
+    }
+
+    function dragDrag(d) {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+    }
+
+    function dragEnd(d) {
+        d.fx = null;
+        d.fy = null;
+    }
+
+    //Handling zoom
+    let zoomHandler = d3.zoom()
+        .on("zoom", zoomActions);
+
+    zoomHandler(svg);
+
+    function zoomActions() {
+        contentGroup.attr("transform", d3.event.transform);
+    }
+
+    function boundX(x) {
+        let graphNodeDiameter = 2 * networkSettings.node.maxRadius;
+        return (x > width - graphNodeDiameter) ? width - graphNodeDiameter : (x < graphNodeDiameter ? graphNodeDiameter : x);
+    }
+
+    function boundY(y) {
+        let graphNodeDiameter = 2 * networkSettings.node.maxRadius;
+        return (y > height - graphNodeDiameter) ? height - graphNodeDiameter : (y < graphNodeDiameter ? graphNodeDiameter : y);
+    }
+
+    //</editor-fold>
 }
