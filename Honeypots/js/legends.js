@@ -7,7 +7,7 @@ const legendSettings = {
         left: 60,
         top: 50
     },
-    width: 314,
+    width: 350,
     height: 116,
     nodeRadius: 8,
     itemHeight: 18,
@@ -53,13 +53,10 @@ function drawLinkLegends(legendG, linkLegendData, colorScale) {
     linkLegendGs.append('line')
         .attr('y1', legendSettings.itemHeight / 2).attr("y2", legendSettings.itemHeight / 2)
         .attr("x2", -legendSettings.linkSize)
-        .attr('stroke', colorScale)
+        .attr('stroke', d=>colorScale(d.value))
         .attr("stroke-width", legendSettings.linkStrokeWidth);
     linkLegendGs.append('text').text(d => {
-        if (d === '') {
-            return 'Empty';
-        }
-        return d;
+        return d.text;
     }).attr('fill', colorScale).call(defineLegendText);
 }
 

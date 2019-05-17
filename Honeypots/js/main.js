@@ -45,6 +45,14 @@ if (fileName === 'data/104.12.0.0.csv') {
 
         let linkTypeColor = getLinkTypeColor(deviceActionColors);
 
+        let linkLegendData = [
+            {value: "Permitted", text: "Permitted"},
+            {value: "none", text: "None"},
+            {value: "", text: "Empty"}
+        ];
+
+        drawLinkLegends(legendG, linkLegendData, linkTypeColor);
+
         function getLinkTypeColor(linkTypeColorObj) {
             return function (type) {
                 return linkTypeColorObj[type];
@@ -75,7 +83,7 @@ if (fileName === 'data/104.12.0.0.csv') {
 
         let {linkTypes, colorColumns, colors, formatColumns, formats, linkStrokeWidthScale, networkSettings} = getNetworkSettings(data, links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, linkTypeColor, nodeColor);
         drawNetworkGraph(networkG, nodes, links, networkSettings);
-        drawLinkLegends(legendG, linkTypes, linkTypeColor);
+
 
         //<editor-fold desc="This section is to calculate nodes and links for the timeArc">
         //links and nodes without combinations
@@ -178,7 +186,7 @@ else {
             COL_DESTINATION_ADDRESS = "destination_ip_address";
 
         //Display first 1 hour
-        data = data.filter(d => d[COL_TIME] <= new Date(day + '01:00:00'));
+        data = data.filter(d => d[COL_TIME] <= new Date(day + '30:00:00'));
 
         //<editor-fold desc="This section is about link type and node type colors">
         let typeColorObj = {
@@ -188,6 +196,12 @@ else {
         }
 
         let linkTypeColor = getLinkTypeColor(typeColorObj);
+        let linkLegendData = [
+            {value: "1", text: "safe"},
+            {value: "-1", text: "unknown threat"},
+            {value: "-2", text: "known threat"}
+        ];
+        drawLinkLegends(legendG, linkLegendData, linkTypeColor);
 
         function getLinkTypeColor(linkTypeColorObj) {
             return function (type) {
@@ -213,7 +227,7 @@ else {
         let {linkTypes, colorColumns, colors, formatColumns, formats, linkStrokeWidthScale, networkSettings} = getNetworkSettings(data, links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, linkTypeColor, nodeTypeColor);
 
         drawNetworkGraph(networkG, nodes, links, networkSettings);
-        drawLinkLegends(legendG, linkTypes, linkTypeColor);
+
 
         const timeArcSettings = getTimeArcSettings(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, linkTypes, linkTypeColor, nodeTypeColor, linkStrokeWidthScale, colorColumns, colors, formatColumns, formats);
         drawTimeArc(timeArcG, timedNodes, timedLinks, timeArcSettings);
@@ -245,6 +259,9 @@ function getNetworkSettings(data, links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_
 
     let linkStrokeWidthScale = getLinkStrokeWidthScale(links, nwMinStrokeWidth, nwMaxStrokeWidth);
     const networkSettings = {
+        margin:{
+            top: 10
+        },
         node: {
             minRadius: nwMinRadius,
             maxRadius: nwMaxRadius
@@ -303,7 +320,7 @@ function getNetworkSettings(data, links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_
     };
 }
 
-function getTimeArcSettings(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, linkTypes, linkTypeColor, nodeColor, linkStrokeWidthScale, colorColumns, colors, formatColumns, formats) {
+function getTimeArcSettings(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, linkTypes, linkTypeColor, nodeTypeColor, linkStrokeWidthScale, colorColumns, colors, formatColumns, formats) {
 //Setup data for the timeArcs
     const timeArcSettings = {
         textHeight: 15,
@@ -314,7 +331,7 @@ function getTimeArcSettings(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, l
         height: timeArcHeight,
         linkTypes: linkTypes,
         linkTypeColor: linkTypeColor,
-        nodeTypeColor: nodeColor,
+        nodeTypeColor: nodeTypeColor,
         linkStrokeWidthScale: linkStrokeWidthScale,
         onNodeMouseOverCallBack: onTimeArcNodeMouseOverCallback,
         onLinkMouseOverCallBack: onTimeArcLinkMouseOverCallBack,

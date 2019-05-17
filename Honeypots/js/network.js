@@ -1,5 +1,7 @@
+
 function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     let width = networkSettings.width, height = networkSettings.height, nodeTypeColor = networkSettings.nodeTypeColor,
+        margin = networkSettings.margin,
         linkTypes = networkSettings.linkTypes, linkTypeColor = networkSettings.linkTypeColor,
         linkStrokeWidthScale = networkSettings.linkStrokeWidthScale,
         onNodeMouseOverCallback = networkSettings.onNodeMouseOverCallback,
@@ -7,10 +9,10 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         onNodeMouseOutCallback = networkSettings.onNodeMouseOutCallback,
         onLinkMouseOutCallback = networkSettings.onLinkMouseOutCallback;
     let nodeRadiusScale;
-
     //Add a clippath
-    theGroup.append("defs").append("clipPath").attr("id", "theNetworkGraphCP").append("rect").attr("x", 0).attr("y", 0).attr("width", width).attr("height", height);
+    theGroup.append("defs").append("clipPath").attr("id", "theNetworkGraphCP").append("rect").attr("x", 0).attr("y", margin.top).attr("width", width).attr("height", height);
     theGroup.attr("clip-path", "url(#theNetworkGraphCP)");
+
     let contentGroup = theGroup.append("g");
     let linkElements = contentGroup.selectAll('.linkElements'),
         nodeElements = contentGroup.selectAll('.nodeElements');
@@ -22,7 +24,20 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     });
 
     let simulation = d3.forceSimulation()
-        .on('tick', tick);
+        .on('tick', tick)
+        .on("end", () => {
+            //Scale the content group.
+            // noinspection ES6ModulesDependencies
+            let xExtent = d3.extent(nodes.map(d => d.x));
+            let yExtent = d3.extent(nodes.map(d => d.y));
+            let xSize = xExtent[1] - xExtent[0];
+            let ySize = yExtent[1] - yExtent[0];
+            let scaleX = (width-2*networkSettings.node.maxRadius - 20)/xSize, scaleY = (height-2*networkSettings.node.maxRadius-20)/ySize;
+            //Scale only if they are smaller than 1
+            if(scaleX<1 || scaleY<1){
+                contentGroup.attr("transform", `scale(${scaleX}, ${scaleY})translate(${xSize/2 - scaleX*xSize/2}, ${ySize/2 - scaleY*ySize/2 + margin.top})`);
+            }
+        });
 
     simulation.nodes(nodes)
         .force('link', d3.forceLink(links).id(d => d.id))
