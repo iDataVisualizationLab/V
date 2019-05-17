@@ -186,7 +186,7 @@ else {
             COL_DESTINATION_ADDRESS = "destination_ip_address";
 
         //Display first 1 hour
-        data = data.filter(d => d[COL_TIME] <= new Date(day + '00:30:00'));
+        data = data.filter(d => d[COL_TIME] <= new Date(day + '01:00:00'));
 
         //<editor-fold desc="This section is about link type and node type colors">
         let typeColorObj = {
