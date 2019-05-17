@@ -89,12 +89,14 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
         tick(1000);
         setTimeout(() => {
             //Now add mouseover event for the nodes, should do it here since when it is on force calculation we shouldn't activate this otherwise it would lead to wrong location.
-            nodeElements.on('mouseover', d => {
+            nodeElements.on('mouseover', function(d){
+                d3.select(this).attr("stroke", "blue").raise();
                 brushTimeArcNode(d, timeArcSettings.transition.duration);
                 //Call also mouseover to connect with other views.
                 onNodeMouseOverCallBack(d);
             });
-            nodeElements.on('mouseout', () => {
+            nodeElements.on('mouseout', function(d) {
+                d3.select(this).attr("stroke", "none");
                 resetBrushing(timeArcSettings.transition.duration);
             });
         }, 2000);
