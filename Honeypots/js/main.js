@@ -167,7 +167,7 @@ if (fileName === 'data/104.12.0.0.csv') {
 }
 else {
     d3.text(fileName).then(data => {
-        let day = 'Apr 11, 2014 '
+        let day = 'Apr 11, 2014 ';
         let cols = ["duration", "service", "source_bytes", "destination_bytes", "count", "same_srv_rate", "serror_rate", "srv_serror_rate", "dst_host_count",
             "dst_host_srv_count", "dst_host_same_src_port_rate", "dst_host_serror_rate", "dst_host_srv_serror_rate", "flag", "ids_detection", "malware_detection",
             "ashula_detection", "label", "source_ip_address", "source_port_number", "destination_ip_address", "destination_port_number", "start_time", "protocol"];
@@ -186,7 +186,7 @@ else {
             COL_DESTINATION_ADDRESS = "destination_ip_address";
 
         //Display first 1 hour
-        data = data.filter(d => d[COL_TIME] <= new Date(day + '30:00:00'));
+        data = data.filter(d => d[COL_TIME] <= new Date(day + '00:30:00'));
 
         //<editor-fold desc="This section is about link type and node type colors">
         let typeColorObj = {
