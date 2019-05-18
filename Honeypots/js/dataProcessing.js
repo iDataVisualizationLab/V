@@ -12,6 +12,7 @@ function getLinksByColumns(data, sourceClm, targetClm, typeColumns) {
             target: d.values[0][targetClm],
             data: d.values,
             dataCount: d.values.length,
+            id: d.key
         };
 
         let typeData = [];
@@ -44,6 +45,7 @@ function getLinksByColumnsAtTime(data, sourceClm, targetClm, timeClm, typeColumn
             target: d.values[0][targetClm],
             data: d.values,
             dataCount: d.values.length,
+            id: d.key
         };
 
         let typeData = [];
@@ -141,7 +143,8 @@ function getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmT
                 source: combinedSource,
                 target: combinedTarget,
                 type: type,
-                data: []
+                data: [],
+                id: linkedKey
             };
         }
         linksObj[linkedKey].data.push(row);
@@ -152,7 +155,8 @@ function getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmT
                 target: combinedTarget,
                 type: type,
                 time: time,
-                data: []
+                data: [],
+                id: timedLinkedKey
             };
         }
         timedLinksObj[timedLinkedKey].data.push(row);

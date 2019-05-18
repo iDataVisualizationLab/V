@@ -17,8 +17,8 @@ let networkG = mainG.append('g').attr('transform', `translate(0, 0)`);
 let timeArcG = mainG.append('g').attr('transform', `translate(${networkWidth},0)`);
 let ipdatacsvTbl = document.getElementById('ipdatacsvTbl');
 let keep = false;
-// let fileName = "data/104.12.0.0.csv";
-let fileName = "data/honeypot/20110401.txt";
+let fileName = "data/104.12.0.0.csv";
+// let fileName = "data/honeypot/20110401.txt";
 
 //COMMON SETTINGS
 let nwMinStrokeWidth = 1,
@@ -294,7 +294,7 @@ function getNetworkSettings(data, links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_
     }
 
     function onNetworkLinkMouseOverCallback(link) {
-        let threatEvents = links.find(d => d === link).data;
+        let threatEvents = link.data;
         updateTable(ipdatacsvTbl, threatEvents, colorColumns, colors, formatColumns, formats);
         brushTimeArcLink(link, timeArcTransitionDuration);
     }

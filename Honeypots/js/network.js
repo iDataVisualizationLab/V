@@ -1,5 +1,8 @@
-
 function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
+    //Use a dummy force to convert source, target id from links to nodes. Also, we will use this for drag of nodes.
+    let simulation = d3.forceSimulation();
+    simulation.nodes(nodes).force('link', d3.forceLink(links).id(d => d.id));
+
     let width = networkSettings.width, height = networkSettings.height, nodeTypeColor = networkSettings.nodeTypeColor,
         margin = networkSettings.margin,
         linkTypes = networkSettings.linkTypes, linkTypeColor = networkSettings.linkTypeColor,
@@ -14,88 +17,107 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     theGroup.attr("clip-path", "url(#theNetworkGraphCP)");
 
     let contentGroup = theGroup.append("g");
-    let linkElements = contentGroup.selectAll('.linkElements'),
-        nodeElements = contentGroup.selectAll('.nodeElements');
     addArrowMarkers(contentGroup, linkTypes, linkTypeColor);
+    //TODO: May move this to the worker to improve performance.
     nodeRadiusScale = getNodeRadiusScale(nodes, networkSettings.node.minRadius, networkSettings.node.maxRadius);
-    //Calculate the node's radius
     nodes.forEach(n => {
         n.radius = nodeRadiusScale(n.dataCount);
     });
+    let linkElements = contentGroup.selectAll('.linkElements');
+    let nodeElements = contentGroup.selectAll('.nodeElements');
 
-    let simulation = d3.forceSimulation()
-        .on('tick', tick)
-        .on("end", () => {
-            //Scale the content group.
-            // noinspection ES6ModulesDependencies
-            let xExtent = d3.extent(nodes.map(d => d.x));
-            let yExtent = d3.extent(nodes.map(d => d.y));
-            let xSize = xExtent[1] - xExtent[0];
-            let ySize = yExtent[1] - yExtent[0];
-            let scaleX = (width-2*networkSettings.node.maxRadius - 20)/xSize, scaleY = (height-2*networkSettings.node.maxRadius-20)/ySize;
-            //Scale only if they are smaller than 1
-            if(scaleX<1 || scaleY<1){
-                contentGroup.attr("transform", `scale(${scaleX}, ${scaleY})translate(${xSize/2 - scaleX*xSize/2}, ${ySize/2 - scaleY*ySize/2 + margin.top})`);
-            }
+    function updateNodesAndLinks(nodes, links) {
+
+        //Update the links
+        linkElements = linkElements.data(links, d => d.id);
+
+        //Exit any old links
+        linkElements.exit().remove();
+
+        //Enter any new links
+        let enterLink = linkElements.enter().append('path').attr('class', "linkElements")
+            .attr("marker-end", d => {
+                if (d.source === d.target) {
+                    return `url(#markerSelfLoop${linkTypes.indexOf(d.type)})`;
+                }
+                return `url(#marker${linkTypes.indexOf(d.type)})`;
+            })
+            .attr("stroke", d => linkTypeColor(d.type))
+            .attr("stroke-width", d => linkStrokeWidthScale(d.dataCount));
+
+        linkElements = enterLink.merge(linkElements);
+        linkElements.on("mouseover", d => {
+            onLinkMouseOverCallback(d);
+        }).on("mouseout", d => {
+            onLinkMouseOutCallback(d);
         });
 
-    simulation.nodes(nodes)
-        .force('link', d3.forceLink(links).id(d => d.id))
-        .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(width / 2, height / 2)).restart()
-        .force("collide", d3.forceCollide(d => d.radius));
+        //Update the nodes
+        nodeElements = nodeElements.data(nodes, d => d.id)
+        //Exit
+        nodeElements.exit().remove();
+        //enter any new nodes
+        let enterNode = nodeElements.enter().append("circle")
+            .attr("class", "nodeElements")
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", d => {
+                return nodeRadiusScale(d.dataCount);
+            })
+            .style('fill', d => nodeTypeColor(d.id))
+            .call(d3.drag()
+                .subject(dragsubject)
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended)
+            );
+        nodeElements = enterNode.merge(nodeElements);
+        nodeElements.on("mouseover", d => {
+            showTip(`IP: "${d.id}", threats count: ${d.dataCount}`);
+            onNodeMouseOverCallback(d);
+        }).on("mouseout", (d) => {
+            hideTip();
+            onNodeMouseOutCallback(d);
+        });
+    }
 
-    //Update the links
-    linkElements = linkElements.data(links, d => d.index);
+    updateNodesAndLinks(nodes, links);
 
-    //Exit any old links
-    linkElements.exit().remove();
+    //Send the data for force calculation
+    let nwForcePool = new WorkerPool("js/workers/worker_nwforce.js", onForceResult, 1);
+    nwForcePool.startWorker({
+        event: "start",
+        nodes: nodes,
+        links: links,
+        width: width,
+        height: height,
+        sendTick: true
+    }, 0);
 
-    //Enter any new links
-    let enterLink = linkElements.enter().append('path').attr('class', "linkElements")
-        .attr("marker-end", d => {
-            if (d.source === d.target) {
-                return `url(#markerSelfLoop${linkTypes.indexOf(d.type)})`;
+    function onForceResult(e) {
+        let result = e.data;
+        if (result.event === "tick") {
+            nodes = result.nodes;
+            links = result.links;
+            updateNodesAndLinks(nodes, links);
+            tick();
+        } else {
+            // nwForcePool.resetWorkers();
+            //Scale the content group.
+            // noinspection ES6ModulesDependencies
+            let xExtent = d3.extent(result.nodes.map(d => d.x));
+            let yExtent = d3.extent(result.nodes.map(d => d.y));
+            let xSize = xExtent[1] - xExtent[0];
+            let ySize = yExtent[1] - yExtent[0];
+            let scaleX = (width - 2 * networkSettings.node.maxRadius - 20) / xSize,
+                scaleY = (height - 2 * networkSettings.node.maxRadius - 20) / ySize;
+            //Scale only if they are smaller than 1
+            if (scaleX < 1 || scaleY < 1) {
+                contentGroup.attr("transform", `scale(${scaleX}, ${scaleY})translate(${xSize / 2 - scaleX * xSize / 2}, ${ySize / 2 - scaleY * ySize / 2 + margin.top})`);
             }
-            return `url(#marker${linkTypes.indexOf(d.type)})`;
-        })
-        .attr("stroke", d => linkTypeColor(d.type))
-        .attr("stroke-width", d => linkStrokeWidthScale(d.dataCount));
+        }
+    }
 
-    linkElements = enterLink.merge(linkElements);
-    linkElements.on("mouseover", d => {
-        onLinkMouseOverCallback(d);
-    }).on("mouseout", d => {
-        onLinkMouseOutCallback(d);
-    });
-
-    //Update the nodes
-    nodeElements = nodeElements.data(nodes, d => d.id)
-    //Exit
-    nodeElements.exit().remove();
-    //enter any new nodes
-    let enterNode = nodeElements.enter().append("circle")
-        .attr("class", "nodeElements")
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y)
-        .attr("r", d => {
-            return nodeRadiusScale(d.dataCount);
-        })
-        .style('fill', d => nodeTypeColor(d.id))
-        .call(d3.drag()
-            .subject(dragsubject)
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended)
-        );
-    nodeElements = enterNode.merge(nodeElements);
-    nodeElements.on("mouseover", d => {
-        showTip(`IP: "${d.id}", threats count: ${d.dataCount}`);
-        onNodeMouseOverCallback(d);
-    }).on("mouseout", (d) => {
-        hideTip();
-        onNodeMouseOutCallback(d);
-    });
 
     function arcPath(leftHand, d) {
         let x1 = leftHand ? d.source.x : d.target.x,
@@ -139,7 +161,9 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     function countSiblingLinks(source, target) {
         let count = 0;
         for (let i = 0; i < links.length; ++i) {
-            if ((links[i].source.id == source.id && links[i].target.id == target.id) || (links[i].source.id == target.id && links[i].target.id == source.id))
+            let linkSourceId = links[i].source.id;
+            let linkTargetId = links[i].target.id;
+            if ((linkSourceId == source.id && linkTargetId == target.id) || (linkSourceId == target.id && linkTargetId == source.id))
                 count++;
         }
         ;
@@ -149,40 +173,53 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     function getSiblingLinks(source, target) {
         let siblings = [];
         for (let i = 0; i < links.length; ++i) {
-            if ((links[i].source.id == source.id && links[i].target.id == target.id) || (links[i].source.id == target.id && links[i].target.id == source.id))
+            let linkSourceId = links[i].source.id;
+            let linkTargetId = links[i].target.id;
+            if ((linkSourceId == source.id && linkTargetId == target.id) || (linkSourceId == target.id && linkTargetId == source.id))
                 siblings.push(links[i]['type']);
         }
         return siblings;
     };
 
     function tick() {
-        // nodeElements.attr("cx", d => d.x=boundX(d.x)).attr("cy", d => d.y=boundY(d.y));
-        nodeElements.attr("cx", d => d.x).attr("cy", d => d.y);
         linkElements.attr("d", d => arcPath(true, d));
+        nodeElements.attr("cx", d => d.x).attr("cy", d => d.y);
     }
 
-    //<editor-fold desc="this section is for drag drop">
+    // <editor-fold desc="this section is for drag drop">
     function dragsubject() {
+        //This simulation is used for drag of the network only.
+        simulation = d3.forceSimulation()
+            .on("tick", tick);
+        simulation.nodes(nodes)
+            .force('link', d3.forceLink(links))
+            .force("charge", d3.forceManyBody())
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collide", d3.forceCollide(d => d.radius));
         return simulation.find(d3.event.x, d3.event.y);
     }
 
-    function dragstarted() {
+    function dragstarted(d) {
+        let node = nodes.find(n => n.id === d.id);
+        node.fx = d3.event.x;
+        node.fy = d3.event.y;
         if (!d3.event.active) simulation.alphaTarget(0.1).restart();
-        d3.event.subject.fx = d3.event.subject.x;
-        d3.event.subject.fy = d3.event.subject.y;
+
     }
 
-    function dragged() {
-        d3.event.subject.fx = d3.event.x;
-        d3.event.subject.fy = d3.event.y;
+    function dragged(d) {
+        let node = nodes.find(n => n.id === d.id);
+        node.fx = d3.event.x;
+        node.fy = d3.event.y;
     }
 
-    function dragended() {
-        if (!d3.event.active) simulation.alphaTarget(0);
-        d3.event.subject.fx = null;
-        d3.event.subject.fy = null;
-    }
+    function dragended(d) {
+        let node = nodes.find(n => n.id === d.id);
+        node.fx = null;
+        node.fy = null;
+        simulation.alphaTarget(0);
 
+    }
     //</editor-fold>
 
     function getNodeRadiusScale(nodes, minR, maxR) {

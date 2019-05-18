@@ -206,7 +206,6 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
                 siblingCount = countSiblingLinks(d),
                 xRotation = 0,
                 largeArc = 0;
-
             // Self edge.
             if (x1 === x2 && y1 === y2) {
                 largeArc = 1;
