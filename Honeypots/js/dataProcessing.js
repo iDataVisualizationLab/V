@@ -89,15 +89,10 @@ function getAllNodesFromLinks(links) {
 //</editor-fold>
 
 //<editor-fold desc="This section is for the data processing for honey pot">
-function getUniqueSourcesAndTargets(data, clmSource, clmTarget) {
-    let allSTs = [];
-    data.forEach(row => {
-        allSTs.push(row[clmSource]);
-        allSTs.push(row[clmTarget]);
-    });
-    return Array.from(new Set(allSTs));
+function updateLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmTime, newRows){
+    data = data.concat(newRows);
+    return getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmTime);
 }
-
 function getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmTime) {
     let allNodes = {};
     data.forEach(row => {
@@ -170,7 +165,12 @@ function getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmT
         r.value.dataCount = r.value.data.length;
         return r.value;
     });
-    return {links, timedLinks};
+    let nodes = getAllNodesFromLinks(links);
+    //Copy the nodes to avoid changing its x, y for the network.
+    let timedNodes = nodes.map(n => {
+        return Object.assign({}, n);
+    });
+    return {nodes, links, timedNodes, timedLinks};
 }
 
 

@@ -1,26 +1,7 @@
-/**
- *
- * @param theGroup
- * @param nodes {id: , nodeType: , data: []}
- * @param links {source: , target: , linkType: , data: []}
- * @param const timeArcSettings = {
-    textHeight: 15,
-    transition: {
-        duration: 500
-    },
-    width: 1200, //default value
-    height: 1200,
-    linkTypes,
-    linkTypeColor,
-    linkStrokeWidthScale,
-    onNodeMouseOverCallBack,
-    onTimeArcLinkMouseOverCallBack,
-    orderFunction
-};
- */
 function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
     //Expected settings from timeArcSettings.
-    let width = timeArcSettings.width, height = timeArcSettings.height, linkTypes = timeArcSettings.linkTypes,
+    let width = timeArcSettings.width, height = timeArcSettings.height,
+        linkTypes = timeArcSettings.linkTypes,
         linkTypeColor = timeArcSettings.linkTypeColor, linkStrokeWidthScale = timeArcSettings.linkStrokeWidthScale,
         nodeColor = timeArcSettings.nodeTypeColor,
         onNodeMouseOverCallBack = timeArcSettings.onNodeMouseOverCallBack,
@@ -28,38 +9,43 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
         orderFunction = timeArcSettings.orderFunction;
 
     addArrowMarkers(theGroup, linkTypes, linkTypeColor);
-    let contentGroup = theGroup.append('g').attr("transform", `translate(0, ${margin.top})`);
-    let linksGroup = contentGroup.append('g');
-    let nodeLinesGroup = contentGroup.append('g');
-    let textsGroup = contentGroup.append('g');
+
+    let contentGroup = theGroup.selectAll('.contentGroup').data([1], d => d).join('g').attr("class", "contentGroup").attr("transform", `translate(0, ${margin.top})`);
+    let linksGroup = contentGroup.selectAll(".linksGroup").data([1], d => d).join('g').attr("class", "linksGroup");
+    let nodeLinesGroup = contentGroup.selectAll(".nodeLinesGroup").data([1], d => d).join('g').attr("class", "nodeLinesGroup");
+    let textsGroup = contentGroup.selectAll(".textsGroup").data([1], d => d).join('g').attr("class", "textsGroup");
     let linkElements = linksGroup.selectAll('.tALinkElements'),
         nodeElements = textsGroup.selectAll('.tANodeElements');
 
     //Do the ordering.
     orderFunction(nodes, links, tick, endedCalculatingY, timeArcSettings);
 
-    nodeElements = nodeElements.data(nodes, d => d.id);
-    //Exit
-    nodeElements.exit().remove();
-    //enter any new nodes
-    let enterNode = nodeElements.enter()
-        .append('text').text(d => {
-            if (d.id !== 'combined') {
-                return d.id;
-            } else {
-                return `${d.nodes.map(d => d.id).join(', ')}`;
-            }
-        })
-        .attr("class", 'tANodeElements tANodeTexts')
-        .attr("transform", "translate(20, 0)")
-        .attr("text-anchor", 'start')
-        .attr("alignment-baseline", 'middle')
-        .style('font-size', '11px')
-        .style('fill', d => nodeColor(d.id));
+    function updateNodes(nodes) {
+        nodeElements = nodeElements.data(nodes, d => d.id);
+        //Exit
+        nodeElements.exit().remove();
+        //enter any new nodes
+        let enterNode = nodeElements.enter()
+            .append('text').text(d => {
+                if (d.id !== 'combined') {
+                    return d.id;
+                } else {
+                    return `${d.nodes.map(d => d.id).join(', ')}`;
+                }
+            })
+            .classed('tANodeElements', true)
+            .classed('tANodeTexts', true)
+            .attr("transform", "translate(20, 0)")
+            .attr("text-anchor", 'start')
+            .attr("alignment-baseline", 'middle')
+            .style('font-size', '11px')
+            .style('fill', d => nodeColor(d.id));
 
-    nodeElements = enterNode.merge(nodeElements);
+        nodeElements = enterNode.merge(nodeElements);
+    }
 
     function endedCalculatingY() {
+        updateNodes(nodes);
         let yScale = d3.scaleLinear().domain([0, nodes.length]).range([0, height]);
         //Sort the nodes by its y location
         nodes.sort((a, b) => a.y - b.y);
@@ -82,30 +68,34 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             let eventTimes = nestedByNode[n.id].map(l => l['time']);
             n.x = xScale(d3.max(eventTimes));
             n.minX = xScale(d3.min(eventTimes));
-            //Update the nodes y position
+
         });
 
         //Transform all the nodes.
         tick(1000);
         setTimeout(() => {
             //Now add mouseover event for the nodes, should do it here since when it is on force calculation we shouldn't activate this otherwise it would lead to wrong location.
-            nodeElements.on('mouseover', function(d){
+            nodeElements.on('mouseover', function (d) {
+                //TODO: Should check if there is some active event
                 d3.select(this).attr("stroke", "blue").raise();
                 brushTimeArcNode(d, timeArcSettings.transition.duration);
                 //Call also mouseover to connect with other views.
                 onNodeMouseOverCallBack(d);
             });
-            nodeElements.on('mouseout', function(d) {
+            nodeElements.on('mouseout', function (d) {
+                //TODO: Should check if there is some active event
                 d3.select(this).attr("stroke", "none");
                 resetBrushing(timeArcSettings.transition.duration);
             });
         }, 2000);
         //Draw the node line
-        let nodeLines = nodeLinesGroup.selectAll('.tANodeLines').data(nodes);
+        let nodeLines = nodeLinesGroup.selectAll('.tANodeLines').data(nodes, n => n.id);
         let enterNodeLines = nodeLines.enter()
             .append('line')
-            .attr("class", 'tANodeElements tANodeLines')
-            .attr("x1", d => d.x)
+            .classed('tANodeElements', true)
+            .classed('tANodeLines', true);
+        nodeLines.exit().remove();
+        nodeLines = enterNodeLines.merge(nodeLines).attr("x1", d => d.x)
             .attr("x2", d => d.minX)
             .attr("y1", d => d.y)
             .attr("y2", d => d.y)
@@ -117,12 +107,10 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
                 }
             })
             .attr('stroke', d => nodeColor(d.id));
-        nodeLines.exit().remove();
-        nodeLines = enterNodeLines.merge(nodeLines);
 
         //Now draw the arcs.
         //Update the links
-        linkElements = linkElements.data(links, d => d.index);
+        linkElements = linksGroup.selectAll('.tALinkElements').data(links, d => d.id);
 
         //Exit any old links
         linkElements.exit().remove();
@@ -184,9 +172,9 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
 
 
         //Draw the xAxis
-        let xAxisG = theGroup.append('g');
-        let xAxis = d3.axisTop(xScale);
-        xAxisG.call(xAxis);
+        // let xAxisG = theGroup.append('g');
+        // let xAxis = d3.axisTop(xScale);
+        // xAxisG.call(xAxis);
 
         //Raise the two group
         nodeLines.raise();
@@ -257,9 +245,9 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
 
     //<editor-fold desc="This section is for the arrow marker">
     function addArrowMarkers(mainG, markerData, markerColor) {
-        mainG.append("defs").selectAll("marker")
-            .data(markerData)
-            .enter().append("marker")
+        let markerTADefs = mainG.selectAll('.markerTADefs').data([1], d => d).join("defs").attr('class', 'markerTADefs');
+        markerTADefs.selectAll(".markerTA")
+            .data(markerData).join("marker")
             .attr("class", "markerTA")
             .attr("id", d => 'markerTA' + markerData.indexOf(d))
             .attr("viewBox", "0 -5 10 10")
@@ -270,13 +258,15 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             .attr('markerUnits', "strokeWidth")
             .attr("orient", "auto")
             .attr('xoverflow', 'visible')
-            .append("path")
+            .selectAll("path").data([1], d => d).join("path")
             .attr('d', 'M0,-5L10,0L0,5')
             .attr("fill", d => d3.color(markerColor(d)).darker());
 
-        mainG.append("defs").selectAll("marker")
-            .data(markerData)
-            .enter().append("marker")
+        let markerSelfLoopTADefs = mainG.selectAll('.markerSelfLoopTADefs').data([1], d => d).join("defs").attr("class", "markerSelfLoopTADefs");
+
+        markerSelfLoopTADefs.selectAll(".markerSelfLoopTA")
+            .data(markerData).join("marker")
+            .attr("class", 'markerSelfLoopTA')
             .attr("id", d => 'markerSelfLoopTA' + markerData.indexOf(d))
             .attr("viewBox", "0 -5 10 10")
             .attr("refX", 10)
@@ -286,18 +276,22 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             .attr('markerUnits', "strokeWidth")
             .attr("orient", "-130deg")
             .attr('xoverflow', 'visible')
-            .append("path")
+            .selectAll("path").data([1], d => d).join("path")
             .attr('d', 'M0,-5L10,0L0,5')
             .attr("fill", d => d3.color(markerColor(d)).darker());
     }
 
     //</editor-fold>
+    this.onUpdateData = function (newNodes, newLinks) {
+
+    }
+    return this;
 }
 
 function forceDirectedLayout(nodes, links, tick, end, timeArcSettings) {
     //Generate the best vertical location
     let simulation = d3.forceSimulation()
-        .on('tick', tick)
+    // .on('tick', tick)
         .on('end', end).alphaTarget(0.0009).restart();
     simulation.nodes(nodes)
         .force('link', d3.forceLink(links).id(d => d.id))

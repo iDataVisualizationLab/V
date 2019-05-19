@@ -11,18 +11,16 @@ onmessage = function (e) {
     let event = e.data.event;
 
     if (!event || event === "start") {
+        //Generate the best vertical location
         simulation = d3.forceSimulation()
-            .on("end", end);
-        if (sendTick) {
-            simulation.on("tick", tick);
-        }
+            .on('tick', tick)
+            .on('end', end).alphaTarget(0.0009).restart();
 
         simulation.nodes(nodes)
             .force('link', d3.forceLink(links).id(d => d.id))
             .force("charge", d3.forceManyBody())
             .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("collide", d3.forceCollide(d => d.radius))
-            .alphaTarget(alphaTarget).restart();
+            .force("x", d3.forceX(width / 2).strength(1));
     }
     if (event === "restart") {
         simulation.nodes().forEach((n, i) => {
@@ -36,30 +34,10 @@ onmessage = function (e) {
 
 
     function tick() {
-        // nodes.forEach(n => {
-        //     bound(n);
-        // });
         postMessage({event: 'tick', nodes: nodes, links: links});
     }
 
     function end() {
         postMessage({event: 'end', nodes: nodes, links: links});
-    }
-
-    function bound(node) {
-        if (node.x !== undefined && node.y !== undefined) {
-            let vecX = node.x - width / 2, vecY = node.y - height / 2;
-            let distance = Math.sqrt(vecX * vecX + vecY * vecY);
-            if (distance > width / 2 + 5) {
-                let ratio = (width / 2) / distance;
-                node.x = ratio * node.x;
-                node.y = ratio * node.y;
-                if (node.x < width / 2 && node.y < height / 2) {
-                    node.x += 10;
-                    node.y += 10;
-                }
-
-            }
-        }
     }
 }

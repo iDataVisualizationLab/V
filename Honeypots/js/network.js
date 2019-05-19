@@ -6,11 +6,20 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     let width = networkSettings.width, height = networkSettings.height, nodeTypeColor = networkSettings.nodeTypeColor,
         margin = networkSettings.margin,
         linkTypes = networkSettings.linkTypes, linkTypeColor = networkSettings.linkTypeColor,
-        linkStrokeWidthScale = networkSettings.linkStrokeWidthScale,
         onNodeMouseOverCallback = networkSettings.onNodeMouseOverCallback,
         onLinkMouseOverCallback = networkSettings.onLinkMouseOverCallback,
         onNodeMouseOutCallback = networkSettings.onNodeMouseOutCallback,
         onLinkMouseOutCallback = networkSettings.onLinkMouseOutCallback;
+
+    function getLinkStrokeWidthScale(links, minWidth, maxWidth) {
+        let scale = d3.scaleLinear().domain(d3.extent(links.map(d => d.dataCount))).range([minWidth, maxWidth]);
+        return function (dataCount) {
+            return scale(dataCount);
+        }
+    }
+
+    let linkStrokeWidthScale = getLinkStrokeWidthScale(links, nwMinStrokeWidth, nwMaxStrokeWidth);
+    this.linkStrokeWidthScale = linkStrokeWidthScale;//Store it to use outside in the TimeArc
     let nodeRadiusScale;
     //Add a clippath
     theGroup.append("defs").append("clipPath").attr("id", "theNetworkGraphCP").append("rect").attr("x", 0).attr("y", margin.top).attr("width", width).attr("height", height);
@@ -18,15 +27,57 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
 
     let contentGroup = theGroup.append("g");
     addArrowMarkers(contentGroup, linkTypes, linkTypeColor);
-    //TODO: May move this to the worker to improve performance.
-    nodeRadiusScale = getNodeRadiusScale(nodes, networkSettings.node.minRadius, networkSettings.node.maxRadius);
-    nodes.forEach(n => {
-        n.radius = nodeRadiusScale(n.dataCount);
-    });
-    let linkElements = contentGroup.selectAll('.linkElements');
-    let nodeElements = contentGroup.selectAll('.nodeElements');
+    let linkGroup = contentGroup.append("g");
+    let nodeGroup = contentGroup.append("g");
+
+    let linkElements = linkGroup.selectAll('.linkElements');
+    let nodeElements = nodeGroup.selectAll('.nodeElements');
+    let nodePosObj = {};
+    setNodeRadius();
+    updateNodesAndLinks(nodes, links);
+
+    //Send the data for force calculation
+    let nwForcePool = new WorkerPool("js/workers/worker_nwforce.js", onForceResult, 1);
+    nwForcePool.startWorker({
+        event: "start",
+        nodes: nodes,
+        links: links,
+        width: width,
+        height: height,
+        sendTick: true
+    }, 0);
+
+    function onForceResult(e) {
+        let result = e.data;
+        if (result.event === "tick") {
+            nodes = result.nodes;
+            links = result.links;
+            updateNodesAndLinks(nodes, links);
+            tick();
+        } else {
+            // // nwForcePool.resetWorkers();
+            // //Scale the content group.
+            // let xExtent = d3.extent(result.nodes.map(d => d.x));
+            // let yExtent = d3.extent(result.nodes.map(d => d.y));
+            // let xSize = xExtent[1] - xExtent[0];
+            // let ySize = yExtent[1] - yExtent[0];
+            // let scaleX = (width - 2 * networkSettings.node.maxRadius - 20) / xSize,
+            //     scaleY = (height - 2 * networkSettings.node.maxRadius - 20) / ySize;
+            // //Scale only if they are smaller than 1
+            // if (scaleX < 1 || scaleY < 1) {
+            //     contentGroup.attr("transform", `scale(${scaleX}, ${scaleY})translate(${xSize / 2 - scaleX * xSize / 2}, ${ySize / 2 - scaleY * ySize / 2 + margin.top})`);
+            // }
+        }
+    }
 
     function updateNodesAndLinks(nodes, links) {
+        nodes.forEach(n => {
+            if (!nodePosObj[n.id]) nodePosObj[n.id] = {}
+            nodePosObj[n.id].x = n.x;
+            nodePosObj[n.id].y = n.y;
+            nodePosObj[n.id].fx = n.fx;
+            nodePosObj[n.id].fy = n.fy;
+        });
 
         //Update the links
         linkElements = linkElements.data(links, d => d.id);
@@ -62,7 +113,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             .attr("cx", d => d.x)
             .attr("cy", d => d.y)
             .attr("r", d => {
-                return nodeRadiusScale(d.dataCount);
+                return d.radius;
             })
             .style('fill', d => nodeTypeColor(d.id))
             .call(d3.drag()
@@ -80,44 +131,6 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             onNodeMouseOutCallback(d);
         });
     }
-
-    updateNodesAndLinks(nodes, links);
-
-    //Send the data for force calculation
-    let nwForcePool = new WorkerPool("js/workers/worker_nwforce.js", onForceResult, 1);
-    nwForcePool.startWorker({
-        event: "start",
-        nodes: nodes,
-        links: links,
-        width: width,
-        height: height,
-        sendTick: true
-    }, 0);
-
-    function onForceResult(e) {
-        let result = e.data;
-        if (result.event === "tick") {
-            nodes = result.nodes;
-            links = result.links;
-            updateNodesAndLinks(nodes, links);
-            tick();
-        } else {
-            // nwForcePool.resetWorkers();
-            //Scale the content group.
-            // noinspection ES6ModulesDependencies
-            let xExtent = d3.extent(result.nodes.map(d => d.x));
-            let yExtent = d3.extent(result.nodes.map(d => d.y));
-            let xSize = xExtent[1] - xExtent[0];
-            let ySize = yExtent[1] - yExtent[0];
-            let scaleX = (width - 2 * networkSettings.node.maxRadius - 20) / xSize,
-                scaleY = (height - 2 * networkSettings.node.maxRadius - 20) / ySize;
-            //Scale only if they are smaller than 1
-            if (scaleX < 1 || scaleY < 1) {
-                contentGroup.attr("transform", `scale(${scaleX}, ${scaleY})translate(${xSize / 2 - scaleX * xSize / 2}, ${ySize / 2 - scaleY * ySize / 2 + margin.top})`);
-            }
-        }
-    }
-
 
     function arcPath(leftHand, d) {
         let x1 = leftHand ? d.source.x : d.target.x,
@@ -200,26 +213,23 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     }
 
     function dragstarted(d) {
-        let node = nodes.find(n => n.id === d.id);
-        node.fx = d3.event.x;
-        node.fy = d3.event.y;
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
         if (!d3.event.active) simulation.alphaTarget(0.1).restart();
-
     }
 
     function dragged(d) {
-        let node = nodes.find(n => n.id === d.id);
-        node.fx = d3.event.x;
-        node.fy = d3.event.y;
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
     }
 
     function dragended(d) {
-        let node = nodes.find(n => n.id === d.id);
-        node.fx = null;
-        node.fy = null;
+        d.fx = null;
+        d.fy = null;
         simulation.alphaTarget(0);
 
     }
+
     //</editor-fold>
 
     function getNodeRadiusScale(nodes, minR, maxR) {
@@ -297,15 +307,44 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         contentGroup.attr("transform", d3.event.transform);
     }
 
-    function boundX(x) {
-        let graphNodeDiameter = 2 * networkSettings.node.maxRadius;
-        return (x > width - graphNodeDiameter) ? width - graphNodeDiameter : (x < graphNodeDiameter ? graphNodeDiameter : x);
+    function setNodeRadius() {
+        //TODO: May move this to the worker to improve performance.
+        nodeRadiusScale = getNodeRadiusScale(nodes, networkSettings.node.minRadius, networkSettings.node.maxRadius);
+        nodes.forEach(n => {
+            n.radius = nodeRadiusScale(n.dataCount);
+        });
     }
 
-    function boundY(y) {
-        let graphNodeDiameter = 2 * networkSettings.node.maxRadius;
-        return (y > height - graphNodeDiameter) ? height - graphNodeDiameter : (y < graphNodeDiameter ? graphNodeDiameter : y);
-    }
+//</editor-fold>
+    this.onUpdateData = function (newNodes, newLinks) {
+        //Should start from their current positions.
+        newNodes.forEach(n => {
+            if (nodePosObj[n.id]) {
+                n.x = nodePosObj[n.id].x;
+                n.y = nodePosObj[n.id].y;
+                n.fx = nodePosObj[n.id].fx;
+                n.fy = nodePosObj[n.id].fy;
+            }else{
+                //Put new nodes at the center by default.
+                n.x = width/2;
+                n.y = height/2;
+            }
+        });
+        nodes = newNodes;
+        links = newLinks;
 
-    //</editor-fold>
+        //Recalculate radius and stroke scale.
+        setNodeRadius();
+        linkStrokeWidthScale = getLinkStrokeWidthScale(links, nwMinStrokeWidth, nwMaxStrokeWidth);
+
+        nwForcePool.postMessage({
+            event: "start",
+            nodes: nodes,
+            links: links,
+            width: width,
+            height: height,
+            sendTick: true
+        }, 0);
+    }
+    return this;
 }
