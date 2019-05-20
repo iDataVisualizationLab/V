@@ -1,4 +1,5 @@
 importScripts('../../lib/d3.js', '../dataProcessing.js');
+
 onmessage = function (e) {
     let day = 'Apr 11, 2014 ';
     let interval = 10 * 1000;
@@ -34,7 +35,10 @@ onmessage = function (e) {
                 postMessage({nodes: nodes, links: links, timedNodes: timedNodes, timedLinks: timedLinks});
             }
             prevTime = time;
+
+
             setTimeout(readData, interval);
+
         }
 
         readData();

@@ -36,9 +36,9 @@ onmessage = function (e) {
 
 
     function tick() {
-        // nodes.forEach(n => {
-        //     bound(n);
-        // });
+        nodes.forEach(n => {
+            bound(n);
+        });
         postMessage({event: 'tick', nodes: nodes, links: links});
     }
 

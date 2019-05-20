@@ -1,7 +1,5 @@
 function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
-    //Use a dummy force to convert source, target id from links to nodes. Also, we will use this for drag of nodes.
-    let simulation = d3.forceSimulation();
-    simulation.nodes(nodes).force('link', d3.forceLink(links).id(d => d.id));
+
 
     let width = networkSettings.width, height = networkSettings.height, nodeTypeColor = networkSettings.nodeTypeColor,
         margin = networkSettings.margin,
@@ -49,25 +47,11 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
 
     function onForceResult(e) {
         let result = e.data;
-        if (result.event === "tick") {
-            nodes = result.nodes;
-            links = result.links;
-            updateNodesAndLinks(nodes, links);
-            tick();
-        } else {
-            // // nwForcePool.resetWorkers();
-            // //Scale the content group.
-            // let xExtent = d3.extent(result.nodes.map(d => d.x));
-            // let yExtent = d3.extent(result.nodes.map(d => d.y));
-            // let xSize = xExtent[1] - xExtent[0];
-            // let ySize = yExtent[1] - yExtent[0];
-            // let scaleX = (width - 2 * networkSettings.node.maxRadius - 20) / xSize,
-            //     scaleY = (height - 2 * networkSettings.node.maxRadius - 20) / ySize;
-            // //Scale only if they are smaller than 1
-            // if (scaleX < 1 || scaleY < 1) {
-            //     contentGroup.attr("transform", `scale(${scaleX}, ${scaleY})translate(${xSize / 2 - scaleX * xSize / 2}, ${ySize / 2 - scaleY * ySize / 2 + margin.top})`);
-            // }
-        }
+        nodes = result.nodes;
+        links = result.links;
+        updateNodesAndLinks(nodes, links);
+        tick();
+
     }
 
     function updateNodesAndLinks(nodes, links) {
@@ -116,15 +100,15 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
                 return d.radius;
             })
             .style('fill', d => nodeTypeColor(d.id))
-            .call(d3.drag()
-                .subject(dragsubject)
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended)
-            );
+            // .call(d3.drag()
+            //     .subject(dragsubject)
+            //     .on("start", dragstarted)
+            //     .on("drag", dragged)
+            //     .on("end", dragended)
+            // );
         nodeElements = enterNode.merge(nodeElements);
         nodeElements.on("mouseover", d => {
-            showTip(`IP: "${d.id}", threats count: ${d.dataCount}`);
+            showTip(`IP: "${d.id}", threats count: ${d.dataCount}, nodes count: ${d.nodeCount}`);
             onNodeMouseOverCallback(d);
         }).on("mouseout", (d) => {
             hideTip();
@@ -135,8 +119,8 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     function arcPath(leftHand, d) {
         let x1 = leftHand ? d.source.x : d.target.x,
             y1 = leftHand ? d.source.y : d.target.y,
-            x2 = leftHand ? d.target.x : d.source.x,
-            y2 = leftHand ? d.target.y : d.source.y,
+            x2 = (leftHand ? d.target.x : d.source.x),
+            y2 = (leftHand ? d.target.y : d.source.y),
             dx = x2 - x1,
             dy = y2 - y1,
             dr = Math.sqrt(dx * dx + dy * dy),
@@ -199,43 +183,47 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         nodeElements.attr("cx", d => d.x).attr("cy", d => d.y);
     }
 
-    // <editor-fold desc="this section is for drag drop">
-    function dragsubject() {
-        //This simulation is used for drag of the network only.
-        simulation = d3.forceSimulation()
-            .on("tick", tick);
-        simulation.nodes(nodes)
-            .force('link', d3.forceLink(links))
-            .force("charge", d3.forceManyBody())
-            .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("collide", d3.forceCollide(d => d.radius));
-        return simulation.find(d3.event.x, d3.event.y);
-    }
-
-    function dragstarted(d) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-        if (!d3.event.active) simulation.alphaTarget(0.1).restart();
-    }
-
-    function dragged(d) {
-        d.fx = d3.event.x;
-        d.fy = d3.event.y;
-    }
-
-    function dragended(d) {
-        d.fx = null;
-        d.fy = null;
-        simulation.alphaTarget(0);
+    function end() {
 
     }
 
-    //</editor-fold>
+    // // <editor-fold desc="this section is for drag drop">
+    // function dragsubject() {
+    //     //This simulation is used for drag of the network only.
+    //     simulation = d3.forceSimulation()
+    //         .on("tick", tick);
+    //     simulation.nodes(nodes)
+    //         .force('link', d3.forceLink(links))
+    //         .force("charge", d3.forceManyBody())
+    //         .force("center", d3.forceCenter(width / 2, height / 2))
+    //         .force("collide", d3.forceCollide(d => d.radius));
+    //     return simulation.find(d3.event.x, d3.event.y);
+    // }
+    //
+    // function dragstarted(d) {
+    //     d.fx = d3.event.x;
+    //     d.fy = d3.event.y;
+    //     if (!d3.event.active) simulation.alphaTarget(0.1).restart();
+    // }
+    //
+    // function dragged(d) {
+    //     d.fx = d3.event.x;
+    //     d.fy = d3.event.y;
+    // }
+    //
+    // function dragended(d) {
+    //     d.fx = null;
+    //     d.fy = null;
+    //     simulation.alphaTarget(0);
+    //
+    // }
+    //
+    // //</editor-fold>
 
     function getNodeRadiusScale(nodes, minR, maxR) {
-        let scale = d3.scalePow(2).domain(d3.extent(nodes.map(d => d.dataCount))).range([minR, maxR]);
-        return function (dataCount) {
-            return scale(dataCount);
+        let scale = d3.scalePow(2).domain(d3.extent(nodes.map(d => d.nodeCount))).range([minR, maxR]);
+        return function (nodeCount) {
+            return scale(nodeCount);
         }
     }
 
@@ -245,7 +233,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             .enter().append("marker")
             .attr("id", d => 'marker' + markerData.indexOf(d))
             .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 20)
+            .attr("refX", 15)
             .attr("refY", 0)
             .attr("markerWidth", 4)
             .attr("markerHeight", 4)
@@ -261,10 +249,10 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             .enter().append("marker")
             .attr("id", d => 'markerSelfLoop' + markerData.indexOf(d))
             .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 20)
-            .attr("refY", 1)
-            .attr("markerWidth", 3)
-            .attr("markerHeight", 3)
+            .attr("refX", 15)
+            .attr("refY", 0)
+            .attr("markerWidth", 4)
+            .attr("markerHeight", 4)
             .attr('markerUnits', "strokeWidth")
             .attr("orient", "25deg")
             .attr('xoverflow', 'visible')
@@ -297,25 +285,26 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         d.fy = null;
     }
 
-    //Handling zoom
-    let zoomHandler = d3.zoom()
-        .on("zoom", zoomActions);
-
-    zoomHandler(svg);
-
-    function zoomActions() {
-        contentGroup.attr("transform", d3.event.transform);
-    }
+    // //Handling zoom
+    // let zoomHandler = d3.zoom()
+    //     .on("zoom", zoomActions);
+    //
+    // zoomHandler(svg);
+    //
+    // function zoomActions() {
+    //     contentGroup.attr("transform", d3.event.transform);
+    // }
+    //</editor-fold>
 
     function setNodeRadius() {
         //TODO: May move this to the worker to improve performance.
         nodeRadiusScale = getNodeRadiusScale(nodes, networkSettings.node.minRadius, networkSettings.node.maxRadius);
         nodes.forEach(n => {
-            n.radius = nodeRadiusScale(n.dataCount);
+            n.radius = nodeRadiusScale(n.nodeCount);
         });
     }
-
-//</editor-fold>
+    //TODO: becareful with this => since it might be used as window object and override other fields.
+    let self = this;
     this.onUpdateData = function (newNodes, newLinks) {
         //Should start from their current positions.
         newNodes.forEach(n => {
@@ -324,10 +313,10 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
                 n.y = nodePosObj[n.id].y;
                 n.fx = nodePosObj[n.id].fx;
                 n.fy = nodePosObj[n.id].fy;
-            }else{
+            } else {
                 //Put new nodes at the center by default.
-                n.x = width/2;
-                n.y = height/2;
+                n.x = width / 2;
+                n.y = height / 2;
             }
         });
         nodes = newNodes;
@@ -336,6 +325,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         //Recalculate radius and stroke scale.
         setNodeRadius();
         linkStrokeWidthScale = getLinkStrokeWidthScale(links, nwMinStrokeWidth, nwMaxStrokeWidth);
+        self.linkStrokeWidthScale = linkStrokeWidthScale;
 
         nwForcePool.postMessage({
             event: "start",

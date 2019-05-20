@@ -86,13 +86,45 @@ function getAllNodesFromLinks(links) {
     return nodes;
 }
 
+function getAllNodesFromLinksWithCombination(links, combinedNodes) {
+    let nestedLinkByNodes = {};
+    links.forEach(link => {
+        if (!nestedLinkByNodes[link.source]) {
+            nestedLinkByNodes[link.source] = [link];
+        } else {
+            nestedLinkByNodes[link.source].push(link);
+        }
+        if (!nestedLinkByNodes[link.target]) {
+            nestedLinkByNodes[link.target] = [link];
+        } else {
+            nestedLinkByNodes[link.target].push(link);
+        }
+    });
+
+    let nodes = Object.keys(nestedLinkByNodes).map(d => {
+        let rows = nestedLinkByNodes[d].map(links => links.data).flat();
+        return {
+            id: d,
+            nodes: combinedNodes[d],
+            nodeCount: combinedNodes[d].length,
+            data: rows,
+            dataCount: rows.length
+        }
+    });
+    return nodes;
+}
 //</editor-fold>
 
 //<editor-fold desc="This section is for the data processing for honey pot">
-function updateLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmTime, newRows){
-    data = data.concat(newRows);
-    return getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmTime);
+function getUniqueSourcesAndTargets(data, clmSource, clmTarget) {
+    let allSTs = [];
+    data.forEach(row => {
+        allSTs.push(row[clmSource]);
+        allSTs.push(row[clmTarget]);
+    });
+    return Array.from(new Set(allSTs));
 }
+
 function getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmTime) {
     let allNodes = {};
     data.forEach(row => {
@@ -117,11 +149,14 @@ function getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmT
     });
     //From node value to its combined name (combined + index)
     let nodeToCombinedNode = {};
+    let combinedNodeToNodes = {}
     d3.entries(combinedNodes).forEach((row, i) => {
+        let newKey = 'combined' +i;
         row.value.forEach(node => {
-            nodeToCombinedNode[node] = 'combined' + i;
+            nodeToCombinedNode[node] = 'combined' +i;
         });
-    })
+        combinedNodeToNodes[newKey] = row.value;
+    });
     //Loop through each row and generate links.
     let linksObj = {};
     let timedLinksObj = {};
@@ -165,7 +200,7 @@ function getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmT
         r.value.dataCount = r.value.data.length;
         return r.value;
     });
-    let nodes = getAllNodesFromLinks(links);
+    let nodes = getAllNodesFromLinksWithCombination(links, combinedNodeToNodes);
     //Copy the nodes to avoid changing its x, y for the network.
     let timedNodes = nodes.map(n => {
         return Object.assign({}, n);

@@ -87,7 +87,7 @@ if (fileName === 'data/104.12.0.0.csv') {
         let {linkTypes, colorColumns, colors, formatColumns, formats, linkStrokeWidthScale, networkSettings} = getNetworkSettings(links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, linkTypeColor, nodeColor);
         ng = drawNetworkGraph(networkG, nodes, links, networkSettings);
 
-        debugger
+
         //<editor-fold desc="This section is to calculate nodes and links for the timeArc">
         //links and nodes without combinations
         let timeLinks = getLinksByColumnsAtTime(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, [COL_LINK_TYPE]);
@@ -158,13 +158,13 @@ if (fileName === 'data/104.12.0.0.csv') {
 
         //</editor-fold>
 
-        // const timeArcSettings = getTimeArcSettings(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, linkTypes, linkTypeColor, nodeColor, linkStrokeWidthScale, colorColumns, colors, formatColumns, formats);
-        // drawTimeArc(timeArcG, tgoNodes, tgoLinks, timeArcSettings);
-        //Reset it when clicking on the svg
-        // document.onclick = () => {
-        //     keep = !keep;
-        //     resetBrushing(timeArcSettings.transition.duration);
-        // };
+        const timeArcSettings = getTimeArcSettings(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, linkTypes, linkTypeColor, nodeColor, linkStrokeWidthScale, colorColumns, colors, formatColumns, formats);
+        drawTimeArc(timeArcG, tgoNodes, tgoLinks, timeArcSettings);
+        // Reset it when clicking on the svg
+        document.onclick = () => {
+            keep = !keep;
+            resetBrushing(timeArcSettings.transition.duration);
+        };
 
     });
 } else {
@@ -177,7 +177,7 @@ if (fileName === 'data/104.12.0.0.csv') {
     //<editor-fold desc="This section is about link type and node type colors">
     let typeColorObj = {
         '1': 'green',
-        '-1': 'gray',
+        '-1': 'steelblue',
         '-2': 'red'
     }
 

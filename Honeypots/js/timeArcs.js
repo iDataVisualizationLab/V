@@ -118,10 +118,11 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
         //Enter any new links
         let enterLink = linkElements.enter().append('path').attr('class', "tALinkElements")
             .attr("marker-end", d => {
+
                 if (d.source === d.target) {
-                    return `url(#markerSelfLoopTA${linkTypes.indexOf(d['type'])})`;
+                    return `url(#markerSelfLoopTA${d['type']})`;
                 }
-                return `url(#markerTA${linkTypes.indexOf(d['type'])})`;
+                return `url(#markerTA${d['type']})`;
             })
             .attr("stroke", d => linkTypeColor(d['type']))
             .attr("stroke-width", d => linkStrokeWidthScale(d.dataCount));
@@ -170,11 +171,13 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             }, timeArcSettings.transition.duration + 1);
         });
 
+        let xAxisG = theGroup.selectAll('.xAxis');
+        let xAxis = d3.axisTop(xScale);
+        if (xAxisG.empty()) {
+            xAxisG = theGroup.selectAll('.xAxis').data([1]).join('g').attr("class", "xAxis");
+        }
+        xAxisG.transition().duration(timeArcTransitionDuration).call(xAxis);
 
-        //Draw the xAxis
-        // let xAxisG = theGroup.append('g');
-        // let xAxis = d3.axisTop(xScale);
-        // xAxisG.call(xAxis);
 
         //Raise the two group
         nodeLines.raise();
@@ -247,9 +250,9 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
     function addArrowMarkers(mainG, markerData, markerColor) {
         let markerTADefs = mainG.selectAll('.markerTADefs').data([1], d => d).join("defs").attr('class', 'markerTADefs');
         markerTADefs.selectAll(".markerTA")
-            .data(markerData).join("marker")
+            .data(markerData, d=>d).join("marker")
             .attr("class", "markerTA")
-            .attr("id", d => 'markerTA' + markerData.indexOf(d))
+            .attr("id", d => 'markerTA' + d)
             .attr("viewBox", "0 -5 10 10")
             .attr("refX", 10)
             .attr("refY", 0)
@@ -258,16 +261,16 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             .attr('markerUnits', "strokeWidth")
             .attr("orient", "auto")
             .attr('xoverflow', 'visible')
-            .selectAll("path").data([1], d => d).join("path")
+            .selectAll("path").data(d=>[d], d => d).join("path")
             .attr('d', 'M0,-5L10,0L0,5')
             .attr("fill", d => d3.color(markerColor(d)).darker());
 
         let markerSelfLoopTADefs = mainG.selectAll('.markerSelfLoopTADefs').data([1], d => d).join("defs").attr("class", "markerSelfLoopTADefs");
 
         markerSelfLoopTADefs.selectAll(".markerSelfLoopTA")
-            .data(markerData).join("marker")
+            .data(markerData, d=>d).join("marker")
             .attr("class", 'markerSelfLoopTA')
-            .attr("id", d => 'markerSelfLoopTA' + markerData.indexOf(d))
+            .attr("id", d => 'markerSelfLoopTA' + d)
             .attr("viewBox", "0 -5 10 10")
             .attr("refX", 10)
             .attr("refY", 0)
@@ -276,15 +279,12 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             .attr('markerUnits', "strokeWidth")
             .attr("orient", "-130deg")
             .attr('xoverflow', 'visible')
-            .selectAll("path").data([1], d => d).join("path")
+            .selectAll("path").data(d=>[d], d => d).join("path")
             .attr('d', 'M0,-5L10,0L0,5')
             .attr("fill", d => d3.color(markerColor(d)).darker());
     }
 
     //</editor-fold>
-    this.onUpdateData = function (newNodes, newLinks) {
-
-    }
     return this;
 }
 
