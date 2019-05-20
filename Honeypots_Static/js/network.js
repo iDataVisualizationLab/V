@@ -62,7 +62,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             .attr("cx", d => d.x)
             .attr("cy", d => d.y)
             .attr("r", d => {
-                return nodeRadiusScale(d.dataCount);
+                return nodeRadiusScale(d.nodeCount);
             })
             .style('fill', d => nodeTypeColor(d.id))
             .call(d3.drag()
@@ -73,7 +73,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             );
         nodeElements = enterNode.merge(nodeElements);
         nodeElements.on("mouseover", d => {
-            showTip(`IP: "${d.id}", threats count: ${d.dataCount}`);
+            showTip(`IP: "${d.id}", threats count: ${d.dataCount}, nodes count: ${d.nodeCount}`);
             onNodeMouseOverCallback(d);
         }).on("mouseout", (d) => {
             hideTip();
@@ -223,9 +223,9 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
     //</editor-fold>
 
     function getNodeRadiusScale(nodes, minR, maxR) {
-        let scale = d3.scalePow(2).domain(d3.extent(nodes.map(d => d.dataCount))).range([minR, maxR]);
-        return function (dataCount) {
-            return scale(dataCount);
+        let scale = d3.scalePow(2).domain(d3.extent(nodes.map(d => d.nodeCount))).range([minR, maxR]);
+        return function (nodeCount) {
+            return scale(nodeCount);
         }
     }
 
@@ -287,15 +287,15 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         d.fy = null;
     }
 
-    //Handling zoom
-    let zoomHandler = d3.zoom()
-        .on("zoom", zoomActions);
-
-    zoomHandler(svg);
-
-    function zoomActions() {
-        contentGroup.attr("transform", d3.event.transform);
-    }
+    // //Handling zoom
+    // let zoomHandler = d3.zoom()
+    //     .on("zoom", zoomActions);
+    //
+    // zoomHandler(svg);
+    //
+    // function zoomActions() {
+    //     contentGroup.attr("transform", d3.event.transform);
+    // }
 
     function boundX(x) {
         let graphNodeDiameter = 2 * networkSettings.node.maxRadius;

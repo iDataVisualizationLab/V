@@ -191,7 +191,7 @@ else {
         //<editor-fold desc="This section is about link type and node type colors">
         let typeColorObj = {
             '1': 'green',
-            '-1': 'gray',
+            '-1': 'steelblue',
             '-2': 'red'
         }
 
@@ -216,12 +216,8 @@ else {
 
 
         //<editor-fold desc="This section is to calculate the nodes and links for the Network">
-        let {links, timedLinks} = getLinksGroupedByFanInOut(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, [COL_LINK_TYPE], COL_TIME);
-        let nodes = getAllNodesFromLinks(links);
-        //Copy the nodes to avoid changing its x, y for the network.
-        let timedNodes = nodes.map(n => {
-            return Object.assign({}, n);
-        });
+        let {nodes, links, timedNodes, timedLinks} = getLinksGroupedByFanInOut(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, [COL_LINK_TYPE], COL_TIME);
+
         //</editor-fold>
 
         let {linkTypes, colorColumns, colors, formatColumns, formats, linkStrokeWidthScale, networkSettings} = getNetworkSettings(data, links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, linkTypeColor, nodeTypeColor);
