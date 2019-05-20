@@ -1,8 +1,4 @@
 function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
-    //Use a dummy force to convert source, target id from links to nodes. Also, we will use this for drag of nodes.
-    let simulation = d3.forceSimulation();
-    simulation.nodes(nodes).force('link', d3.forceLink(links).id(d => d.id));
-
     let width = networkSettings.width, height = networkSettings.height, nodeTypeColor = networkSettings.nodeTypeColor,
         margin = networkSettings.margin,
         linkTypes = networkSettings.linkTypes, linkTypeColor = networkSettings.linkTypeColor,
@@ -11,6 +7,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         onLinkMouseOverCallback = networkSettings.onLinkMouseOverCallback,
         onNodeMouseOutCallback = networkSettings.onNodeMouseOutCallback,
         onLinkMouseOutCallback = networkSettings.onLinkMouseOutCallback;
+
     let nodeRadiusScale;
     //Add a clippath
     theGroup.append("defs").append("clipPath").attr("id", "theNetworkGraphCP").append("rect").attr("x", 0).attr("y", margin.top).attr("width", width).attr("height", height);
@@ -83,40 +80,14 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
 
     updateNodesAndLinks(nodes, links);
 
-    //Send the data for force calculation
-    let nwForcePool = new WorkerPool("js/workers/worker_nwforce.js", onForceResult, 1);
-    nwForcePool.startWorker({
-        event: "start",
-        nodes: nodes,
-        links: links,
-        width: width,
-        height: height,
-        sendTick: true
-    }, 0);
-
-    function onForceResult(e) {
-        let result = e.data;
-        if (result.event === "tick") {
-            nodes = result.nodes;
-            links = result.links;
-            updateNodesAndLinks(nodes, links);
-            tick();
-        } else {
-            // nwForcePool.resetWorkers();
-            //Scale the content group.
-            // noinspection ES6ModulesDependencies
-            let xExtent = d3.extent(result.nodes.map(d => d.x));
-            let yExtent = d3.extent(result.nodes.map(d => d.y));
-            let xSize = xExtent[1] - xExtent[0];
-            let ySize = yExtent[1] - yExtent[0];
-            let scaleX = (width - 2 * networkSettings.node.maxRadius - 20) / xSize,
-                scaleY = (height - 2 * networkSettings.node.maxRadius - 20) / ySize;
-            //Scale only if they are smaller than 1
-            if (scaleX < 1 || scaleY < 1) {
-                contentGroup.attr("transform", `scale(${scaleX}, ${scaleY})translate(${xSize / 2 - scaleX * xSize / 2}, ${ySize / 2 - scaleY * ySize / 2 + margin.top})`);
-            }
-        }
-    }
+    let simulation = d3.forceSimulation()
+        .on("end", end)
+        .on("tick", tick);
+    simulation.nodes(nodes)
+        .force('link', d3.forceLink(links).id(d => d.id))
+        .force("charge", d3.forceManyBody())
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("collide", d3.forceCollide(d => d.radius));
 
 
     function arcPath(leftHand, d) {
@@ -186,6 +157,19 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         nodeElements.attr("cx", d => d.x).attr("cy", d => d.y);
     }
 
+    function end() {
+        let xExtent = d3.extent(nodes.map(d => d.x));
+        let yExtent = d3.extent(nodes.map(d => d.y));
+        let xSize = xExtent[1] - xExtent[0];
+        let ySize = yExtent[1] - yExtent[0];
+        let scaleX = (width - 2 * networkSettings.node.maxRadius - 20) / xSize,
+            scaleY = (height - 2 * networkSettings.node.maxRadius - 20) / ySize;
+        //Scale only if they are smaller than 1
+        if (scaleX < 1 || scaleY < 1) {
+            contentGroup.attr("transform", `scale(${scaleX}, ${scaleY})translate(${xSize / 2 - scaleX * xSize / 2}, ${ySize / 2 - scaleY * ySize / 2 + margin.top})`);
+        }
+    }
+
     // <editor-fold desc="this section is for drag drop">
     function dragsubject() {
         //This simulation is used for drag of the network only.
@@ -220,6 +204,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         simulation.alphaTarget(0);
 
     }
+
     //</editor-fold>
 
     function getNodeRadiusScale(nodes, minR, maxR) {
