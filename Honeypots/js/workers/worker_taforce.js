@@ -13,8 +13,10 @@ onmessage = function (e) {
     if (!event || event === "start") {
         //Generate the best vertical location
         simulation = d3.forceSimulation()
-            .on('tick', tick)
-            .on('end', end).alphaTarget(0.0009).restart();
+            .on('end', end).alphaMin(0.001)
+        if (sendTick) {
+            simulation.on('tick', tick)
+        }
 
         simulation.nodes(nodes)
             .force('link', d3.forceLink(links).id(d => d.id))
