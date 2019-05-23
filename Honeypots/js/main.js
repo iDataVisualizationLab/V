@@ -184,8 +184,8 @@ if (fileName === 'data/104.12.0.0.csv') {
     let linkTypeColor = getLinkTypeColor(typeColorObj);
     let linkLegendData = [
         {value: "1", text: "safe"},
-        {value: "-1", text: "unknown threat"},
-        {value: "-2", text: "known threat"}
+        {value: "-1", text: "known threat"},
+        {value: "-2", text: "unknown threat"}
     ];
 
     drawLinkLegends(legendG, linkLegendData, linkTypeColor);

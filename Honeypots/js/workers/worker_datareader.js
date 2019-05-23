@@ -5,7 +5,7 @@ onmessage = function (e) {
     let interval = 10 * 1000;
     let fileName = '../../data/honeypot/20110401.txt';
     let duration = 30 * 60 * 1000;
-    let step = 6;
+    let step = 15;
     d3.text(fileName).then(rawData => {
         let cols = ["duration", "service", "source_bytes", "destination_bytes", "count", "same_srv_rate", "serror_rate", "srv_serror_rate", "dst_host_count",
             "dst_host_srv_count", "dst_host_same_src_port_rate", "dst_host_serror_rate", "dst_host_srv_serror_rate", "flag", "ids_detection", "malware_detection",
