@@ -33,6 +33,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
                     return `${d.nodes.map(d => d.id).join(', ')}`;
                 }
             })
+            .attr("x", d => d.x).attr("y", d => d.y)
             .classed('tANodeElements', true)
             .classed('tANodeTexts', true)
             .attr("transform", "translate(20, 0)")
@@ -250,7 +251,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
     function addArrowMarkers(mainG, markerData, markerColor) {
         let markerTADefs = mainG.selectAll('.markerTADefs').data([1], d => d).join("defs").attr('class', 'markerTADefs');
         markerTADefs.selectAll(".markerTA")
-            .data(markerData, d=>d).join("marker")
+            .data(markerData, d => d).join("marker")
             .attr("class", "markerTA")
             .attr("id", d => 'markerTA' + d)
             .attr("viewBox", "0 -5 10 10")
@@ -261,14 +262,14 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             .attr('markerUnits', "strokeWidth")
             .attr("orient", "auto")
             .attr('xoverflow', 'visible')
-            .selectAll("path").data(d=>[d], d => d).join("path")
+            .selectAll("path").data(d => [d], d => d).join("path")
             .attr('d', 'M0,-5L10,0L0,5')
             .attr("fill", d => d3.color(markerColor(d)).darker());
 
         let markerSelfLoopTADefs = mainG.selectAll('.markerSelfLoopTADefs').data([1], d => d).join("defs").attr("class", "markerSelfLoopTADefs");
 
         markerSelfLoopTADefs.selectAll(".markerSelfLoopTA")
-            .data(markerData, d=>d).join("marker")
+            .data(markerData, d => d).join("marker")
             .attr("class", 'markerSelfLoopTA')
             .attr("id", d => 'markerSelfLoopTA' + d)
             .attr("viewBox", "0 -5 10 10")
@@ -279,7 +280,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             .attr('markerUnits', "strokeWidth")
             .attr("orient", "-130deg")
             .attr('xoverflow', 'visible')
-            .selectAll("path").data(d=>[d], d => d).join("path")
+            .selectAll("path").data(d => [d], d => d).join("path")
             .attr('d', 'M0,-5L10,0L0,5')
             .attr("fill", d => d3.color(markerColor(d)).darker());
     }
