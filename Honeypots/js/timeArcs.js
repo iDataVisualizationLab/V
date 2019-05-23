@@ -25,7 +25,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
         //Exit
         nodeElements.exit().remove();
         //enter any new nodes
-        let enterNode = nodeElements.enter()
+        let enterNodes = nodeElements.enter()
             .append('text').text(d => {
                 if (d.id !== 'combined') {
                     return d.id;
@@ -33,7 +33,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
                     return `${d.nodes.map(d => d.id).join(', ')}`;
                 }
             })
-            .attr("x", d => d.x).attr("y", d => d.y)
+            .attr('opacity', 0).attr("x", d => d.x).attr("y", d => d.y)
             .classed('tANodeElements', true)
             .classed('tANodeTexts', true)
             .attr("transform", "translate(20, 0)")
@@ -42,11 +42,15 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             .style('font-size', '11px')
             .style('fill', d => nodeColor(d.id));
 
-        nodeElements = enterNode.merge(nodeElements);
+        enterNodes.transition().duration(timeArcTransitionDuration).attr("opacity", 1.0);
+
+        nodeElements.transition().duration(timeArcTransitionDuration).attr("x", d => d.x).attr("y", d => d.y);
+
+        nodeElements = enterNodes.merge(nodeElements);
     }
 
     function endedCalculatingY() {
-        updateNodes(nodes);
+
         let yScale = d3.scaleLinear().domain([0, nodes.length]).range([0, height]);
         //Sort the nodes by its y location
         nodes.sort((a, b) => a.y - b.y);
@@ -72,8 +76,10 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
 
         });
 
+        updateNodes(nodes);
+
         //Transform all the nodes.
-        tick(1000);
+
         setTimeout(() => {
             //Now add mouseover event for the nodes, should do it here since when it is on force calculation we shouldn't activate this otherwise it would lead to wrong location.
             nodeElements.on('mouseover', function (d) {
@@ -239,12 +245,8 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
         };
     }
 
-    function tick(duration) {
-        if (duration) {
-            nodeElements.transition().duration(duration).attr("x", d => d.x).attr("y", d => d.y);
-        } else {
-            nodeElements.attr("x", d => d.x).attr("y", d => d.y);
-        }
+    function tick(){
+
     }
 
     //<editor-fold desc="This section is for the arrow marker">
@@ -293,13 +295,14 @@ function forceDirectedLayout(nodes, links, tick, end, timeArcSettings) {
     //Generate the best vertical location
     let simulation = d3.forceSimulation()
     // .on('tick', tick)
-        .on('end', end).alphaTarget(0.0009).restart();
+        .on('end', end);
     simulation.nodes(nodes)
         .force('link', d3.forceLink(links).id(d => d.id))
         .force("charge", d3.forceManyBody())
         .force("collide", d3.forceCollide(timeArcSettings.textHeight))
         .force("center", d3.forceCenter(timeArcSettings.width / 2, timeArcSettings.height / 2))
-        .force("x", d3.forceX(timeArcSettings.width / 2).strength(1));
+        .force("x", d3.forceX(timeArcSettings.width / 2).strength(1))
+        .alphaMin(0.001);
 }
 
 function brushTimeArcNode(node, duration) {

@@ -22,6 +22,7 @@ onmessage = function (e) {
             .force("charge", d3.forceManyBody())
             .force("center", d3.forceCenter(width / 2, height / 2))
             .force("collide", d3.forceCollide(d => d.radius))
+            .alphaMin(0.08)
             .alphaTarget(alphaTarget).restart();
     }
     if (event === "restart") {

@@ -2,7 +2,7 @@ importScripts('../../lib/d3.js', '../dataProcessing.js');
 
 onmessage = function (e) {
     let day = 'Apr 11, 2014 ';
-    let interval = 10 * 1000;
+    let interval = 5 * 1000;
     let fileName = '../../data/honeypot/20110401.txt';
     let duration = 30 * 60 * 1000;
     let step = 15;
