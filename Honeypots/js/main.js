@@ -203,24 +203,28 @@ if (fileName === 'data/104.12.0.0.csv') {
 
 
     let networkGraph = null;
+    let timeArcGraph = null;
     //<editor-fold desc="This section is to calculate the nodes and links for the Network">
     let dataReaderWK = new WorkerPool("js/workers/worker_datareader.js", onReaderResult, 1);
     dataReaderWK.startWorker({}, 0);
 
     //</editor-fold>
     function onReaderResult(e) {
-
         let nodes = e.data.nodes, links = e.data.links, timedNodes = e.data.timedNodes, timedLinks = e.data.timedLinks;
-        //Create a simulaton for drag/drop and also help to
+        //Create a simulation for drag/drop and also help to
 
         let {linkTypes, colorColumns, colors, formatColumns, formats, networkSettings} = getNetworkSettings(links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, linkTypeColor, nodeTypeColor);
         if (!networkGraph) {
-            networkGraph = drawNetworkGraph(networkG, nodes, links, networkSettings);
+            networkGraph = new drawNetworkGraph(networkG, nodes, links, networkSettings);
         } else {
             networkGraph.onUpdateData(nodes, links);
         }
         const timeArcSettings = getTimeArcSettings(COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, linkTypes, linkTypeColor, nodeTypeColor, networkGraph.linkStrokeWidthScale, colorColumns, colors, formatColumns, formats);
-        drawTimeArc(timeArcG, timedNodes, timedLinks, timeArcSettings);
+        if (!timeArcGraph) {
+            timeArcGraph = new drawTimeArc(timeArcG, timedNodes, timedLinks, timeArcSettings);
+        } else {
+            timeArcGraph.onUpdateTAData(timedNodes, timedLinks);
+        }
     }
 
     //Reset it when clicking on the svg

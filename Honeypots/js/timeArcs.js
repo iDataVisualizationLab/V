@@ -19,9 +19,8 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
 
     //Do the ordering.
     // orderFunction(nodes, links, tick, endedCalculatingY, timeArcSettings);
-    // Copy
-    let nwForcePool = new WorkerPool("js/workers/worker_taforce.js", onForceResult, 1);
-    nwForcePool.startWorker({
+    let taForcePool = new WorkerPool("js/workers/worker_taforce.js", onForceResult, 1);
+    taForcePool.startWorker({
         event: "start",
         nodes: nodes,
         links: links,
@@ -29,14 +28,12 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
         height: height,
         sendTick: false
     }, 0);
-
     function onForceResult(e) {
         let result = e.data;
         nodes = result.nodes;
         links = result.links;
         endedCalculatingY();
     }
-
 
     function updateNodes(nodes) {
         nodeElements = nodeElements.data(nodes, d => d.id);
@@ -306,6 +303,20 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
     }
 
     //</editor-fold>
+
+    function onUpdateTAData(newNodes, newLinks){
+        nodes = newNodes;
+        links = newLinks;
+        taForcePool.postMessage({
+            event: "start",
+            nodes: nodes,
+            links: links,
+            width: width,
+            height: height,
+            sendTick: false
+        }, 0);
+    }
+    this.onUpdateTAData = onUpdateTAData;
     return this;
 }
 
