@@ -90,7 +90,6 @@ d3.csv('data/104.12.0.0.csv').then(data => {
         return link;
     });
 
-    // drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, tgoNodes, tgoLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack, orderFunction);
     drawTimeArc(timeArcG, timeArcWidth, timeArcHeight, tgoNodes, tgoLinks, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallback, onTimeArcLinkMouseOverCallBack);
 
     //Reset it when clicking on the svg
