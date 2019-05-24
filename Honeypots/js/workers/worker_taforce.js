@@ -14,7 +14,7 @@ onmessage = function (e) {
     if (!event || event === "start") {
         //Generate the best vertical location
         simulation = d3.forceSimulation()
-            .on('end', end).alphaMin(0.08)
+            .on('end', end).alphaMin(0.2)
         if (sendTick) {
             simulation.on('tick', tick)
         }
