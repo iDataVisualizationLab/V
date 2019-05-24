@@ -10,7 +10,7 @@ onmessage = function (e) {
     let sendTick = e.data.sendTick;
     alphaTarget = alphaTarget ? alphaTarget : 0;
     let event = e.data.event;
-
+    let tickCount = 0;
     if (!event || event === "start") {
         simulation = d3.forceSimulation()
             .on("end", end);
@@ -40,7 +40,11 @@ onmessage = function (e) {
         nodes.forEach(n => {
             bound(n);
         });
-        postMessage({event: 'tick', nodes: nodes, links: links});
+        tickCount += 1;
+        if(tickCount%10 === 1){
+            postMessage({event: 'tick', nodes: nodes, links: links});
+        }
+
     }
 
     function end() {

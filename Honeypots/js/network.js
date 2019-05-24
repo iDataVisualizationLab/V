@@ -1,6 +1,5 @@
 function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
 
-
     let width = networkSettings.width, height = networkSettings.height, nodeTypeColor = networkSettings.nodeTypeColor,
         margin = networkSettings.margin,
         linkTypes = networkSettings.linkTypes, linkTypeColor = networkSettings.linkTypeColor,
