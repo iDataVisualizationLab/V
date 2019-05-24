@@ -1,7 +1,7 @@
 importScripts('../../lib/d3.js');
 let simulation;
 onmessage = function (e) {
-    let start=new Date();
+    // let start=new Date();
     let nodes = e.data.nodes;
     let links = e.data.links;
     let width = e.data.width;
@@ -44,7 +44,7 @@ onmessage = function (e) {
     }
 
     function end() {
-        console.log('Done calculating Network force' + (new Date() - start));
+        // console.log('Done calculating Network force' + (new Date() - start));
         postMessage({event: 'end', nodes: nodes, links: links});
     }
 
