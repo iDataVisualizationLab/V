@@ -57,9 +57,9 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             .style('font-size', '11px')
             .style('fill', d => nodeColor(d.id));
 
-        enterNodes.transition().duration(timeArcTransitionDuration).attr("opacity", 1.0);
-
-        nodeElements.transition().duration(timeArcTransitionDuration).attr("x", d => d.x).attr("y", d => d.y);
+        enterNodes.transition().duration(timeArcTransitionDuration).attr("opacity", 1.0).end().then(()=>{
+            nodeElements.transition().duration(timeArcTransitionDuration).attr("x", d => d.x).attr("y", d => d.y);
+        });
 
         nodeElements = enterNodes.merge(nodeElements);
     }
