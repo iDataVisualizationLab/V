@@ -1,7 +1,7 @@
 importScripts('../../lib/d3.js');
 let simulation;
 onmessage = function (e) {
-    let start=new Date();
+    // let start=new Date();
     let nodes = e.data.nodes;
     let links = e.data.links;
     let width = e.data.width;
@@ -35,13 +35,12 @@ onmessage = function (e) {
         simulation.alphaTarget(alphaTarget).restart();
     }
 
-
     function tick() {
         postMessage({event: 'tick', nodes: nodes, links: links});
     }
 
     function end() {
-        console.log('Done calculating TA force' + (new Date() - start));
+        // console.log('Done calculating TA force' + (new Date() - start));
         postMessage({event: 'end', nodes: nodes, links: links});
     }
 }
