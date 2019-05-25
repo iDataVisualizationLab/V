@@ -1,6 +1,7 @@
 importScripts('../../lib/d3.js');
 let simulation;
 onmessage = function (e) {
+    // let start=new Date();
     let nodes = e.data.nodes;
     let links = e.data.links;
     let width = e.data.width;
@@ -13,8 +14,10 @@ onmessage = function (e) {
     if (!event || event === "start") {
         //Generate the best vertical location
         simulation = d3.forceSimulation()
-            .on('tick', tick)
-            .on('end', end).alphaTarget(0.0009).restart();
+            .on('end', end).alphaMin(0.2)
+        if (sendTick) {
+            simulation.on('tick', tick)
+        }
 
         simulation.nodes(nodes)
             .force('link', d3.forceLink(links).id(d => d.id))
@@ -32,12 +35,12 @@ onmessage = function (e) {
         simulation.alphaTarget(alphaTarget).restart();
     }
 
-
     function tick() {
         postMessage({event: 'tick', nodes: nodes, links: links});
     }
 
     function end() {
+        // console.log('Done calculating TA force' + (new Date() - start));
         postMessage({event: 'end', nodes: nodes, links: links});
     }
 }

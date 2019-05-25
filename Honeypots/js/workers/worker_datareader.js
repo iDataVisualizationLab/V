@@ -1,10 +1,11 @@
 importScripts('../../lib/d3.js', '../dataProcessing.js');
+
 onmessage = function (e) {
     let day = 'Apr 11, 2014 ';
-    let interval = 10 * 1000;
+    let interval = 5 * 1000;
     let fileName = '../../data/honeypot/20110401.txt';
-    let duration = 30 * 60 * 1000;
-    let step = 6;
+    let duration = 60 * 60 * 1000;
+    let step = 60;
     d3.text(fileName).then(rawData => {
         let cols = ["duration", "service", "source_bytes", "destination_bytes", "count", "same_srv_rate", "serror_rate", "srv_serror_rate", "dst_host_count",
             "dst_host_srv_count", "dst_host_same_src_port_rate", "dst_host_serror_rate", "dst_host_srv_serror_rate", "flag", "ids_detection", "malware_detection",
@@ -34,7 +35,10 @@ onmessage = function (e) {
                 postMessage({nodes: nodes, links: links, timedNodes: timedNodes, timedLinks: timedLinks});
             }
             prevTime = time;
+
+
             setTimeout(readData, interval);
+
         }
 
         readData();

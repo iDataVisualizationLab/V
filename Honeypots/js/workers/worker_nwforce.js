@@ -1,6 +1,7 @@
 importScripts('../../lib/d3.js');
 let simulation;
 onmessage = function (e) {
+    // let start=new Date();
     let nodes = e.data.nodes;
     let links = e.data.links;
     let width = e.data.width;
@@ -9,7 +10,7 @@ onmessage = function (e) {
     let sendTick = e.data.sendTick;
     alphaTarget = alphaTarget ? alphaTarget : 0;
     let event = e.data.event;
-
+    let tickCount = 0;
     if (!event || event === "start") {
         simulation = d3.forceSimulation()
             .on("end", end);
@@ -19,10 +20,10 @@ onmessage = function (e) {
 
         simulation.nodes(nodes)
             .force('link', d3.forceLink(links).id(d => d.id))
-            .force("charge", d3.forceManyBody())
+            .force("charge", d3.forceManyBody().strength(-5))
             .force("center", d3.forceCenter(width / 2, height / 2))
             .force("collide", d3.forceCollide(d => d.radius))
-            .alphaTarget(alphaTarget).restart();
+            .alphaMin(0.4);
     }
     if (event === "restart") {
         simulation.nodes().forEach((n, i) => {
@@ -36,13 +37,18 @@ onmessage = function (e) {
 
 
     function tick() {
-        // nodes.forEach(n => {
-        //     bound(n);
-        // });
-        postMessage({event: 'tick', nodes: nodes, links: links});
+        nodes.forEach(n => {
+            bound(n);
+        });
+        tickCount += 1;
+        if(tickCount%10 === 1){
+            postMessage({event: 'tick', nodes: nodes, links: links});
+        }
+
     }
 
     function end() {
+        // console.log('Done calculating Network force' + (new Date() - start));
         postMessage({event: 'end', nodes: nodes, links: links});
     }
 
