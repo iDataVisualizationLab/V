@@ -11,7 +11,7 @@ let svg = d3.select("#graphDiv").append("svg").attr("width", svgWidth).attr("hei
 let titleG = svg.append('g').attr('transform', `translate(${(networkWidth - margin.left) / 2}, ${margin.top})`);
 titleG.append('text').text('104.12.0.0 Threat Event Log Visualization').attr('class', 'graphTitle').attr('text-anchor', 'middle');
 let legendG = svg.append('g').attr('transform', `translate(${legendSettings.margin.left}, ${margin.top + networkHeight + margin.top})`);
-drawNodeLegends(legendG);
+
 let mainG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
 let networkG = mainG.append('g').attr('transform', `translate(0, 0)`);
 let timeArcG = mainG.append('g').attr('transform', `translate(${networkWidth},0)`);
@@ -50,7 +50,7 @@ if (fileName === 'data/104.12.0.0.csv') {
             {value: "none", text: "None"},
             {value: "", text: "Empty"}
         ];
-
+        drawNodeLegends(legendG);
         drawLinkLegends(legendG, linkLegendData, linkTypeColor);
 
         function getLinkTypeColor(linkTypeColorObj) {
@@ -82,6 +82,7 @@ if (fileName === 'data/104.12.0.0.csv') {
         //</editor-fold>
 
         let {linkTypes, colorColumns, colors, formatColumns, formats, linkStrokeWidthScale, networkSettings} = getNetworkSettings(data, links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, linkTypeColor, nodeColor);
+        hideLoader();
         drawNetworkGraph(networkG, nodes, links, networkSettings);
 
 
@@ -201,6 +202,7 @@ else {
             {value: "-1", text: "known threat"},
             {value: "-2", text: "unknown threat"}
         ];
+        drawNodeLegends(legendG);
         drawLinkLegends(legendG, linkLegendData, linkTypeColor);
 
         function getLinkTypeColor(linkTypeColorObj) {
@@ -222,6 +224,7 @@ else {
 
         let {linkTypes, colorColumns, colors, formatColumns, formats, linkStrokeWidthScale, networkSettings} = getNetworkSettings(data, links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, linkTypeColor, nodeTypeColor);
 
+        hideLoader();
         drawNetworkGraph(networkG, nodes, links, networkSettings);
 
 
