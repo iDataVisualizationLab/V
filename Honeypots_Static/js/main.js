@@ -339,11 +339,8 @@ function getTimeArcSettings(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, l
 
     function onTimeArcNodeMouseOverCallback(node) {
         //If the node is a combination then we need to concatenate many values
-        if (node.id === 'combined') {
-            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], node.nodes.map(d => d.id), data, colorColumns, colors, formatColumns, formats);
-        } else {
-            filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], [node.id], data, colorColumns, colors, formatColumns, formats);
-        }
+        let threatEvents = node.data;
+        updateTable(ipdatacsvTbl, threatEvents, colorColumns, colors, formatColumns, formats);
         //Also brush the timeArc
         brushTimeArcNode(node, timeArcTransitionDuration);
     }
@@ -356,4 +353,3 @@ function getTimeArcSettings(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, l
 
     return timeArcSettings;
 }
-
