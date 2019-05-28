@@ -9,7 +9,7 @@ function brushTimeArcNode(node) {
     //Brush node text and node line
     d3.selectAll('.tANodeElements').each(function () {
         let sel = d3.select(this);
-        sel.transition().duration(timeArcSettings.transition.duration).attr("opacity", d => {
+        sel.transition('brushTimeArcNode').duration(timeArcSettings.transition.duration).attr("opacity", d => {
             if (d.id === node.id) {
                 return 1;
             } else {
@@ -35,7 +35,7 @@ function brushTimeArcNodes(nodes) {
     let allNodeIds = nodes.map(n => n.id);
     d3.selectAll('.tANodeElements').each(function () {
         let sel = d3.select(this);
-        sel.transition().duration(timeArcSettings.transition.duration).attr("opacity", d => {
+        sel.transition('brushTimeArcNodes').duration(timeArcSettings.transition.duration).attr("opacity", d => {
             if (allNodeIds.indexOf(d.id) >= 0) {
                 return 1;
             } else {
@@ -49,7 +49,7 @@ function brushTimeArcLink(link) {
     //Join the three properties, source, target, type and compare
     d3.selectAll('.tALinkElements').each(function () {
         let sel = d3.select(this);
-        sel.transition().duration(timeArcSettings.transition.duration).attr("opacity", d => {
+        sel.transition('brushTimeArcLink').duration(timeArcSettings.transition.duration).attr("opacity", d => {
             if (combineProp(d) === combineProp(link)) {
                 return 1.0;
             } else {
@@ -69,7 +69,7 @@ function brushTimeArcLinksOfNodes(node) {
     let relatedLinks = [];
     d3.selectAll('.tALinkElements').each(function () {
         let sel = d3.select(this);
-        sel.transition().duration(timeArcSettings.transition.duration).attr("opacity", d => {
+        sel.transition('brushTimeArcLinksOfNodes').duration(timeArcSettings.transition.duration).attr("opacity", d => {
             if (d.source.id === node.id || d.target.id === node.id) {
                 relatedLinks.push(d);
                 return 1.0;
@@ -84,9 +84,9 @@ function brushTimeArcLinksOfNodes(node) {
 function resetBrushing() {
     if (!keep) {
         //Reset nodes
-        d3.selectAll('.tANodeElements').transition().duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
+        d3.selectAll('.tANodeElements').transition('resetBrushing').duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
         //Reset all links
-        d3.selectAll('.tALinkElements').transition().duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
+        d3.selectAll('.tALinkElements').transition('resetBrushing').duration(timeArcSettings.transition.duration).attr("opacity", 1.0);
         //Also clear the table.
         updateTable(ipdatacsvTbl, []);
     }
@@ -239,7 +239,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                 }
             });
             //Bring the text to its location
-            d3.selectAll('.tANodeTexts').transition().duration(timeArcSettings.transition.duration).attr("x", function (d) {
+            d3.selectAll('.tANodeTexts').transition('moveTextToMouse').duration(timeArcSettings.transition.duration).attr("x", function (d) {
                 if (d === theLink.source || d === theLink.target) {
                     return `${xScale(theLink[COL_END_TIME])}`;
                 } else {
@@ -250,7 +250,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
             onTimeArcLinkMouseOverCallBack(theLink);
         }).on("mouseout", function (theLink) {
             //Move the text of this node to its location
-            d3.selectAll('.tANodeTexts').transition().duration(timeArcSettings.transition.duration).attr("x", function (d) {
+            d3.selectAll('.tANodeTexts').transition('moveTextFromMouseToPos').duration(timeArcSettings.transition.duration).attr("x", function (d) {
                 return d.x;
             });
             setTimeout(() => {
@@ -327,7 +327,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
 
     function tick(duration) {
         if (duration) {
-            nodeElements.transition().duration(duration).attr("x", d => d.x).attr("y", d => d.y);
+            nodeElements.transition('moveNodeToPos').duration(duration).attr("x", d => d.x).attr("y", d => d.y);
         } else {
             nodeElements.attr("x", d => d.x).attr("y", d => d.y);
         }

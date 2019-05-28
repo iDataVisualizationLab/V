@@ -162,7 +162,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
                 }
             });
             //Bring the text to its location
-            d3.selectAll('.tANodeTexts').transition().duration(timeArcSettings.transition.duration).attr("x", function (d) {
+            d3.selectAll('.tANodeTexts').transition("moveTextToMouse").duration(timeArcSettings.transition.duration).attr("x", function (d) {
                 if (d === theLink.source || d === theLink.target) {
                     return `${xScale(theLink['time'])}`;
                 } else {
@@ -173,7 +173,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
             onLinkMouseOverCallBack(theLink);
         }).on("mouseout", function (theLink) {
             //Move the text of this node to its location
-            d3.selectAll('.tANodeTexts').transition().duration(timeArcSettings.transition.duration).attr("x", function (d) {
+            d3.selectAll('.tANodeTexts').transition('moveTextFromMouseToPos').duration(timeArcSettings.transition.duration).attr("x", function (d) {
                 return d.x;
             });
             setTimeout(() => {
@@ -249,7 +249,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
 
     function tick(duration) {
         if (duration) {
-            nodeElements.transition().duration(duration).attr("x", d => d.x).attr("y", d => d.y);
+            nodeElements.transition('moveTextToPos').duration(duration).attr("x", d => d.x).attr("y", d => d.y);
         } else {
             nodeElements.attr("x", d => d.x).attr("y", d => d.y);
         }
@@ -311,7 +311,7 @@ function brushTimeArcNode(node, duration) {
     //Brush node text and node line
     d3.selectAll('.tANodeElements').each(function () {
         let sel = d3.select(this);
-        sel.transition().duration(duration).attr("opacity", d => {
+        sel.transition('brushTimeArcNode').duration(duration).attr("opacity", d => {
             if (d.id === node.id) {
                 return 1;
             } else {
@@ -337,7 +337,7 @@ function brushTimeArcNodes(nodes, duration) {
     let allNodeIds = nodes.map(n => n.id);
     d3.selectAll('.tANodeElements').each(function () {
         let sel = d3.select(this);
-        sel.transition().duration(duration).attr("opacity", d => {
+        sel.transition('brushTimeArcNodes').duration(duration).attr("opacity", d => {
             if (allNodeIds.indexOf(d.id) >= 0) {
                 return 1;
             } else {
@@ -351,7 +351,7 @@ function brushTimeArcLink(link, duration) {
     //Join the three properties, source, target, type and compare
     d3.selectAll('.tALinkElements').each(function () {
         let sel = d3.select(this);
-        sel.transition().duration(duration).attr("opacity", d => {
+        sel.transition('brushTimeArcLink').duration(duration).attr("opacity", d => {
             if (combineProp(d) === combineProp(link)) {
                 return 1.0;
             } else {
@@ -371,7 +371,7 @@ function brushTimeArcLinksOfNodes(node, duration) {
     let relatedLinks = [];
     d3.selectAll('.tALinkElements').each(function () {
         let sel = d3.select(this);
-        sel.transition().duration(duration).attr("opacity", d => {
+        sel.transition('brushTimeArcLinksOfNodes').duration(duration).attr("opacity", d => {
             if (d.source.id === node.id || d.target.id === node.id) {
                 relatedLinks.push(d);
                 return 1.0;
@@ -386,9 +386,9 @@ function brushTimeArcLinksOfNodes(node, duration) {
 function resetBrushing(duration) {
     if (!keep) {
         //Reset nodes
-        d3.selectAll('.tANodeElements').transition().duration(duration).attr("opacity", 1.0);
+        d3.selectAll('.tANodeElements').transition('resetBrushing').duration(duration).attr("opacity", 1.0);
         //Reset all links
-        d3.selectAll('.tALinkElements').transition().duration(duration).attr("opacity", 1.0);
+        d3.selectAll('.tALinkElements').transition('resetBrushing').duration(duration).attr("opacity", 1.0);
         //Also clear the table.
         updateTable(ipdatacsvTbl, []);
     }
