@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3e976d4a-430b-439b-b648-109f312db29a" name="Default Changelist" comment="Static version.">
-      <change afterPath="$PROJECT_DIR$/../Honeypots/chaintransitions.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/loader/loader.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/loader/loader.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/V.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/V.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Honeypots/js/timeArcs.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Honeypots/js/timeArcs.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/demos.html" beforeDir="false" afterPath="$PROJECT_DIR$/demos.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
-    </list>
+    <list default="true" id="3e976d4a-430b-439b-b648-109f312db29a" name="Default Changelist" comment="Static version." />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -54,8 +44,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="72" lean-forward="true" selection-start-line="72" selection-end-line="72" />
+            <state relative-caret-position="93">
+              <caret line="59" column="10" lean-forward="true" selection-start-line="59" selection-start-column="10" selection-end-line="59" selection-end-column="10" />
               <folding>
                 <element signature="n#!!block;n#getTimeArcSettings#0" />
               </folding>
@@ -258,7 +248,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7095000" />
+    <option name="totallyTimeSpent" value="7121000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2560" height="1417" extended-state="0" />
@@ -278,7 +268,7 @@
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.4988086" visible="true" weight="0.07410237" />
       <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49960285" weight="0.32925898" />
-      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50119144" side_tool="true" visible="true" weight="0.07410237" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5007943" side_tool="true" visible="true" weight="0.32925898" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -294,7 +284,8 @@
     <MESSAGE value="Static version." />
     <MESSAGE value="Changed color for unknown detected threats and node size as number of nodes combined into that." />
     <MESSAGE value="Remove workers out of the static version, just to keep things clean." />
-    <option name="LAST_COMMIT_MESSAGE" value="Remove workers out of the static version, just to keep things clean." />
+    <MESSAGE value="Added loader" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added loader" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/js/workers/webworker.js" />
@@ -356,8 +347,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="72" lean-forward="true" selection-start-line="72" selection-end-line="72" />
+        <state relative-caret-position="93">
+          <caret line="59" column="10" lean-forward="true" selection-start-line="59" selection-start-column="10" selection-end-line="59" selection-end-column="10" />
           <folding>
             <element signature="n#!!block;n#getTimeArcSettings#0" />
           </folding>
