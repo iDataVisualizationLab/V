@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>tSNE with worker</title>
+    <script src="lib/d3.js"></script>
+</head>
+<body>
+<script>
+</script>
+<script src="js/tsnegui.js"></script>
+<script>
+    let tsneMargin = {left: 30, top: 30, right: 30, bottom: 30};
+    let width = 400;
+    let height = 400;
+    let tsneSettings = {
+        contentWidth: width - margin.left - margin.right,
+        contentHeight: height - margin.top - margin.bottom
+    }
+    let theGroup = d3.select("body").append("svg").attr("width", 400).attr("height", 400).append("g").attr("transform", 'translate(30, 30)');
+
+    drawTSNE(theGroup, tsneSettings);
+</script>
+</body>
+</html>

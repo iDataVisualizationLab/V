@@ -4,22 +4,28 @@ const margin = {left: 0, top: 20, right: 120, bottom: 20},
     timeArcWidth = window.innerWidth - networkWidth - margin.left - margin.right,
     timeArcHeight = window.innerHeight - margin.top - margin.bottom - 220,
     svgWidth = networkWidth + timeArcWidth + margin.left + margin.right,
-    svgHeight = Math.max(networkHeight, timeArcHeight) + margin.top + margin.bottom;
+    svgHeight = Math.max(networkHeight, timeArcHeight) + margin.top + margin.bottom,
+    tsneMargin = {left: 30, top: 30, right: 30, bottom: 30},
+    tsneSettings = {
+        contentWidth: networkWidth - tsneMargin.left - tsneMargin.right,
+        contentHeight: networkHeight - tsneMargin.top - tsneMargin.bottom
+    };
 
 let svg = d3.select("#graphDiv").append("svg").attr("width", svgWidth).attr("height", svgHeight).style('overflow-x', 'visible');
 //Title.
 let titleG = svg.append('g').attr('transform', `translate(${(networkWidth - margin.left) / 2}, ${margin.top})`);
 titleG.append('text').text('104.12.0.0 Threat Event Log Visualization').attr('class', 'graphTitle').attr('text-anchor', 'middle');
-let legendG = svg.append('g').attr('transform', `translate(${legendSettings.margin.left}, ${margin.top + networkHeight + margin.top})`);
+let legendG = svg.append('g').attr('transform', `translate(${legendSettings.margin.left}, ${2*networkHeight + 3*margin.top})`);
 
 let mainG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
-let networkG = mainG.append('g').attr('transform', `translate(0, 0)`);
+let tsneG = mainG.append('g').attr("transform", `translate(${tsneMargin.left}, ${tsneMargin.top} )`);
+let networkG = mainG.append('g').attr('transform', `translate(0, ${networkHeight})`);
 let timeArcG = mainG.append('g').attr('transform', `translate(${networkWidth},0)`);
+
+drawTSNE(tsneG, tsneSettings);
+
 let ipdatacsvTbl = document.getElementById('ipdatacsvTbl');
 let keep = false;
-let ng;
-
-let fileName = "data/honeypot/20110401.txt";
 
 //COMMON SETTINGS
 let nwMinStrokeWidth = 1,
@@ -54,17 +60,15 @@ let nodeTypeColor = function nodeTypeColor(value) {
 }
 //</editor-fold>
 
-
 let networkGraph = null;
 let timeArcGraph = null;
 //<editor-fold desc="This section is to calculate the nodes and links for the Network">
 let dataReaderWK = new WorkerPool("js/workers/worker_datareader.js", onReaderResult, 1);
 dataReaderWK.startWorker({}, 0);
-
 //</editor-fold>
 function onReaderResult(e) {
     //Hide loader if it is showing
-    if(isLoaderVisible()){
+    if (isLoaderVisible()) {
         hideLoader();
     }
     let nodes = e.data.nodes, links = e.data.links, timedNodes = e.data.timedNodes, timedLinks = e.data.timedLinks;
@@ -83,20 +87,20 @@ function onReaderResult(e) {
         timeArcGraph.onUpdateTAData(timedNodes, timedLinks);
     }
 }
-let linkLegendData = [
-    {value: "1", text: "safe"},
-    {value: "-1", text: "known threat"},
-    {value: "-2", text: "unknown threat"}
-];
 
-drawLinkLegends(legendG, linkLegendData, linkTypeColor);
-drawNodeLegends(legendG);
 //Reset it when clicking on the svg
 document.onclick = () => {
     keep = !keep;
     resetBrushing(timeArcTransitionDuration);
 };
 
+let linkLegendData = [
+    {value: "1", text: "safe"},
+    {value: "-1", text: "known threat"},
+    {value: "-2", text: "unknown threat"}
+];
+drawNodeLegends(legendG);
+drawLinkLegends(legendG, linkLegendData, linkTypeColor);
 
 function getNetworkSettings(links, COL_LINK_TYPE, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, COL_TIME, linkTypeColor, nodeTypeColor) {
     let linkTypes = Array.from(new Set(links.map(l => l['type'])));

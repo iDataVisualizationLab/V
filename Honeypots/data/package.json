@@ -1,0 +1,25 @@
+{
+  "name": "honeypotdataprocessing",
+  "version": "1.0.0",
+  "description": "Honeypot data processing",
+  "main": "parent.js",
+  "scripts": {
+    "test": "node parent.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/idatavisualization/V/Honeypot"
+  },
+  "keywords": [
+    "Honeypot"
+  ],
+  "author": "IDVL",
+  "license": "ISC",
+  "dependencies": {
+    "btoa": "^1.2.1",
+    "d3": "^5.9.2",
+    "jsdom": "^15.1.1",
+    "node-fetch-polyfill": "^2.0.6",
+    "svg2img": "^0.6.0"
+  }
+}
