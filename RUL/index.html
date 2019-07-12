@@ -12,8 +12,8 @@
     </style>
     <!--</editor-fold>-->
     <!--<editor-fold desc="this section is for tfjs">-->
-    <script src="lib/tfjs/tfjs.js"> </script>
-    <script src="lib/tfjs/tfjs-vis.js"> </script>
+    <script src="lib/tfjs/tfjs.js"></script>
+    <script src="lib/tfjs/tfjs-vis.js"></script>
     <!--</editor-fold>-->
 
     <!--<editor-fold desc="this section is for other libraries">-->
@@ -25,34 +25,6 @@
 <header>
     <h1 class="page"><a href="index.html"><b>Neural Network</b></a> <span class="optional">Exploration Page</span>.</h1>
 </header>
-<script>
-    let sensorId = 0;
-
-    //Load data
-    d3.json('data/test_FD001.json').then(test_FD=>{
-        d3.json('data/test_RUL_FD001.json').then(test_RUL=>{
-           //Process data.
-            tf.loadLayersModel('data/models/model.json').then(model=>{
-                const X_test = tf.tensor3d(test_FD, [test_FD.length, test_FD[0].length, test_FD[0][0].length]);
-                const y_test = tf.tensor2d(test_RUL, [test_RUL.length, 1]);
-
-                console.log(model.predict(X_test, y_test));
-                console.log(y_test);
-
-                //build viz model
-                const viz_model = getVizModel(model);
-                console.log(viz_model);
-            });
-        });
-    });
-    function getVizModel(model){
-        const output_layers = model.layers.map(l=>l.output);
-        const input = model.input;
-        const viz_model = tf.model({inputs: input, outputs: output_layers});
-        return viz_model
-    }
-
-</script>
 <div id="top-controls">
     <div class="container page">
         <div class="control">
@@ -61,15 +33,22 @@
     </div>
 </div>
 <div class="page" id="main-part">
-    <div style="width: 1400px; margin-left: auto; margin-right: auto;">
-        <div style="float:left">
-
+    <div class="row" style="width: 1400px; margin-left: auto; margin-right: auto;">
+        <div class="col s4">
+            <div id="inputDiv"></div>
+        </div>
+        <div class="col s4">
+            <div id="modelDiv"></div>
+        </div>
+        <div class="col s4">
+            <div id="layerOutput"></div>
         </div>
     </div>
 </div>
 <div class="more">
     <a href="#scagStages">
-        <button class="mdl-button mdl-js-button mdl-button--fab" data-upgraded=",MaterialButton">
+
+        <button class="mdl-button mdl-js-button mdl-button--fab" data-upgraded="MaterialButton">
             <i class="material-icons">keyboard_arrow_down</i>
         </button>
     </a>
@@ -80,5 +59,74 @@
         <div id="controlButtons"></div>
     </div>
 </article>
+
+<script>
+    let engineIdx = 0;
+
+    //Load data
+    d3.json('data/test_FD001.json').then(test_FD => {
+        d3.json('data/test_RUL_FD001.json').then(test_RUL => {
+            //Process data.
+            const selectedSensors = [2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 20, 21];
+            const values = [];
+            const series = [];
+            const engineData = test_FD[engineIdx];
+            const sequenceLength = engineData.length;
+            const numberOfSensors = selectedSensors.length;
+            const numberofEngines = test_FD.length;
+            for (let sensorIdx = 0; sensorIdx < numberOfSensors; sensorIdx++) {
+                series.push('sensor' + selectedSensors[sensorIdx]);
+                let sensorValues = [];
+                for (let sequenceIdx = 0; sequenceIdx < sequenceLength; sequenceIdx++) {
+                    sensorValues.push({x: sequenceIdx, y: engineData[sequenceIdx][sensorIdx]})
+                }
+                values.push(sensorValues);
+            }
+            //Add the divs for inputs
+            d3.select("#inputDiv").selectAll(".inputSensor").data(selectedSensors).enter().append("div").attr("id", (d, i) => "inputSensor" + d);
+            //Draw inputs
+
+            for (let i = 0; i < selectedSensors.length; i++) {
+                tfvis.render.linechart(document.getElementById("inputSensor" + selectedSensors[i]), {
+                    values: values[i],
+                    series: ['sensor' + selectedSensors[i]]
+                }, {width: 400, height: 100, xLabel: 'sequence step', yLabel: 'sensor value'});
+            }
+
+            const tsX = tf.tensor3d(test_FD, [numberofEngines, sequenceLength, numberOfSensors]);
+            const tsY = tf.tensor2d(test_RUL, [test_RUL.length, 1]);
+            const tsEngineX = tf.tensor3d([engineData], [1, sequenceLength, numberOfSensors]);
+            const engineRUL = test_RUL[engineIdx];
+
+            tf.loadLayersModel('data/models/model.json').then(model => {
+                //Show model
+                tfvis.show.modelSummary(document.getElementById('modelDiv'), model);
+                //build viz model
+                const viz_model = getVizModel(model);
+                //Predict result
+                const layerOutputs = viz_model.predict(tsEngineX);
+                const layerIndex = 1;
+                const layerOutput = layerOutputs[layerIndex];
+                const heatmapData = {
+                    values: layerOutput.reshape([layerOutput.shape[1], layerOutput.shape[2]])
+                };
+                tfvis.render.heatmap(document.getElementById('layerOutput'), heatmapData);
+
+            });
+
+
+            function getVizModel(model) {
+                const output_layers = model.layers.map(l => l.output);
+                const input = model.input;
+                const viz_model = tf.model({inputs: input, outputs: output_layers});
+                return viz_model
+            }
+        });
+    });
+
+
+
+</script>
+
 </body>
 </html>
