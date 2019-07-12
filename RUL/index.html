@@ -6,7 +6,7 @@
     <!--<editor-fold desc="this section is for materialize">-->
     <link href="lib/materialize/materialize.min.css" rel="stylesheet">
     <script src="lib/materialize/materialize.min.js"></script>
-    <link href="lib/materialize/MaterialIcons.css" rel="stylesheet" type="text/css">
+    <link href="lib/materialize/MaterialIcns.css" rel="stylesheet" type="text/css">
     <style>
         @import "css/playground.css";
     </style>
@@ -61,26 +61,25 @@
 </article>
 
 <script>
-    let engineIdx = 0;
-
+    let engineIdx = 1;
     //Load data
     d3.json('data/test_FD001.json').then(test_FD => {
         d3.json('data/test_RUL_FD001.json').then(test_RUL => {
             //Process data.
             const selectedSensors = [2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 20, 21];
-            const values = [];
-            const series = [];
+            const inputValues = [];
+            const inputSeries = [];
             const engineData = test_FD[engineIdx];
             const sequenceLength = engineData.length;
             const numberOfSensors = selectedSensors.length;
             const numberofEngines = test_FD.length;
             for (let sensorIdx = 0; sensorIdx < numberOfSensors; sensorIdx++) {
-                series.push('sensor' + selectedSensors[sensorIdx]);
+                inputSeries.push('sensor' + selectedSensors[sensorIdx]);
                 let sensorValues = [];
                 for (let sequenceIdx = 0; sequenceIdx < sequenceLength; sequenceIdx++) {
                     sensorValues.push({x: sequenceIdx, y: engineData[sequenceIdx][sensorIdx]})
                 }
-                values.push(sensorValues);
+                inputValues.push(sensorValues);
             }
             //Add the divs for inputs
             d3.select("#inputDiv").selectAll(".inputSensor").data(selectedSensors).enter().append("div").attr("id", (d, i) => "inputSensor" + d);
@@ -88,7 +87,7 @@
 
             for (let i = 0; i < selectedSensors.length; i++) {
                 tfvis.render.linechart(document.getElementById("inputSensor" + selectedSensors[i]), {
-                    values: values[i],
+                    values: inputValues[i],
                     series: ['sensor' + selectedSensors[i]]
                 }, {width: 400, height: 100, xLabel: 'sequence step', yLabel: 'sensor value'});
             }
@@ -111,7 +110,6 @@
                     values: layerOutput.reshape([layerOutput.shape[1], layerOutput.shape[2]])
                 };
                 tfvis.render.heatmap(document.getElementById('layerOutput'), heatmapData);
-
             });
 
 
