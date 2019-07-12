@@ -28,7 +28,10 @@
 <div id="top-controls">
     <div class="container page">
         <div class="control">
-            <!--Content comes here-->
+            <label for="engineSelection">Select an engine</label>
+            <div class="select">
+                <select class="select multiple" id="engineSelection" onchange="changeEngine(this);"></select>
+            </div>
         </div>
     </div>
 </div>
@@ -61,67 +64,100 @@
 </article>
 
 <script>
-    let engineIdx = 1;
-    //Load data
-    d3.json('data/test_FD001.json').then(test_FD => {
-        d3.json('data/test_RUL_FD001.json').then(test_RUL => {
-            //Process data.
-            const selectedSensors = [2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 20, 21];
-            const inputValues = [];
-            const inputSeries = [];
-            const engineData = test_FD[engineIdx];
-            const sequenceLength = engineData.length;
-            const numberOfSensors = selectedSensors.length;
-            const numberofEngines = test_FD.length;
-            for (let sensorIdx = 0; sensorIdx < numberOfSensors; sensorIdx++) {
-                inputSeries.push('sensor' + selectedSensors[sensorIdx]);
-                let sensorValues = [];
-                for (let sequenceIdx = 0; sequenceIdx < sequenceLength; sequenceIdx++) {
-                    sensorValues.push({x: sequenceIdx, y: engineData[sequenceIdx][sensorIdx]})
-                }
-                inputValues.push(sensorValues);
-            }
-            //Add the divs for inputs
-            d3.select("#inputDiv").selectAll(".inputSensor").data(selectedSensors).enter().append("div").attr("id", (d, i) => "inputSensor" + d);
-            //Draw inputs
 
-            for (let i = 0; i < selectedSensors.length; i++) {
-                tfvis.render.linechart(document.getElementById("inputSensor" + selectedSensors[i]), {
-                    values: inputValues[i],
-                    series: ['sensor' + selectedSensors[i]]
-                }, {width: 400, height: 100, xLabel: 'sequence step', yLabel: 'sensor value'});
-            }
-
-            const tsX = tf.tensor3d(test_FD, [numberofEngines, sequenceLength, numberOfSensors]);
-            const tsY = tf.tensor2d(test_RUL, [test_RUL.length, 1]);
-            const tsEngineX = tf.tensor3d([engineData], [1, sequenceLength, numberOfSensors]);
-            const engineRUL = test_RUL[engineIdx];
-
-            tf.loadLayersModel('data/models/model.json').then(model => {
-                //Show model
-                tfvis.show.modelSummary(document.getElementById('modelDiv'), model);
-                //build viz model
-                const viz_model = getVizModel(model);
-                //Predict result
-                const layerOutputs = viz_model.predict(tsEngineX);
-                const layerIndex = 1;
-                const layerOutput = layerOutputs[layerIndex];
-                const heatmapData = {
-                    values: layerOutput.reshape([layerOutput.shape[1], layerOutput.shape[2]])
-                };
-                tfvis.render.heatmap(document.getElementById('layerOutput'), heatmapData);
-            });
+    const numberOfEngines = 100;
+    const selectedSensors = [2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 20, 21];
+    const sequenceLength = 200;
+    const numberOfSensors = selectedSensors.length;
+    let test_FD = null;
+    let test_RUL = null;
+    const modelPaths = ['data/models/model.json'];
+    let models = [];
+    let visModels = [];
 
 
-            function getVizModel(model) {
-                const output_layers = model.layers.map(l => l.output);
-                const input = model.input;
-                const viz_model = tf.model({inputs: input, outputs: output_layers});
-                return viz_model
-            }
-        });
+    async function main() {
+        //Load data
+        test_FD = await d3.json('data/test_FD001.json');
+        test_RUL = await d3.json('data/test_RUL_FD001.json');
+        //Load models
+        models = await Promise.all(modelPaths.map(thePath =>tf.loadLayersModel(thePath)));
+        //Get the vis model
+        visModels = models.map(model=>getVisModel(model));
+    }
+
+    main().then(()=>{
+        //Populate engine ids.
+        populateEngineIds(numberOfEngines);
+        drawModels(models);
+        //Change to default engine (engine 1)
+        changeEngine(document.getElementById('engineSelection'));
     });
 
+    function changeEngine(engineSelection){
+        const engineIdx = engineSelection.selectedIndex;
+        const engineData = test_FD[engineIdx];
+        drawInputs(engineData);
+        //Create tensor for the engineData
+        const tsEngineX = tf.tensor3d([engineData], [1, sequenceLength, numberOfSensors]);
+        //Get output layers for all models.
+        const modelLayerOutputs = visModels.map(viz_model=>{
+            const layerOutputs = viz_model.predict(tsEngineX);
+            return layerOutputs;
+        });
+        //Draw
+        const layerIdx = 1;
+        const modelIdx = 0;
+        drawLayerOutput(modelLayerOutputs[modelIdx][layerIdx], document.getElementById('layerOutput'));
+    }
+    function drawLayerOutput(layerOutput, theDiv){
+        const heatmapData = {
+            values: layerOutput.reshape([layerOutput.shape[1], layerOutput.shape[2]])
+        };
+        tfvis.render.heatmap(theDiv, heatmapData, {height: 250});
+    }
+    function populateEngineIds(numberOfEngines){
+        const engineSelection = d3.select("#engineSelection");
+        for (let i = 0; i < numberOfEngines; i++) {
+            engineSelection.append("option").attr("value", i).node().innerHTML = "Engine " + (i+1);
+        }
+    }
+    function drawModels(models) {
+        //Create divs for the models
+        d3.select('#modelDiv').selectAll('div').data(models).enter().append("div").attr("id", (d, i) => 'model' + i);
+        //Draw models
+        models.forEach((model, i) => {
+            //Show model
+            tfvis.show.modelSummary(document.getElementById('model' + i), model);
+        });
+    }
+    function drawInputs(engineData) {
+        const inputValues = [];
+        const inputSeries = [];
+        for (let sensorIdx = 0; sensorIdx < numberOfSensors; sensorIdx++) {
+            inputSeries.push('sensor' + selectedSensors[sensorIdx]);
+            let sensorValues = [];
+            for (let sequenceIdx = 0; sequenceIdx < sequenceLength; sequenceIdx++) {
+                sensorValues.push({x: sequenceIdx, y: engineData[sequenceIdx][sensorIdx]})
+            }
+            inputValues.push(sensorValues);
+        }
+        //Add the divs for inputs
+        d3.select("#inputDiv").selectAll(".inputSensor").data(selectedSensors).enter().append("div").attr("id", (d, i) => "inputSensor" + d);
+        //Draw inputs
+        for (let i = 0; i < selectedSensors.length; i++) {
+            tfvis.render.linechart(document.getElementById("inputSensor" + selectedSensors[i]), {
+                values: inputValues[i],
+                series: ['sensor' + selectedSensors[i]]
+            }, {width: 400, height: 100, xLabel: 'sequence step', yLabel: 'sensor value'});
+        }
+    }
+    function getVisModel(model) {
+        const output_layers = model.layers.map(l => l.output);
+        const input = model.input;
+        const viz_model = tf.model({inputs: input, outputs: output_layers});
+        return viz_model
+    }
 
 
 </script>
