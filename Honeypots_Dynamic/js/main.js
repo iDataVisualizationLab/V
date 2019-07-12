@@ -19,7 +19,7 @@ let ipdatacsvTbl = document.getElementById('ipdatacsvTbl');
 let keep = false;
 let ng;
 
-let fileName = "data/honeypot/20110401.txt";
+let fileName = "data/honeypot/20150101.txt";
 
 //COMMON SETTINGS
 let nwMinStrokeWidth = 1,
@@ -39,7 +39,7 @@ let typeColorObj = {
     '1': 'green',
     '-1': 'steelblue',
     '-2': 'red'
-}
+};
 
 let linkTypeColor = getLinkTypeColor(typeColorObj);
 
@@ -51,7 +51,7 @@ function getLinkTypeColor(linkTypeColorObj) {
 
 let nodeTypeColor = function nodeTypeColor(value) {
     return 'black';
-}
+};
 //</editor-fold>
 
 

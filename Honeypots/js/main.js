@@ -5,17 +5,18 @@ const margin = {left: 0, top: 20, right: 120, bottom: 20},
     timeArcHeight = window.innerHeight - margin.top - margin.bottom - 220,
     svgWidth = networkWidth + timeArcWidth + margin.left + margin.right,
     svgHeight = Math.max(networkHeight, timeArcHeight) + margin.top + margin.bottom,
-    tsneMargin = {left: 30, top: 30, right: 30, bottom: 30},
+    tsneMargin = {left: 50, top: 50, right: 50, bottom: 50},
     tsneSettings = {
         contentWidth: networkWidth - tsneMargin.left - tsneMargin.right,
-        contentHeight: networkHeight - tsneMargin.top - tsneMargin.bottom
+        contentHeight: networkHeight - tsneMargin.top - tsneMargin.bottom,
+        onTNSENodeClick: onTNSENodeClick
     };
 
 let svg = d3.select("#graphDiv").append("svg").attr("width", svgWidth).attr("height", svgHeight).style('overflow-x', 'visible');
 //Title.
 let titleG = svg.append('g').attr('transform', `translate(${(networkWidth - margin.left) / 2}, ${margin.top})`);
-titleG.append('text').text('104.12.0.0 Threat Event Log Visualization').attr('class', 'graphTitle').attr('text-anchor', 'middle');
-let legendG = svg.append('g').attr('transform', `translate(${legendSettings.margin.left}, ${2*networkHeight + 3*margin.top})`);
+titleG.append('text').text('Event Log Visualization').attr('class', 'graphTitle').attr('text-anchor', 'middle');
+let legendG = svg.append('g').attr('transform', `translate(${legendSettings.margin.left}, ${2 * networkHeight + 3 * margin.top})`);
 
 let mainG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
 let tsneG = mainG.append('g').attr("transform", `translate(${tsneMargin.left}, ${tsneMargin.top} )`);
@@ -45,7 +46,7 @@ let typeColorObj = {
     '1': 'green',
     '-1': 'steelblue',
     '-2': 'red'
-}
+};
 
 let linkTypeColor = getLinkTypeColor(typeColorObj);
 
@@ -57,20 +58,20 @@ function getLinkTypeColor(linkTypeColorObj) {
 
 let nodeTypeColor = function nodeTypeColor(value) {
     return 'black';
-}
+};
 //</editor-fold>
 
 let networkGraph = null;
 let timeArcGraph = null;
 //<editor-fold desc="This section is to calculate the nodes and links for the Network">
-let dataReaderWK = new WorkerPool("js/workers/worker_datareader.js", onReaderResult, 1);
-dataReaderWK.startWorker({}, 0);
+let dataReaderWK = new WorkerPool("js/workers/worker_hourdatareader.js", onReaderResult, 1);
+
 //</editor-fold>
 function onReaderResult(e) {
     //Hide loader if it is showing
-    if (isLoaderVisible()) {
-        hideLoader();
-    }
+    // if (isLoaderVisible()) {
+    //     hideLoader();
+    // }
     let nodes = e.data.nodes, links = e.data.links, timedNodes = e.data.timedNodes, timedLinks = e.data.timedLinks;
     //Create a simulation for drag/drop and also help to
 
@@ -206,3 +207,6 @@ function getTimeArcSettings(COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, linkTyp
     return timeArcSettings;
 }
 
+function onTNSENodeClick(fileName) {
+    dataReaderWK.startWorker({fileName: fileName}, 0);
+}

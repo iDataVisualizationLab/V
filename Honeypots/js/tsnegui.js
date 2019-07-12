@@ -10,11 +10,26 @@ function drawTSNE(theGroup, tsneSettings) {
         let selection = theGroup.selectAll(".compute").data(data);
         //Exit
         selection.exit().remove();
+        /*********Images************/
+        // //Enter
+        // const newElements = selection.enter().append('image').attr("class", "compute").attr("xlink:href", (d, i) => {
+        //     return "data/dataprocessing/input/" + files[i];
+        // }).attr("x", d => xScale(d[0])).attr("y", d => yScale(d[1])).attr("width", 30).attr("height", 30);
+        // selection = newElements.merge(selection);
+        // //Update
+        // selection.attr("x", d => xScale(d[0])).attr("y", d => yScale(d[1]))
+        //     .on("click", (d, i) => {
+        //         tsneSettings.onTNSENodeClick(files[i]);
+        //     });
+        /*********Circles************/
         //Enter
-        const newElements = selection.enter().append('image').attr("class", "compute").attr("xlink:href", (d, i) => "data/dataprocessing/input/" + files[i]).attr("x", d => xScale(d[0])).attr("y", d => yScale(d[1])).attr("width", 30).attr("height", 30);
+        const newElements = selection.enter().append('circle').attr("class", "compute").attr("r", 3).attr("cx", d => xScale(d[0])).attr("cy", d => yScale(d[1]));
         selection = newElements.merge(selection);
         //Update
-        selection.attr("x", d => xScale(d[0])).attr("y", d => yScale(d[1]));
+        selection.attr("cx", d => xScale(d[0])).attr("cy", d => yScale(d[1]))
+            .on("click", (d, i) => {
+                tsneSettings.onTNSENodeClick(files[i]);
+            });
     }
 
     function getExtent(data, columnIndex) {
@@ -37,8 +52,8 @@ function drawTSNE(theGroup, tsneSettings) {
         }
     }
 
-    d3.json('data/dataprocessing/python/features.json').then((data) => {
-        d3.json('data/dataprocessing/python/files.json').then((file_list) => {
+    d3.json('data/dataprocessing/python/april11_pca_features_notNorm.json').then((data) => {
+        d3.json('data/dataprocessing/python/april11_files.json').then((file_list) => {
             files = file_list;
             startWorker("js/workers/worker_tsne.js", data, draw);
         });

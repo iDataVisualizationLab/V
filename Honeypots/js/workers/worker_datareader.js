@@ -1,6 +1,7 @@
 importScripts('../../lib/d3.js', '../dataProcessing.js');
 
 onmessage = function (e) {
+
     let day = 'Apr 11, 2014 ';
     let interval = 5 * 1000;
     let fileName = '../../data/honeypot/20110401.txt';
@@ -29,7 +30,7 @@ onmessage = function (e) {
         function readData() {
             let time = new Date(prevTime.getTime() + interval * step);
             let minTime = time.getTime() - duration;
-            let data = rawData.filter(d => d[COL_TIME] <= time && d[COL_TIME] >= minTime)
+            let data = rawData.filter(d => d[COL_TIME] <= time && d[COL_TIME] >= minTime);
             if (data.length > 0) {
                 //TODO: Need to make use of the prev nodes, links information to avoid resetting everything
                 let {nodes, links, timedNodes, timedLinks} = getLinksGroupedByFanInOut(data, COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS, [COL_LINK_TYPE], COL_TIME);
