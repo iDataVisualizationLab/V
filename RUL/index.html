@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NN Visualization</title>
+    <!--<editor-fold desc="this section is for materialize">-->
+    <link href="lib/materialize/materialize.min.css" rel="stylesheet">
+    <script src="lib/materialize/materialize.min.js"></script>
+    <link href="lib/materialize/MaterialIcons.css" rel="stylesheet" type="text/css">
+    <style>
+        @import "css/playground.css";
+    </style>
+    <!--</editor-fold>-->
+    <!--<editor-fold desc="this section is for tfjs">-->
+    <script src="lib/tfjs/tfjs.js"> </script>
+    <script src="lib/tfjs/tfjs-vis.js"> </script>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="this section is for other libraries">-->
+    <script src="lib/d3.js"></script>
+    <script src="lib/tf.min.js"></script>
+    <!--</editor-fold>-->
+</head>
+<body>
+<header>
+    <h1 class="page"><a href="index.html"><b>Neural Network</b></a> <span class="optional">Exploration Page</span>.</h1>
+</header>
+<script>
+    let sensorId = 0;
+
+    //Load data
+    d3.json('data/test_FD001.json').then(test_FD=>{
+        d3.json('data/test_RUL_FD001.json').then(test_RUL=>{
+           //Process data.
+            tf.loadLayersModel('data/models/model.json').then(model=>{
+                const X_test = tf.tensor3d(test_FD, [test_FD.length, test_FD[0].length, test_FD[0][0].length]);
+                const y_test = tf.tensor2d(test_RUL, [test_RUL.length, 1]);
+
+                console.log(model.predict(X_test, y_test));
+                console.log(y_test);
+
+                //build viz model
+                const viz_model = getVizModel(model);
+                console.log(viz_model);
+            });
+        });
+    });
+    function getVizModel(model){
+        const output_layers = model.layers.map(l=>l.output);
+        const input = model.input;
+        const viz_model = tf.model({inputs: input, outputs: output_layers});
+        return viz_model
+    }
+
+</script>
+<div id="top-controls">
+    <div class="container page">
+        <div class="control">
+            <!--Content comes here-->
+        </div>
+    </div>
+</div>
+<div class="page" id="main-part">
+    <div style="width: 1400px; margin-left: auto; margin-right: auto;">
+        <div style="float:left">
+
+        </div>
+    </div>
+</div>
+<div class="more">
+    <a href="#scagStages">
+        <button class="mdl-button mdl-js-button mdl-button--fab" data-upgraded=",MaterialButton">
+            <i class="material-icons">keyboard_arrow_down</i>
+        </button>
+    </a>
+</div>
+<article id="article-text">
+    <div class="page">
+        <h5><a name="scagStages">Computation stages</a></h5>
+        <div id="controlButtons"></div>
+    </div>
+</article>
+</body>
+</html>
