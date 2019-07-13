@@ -1,10 +1,7 @@
-const canvas = document.getElementById('topLayer');
-const ctx = canvas.getContext('2d');
-
-drawLine(ctx, [graphWidth+20, 0], [graphWidth+20, contentHeight], 'red');
-
 //A line
-function drawLine(ctx, fromPoint, toPoint, color) {
+function drawLine(fromPoint, toPoint, color) {
+    const canvas = document.getElementById('topLayer');
+    const ctx = canvas.getContext('2d');
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(fromPoint[0], fromPoint[1]);

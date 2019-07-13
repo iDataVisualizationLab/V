@@ -43,8 +43,11 @@ main().then(() => {
 
     //Trigger default input
     changeEngine(document.getElementById('engineSelection'));
+
     hideLoader();
 
+    //Draw lines
+    // drawLine([graphWidth+20, 0], [graphWidth+20, contentHeight], 'red');
 
 });
 
@@ -66,7 +69,6 @@ function changeEngine(engineSelection) {
         drawLayerOutput(modelLayerOutputs[modelIdx][layerIdx], document.getElementById('model' + (modelIdx) + 'LayerOutput'));
         drawModelOutput(modelIdx);
     });
-
 }
 
 function populateEngineIds(numberOfEngines) {

@@ -203,7 +203,6 @@ select {
 #topLayer {
     pointer-events: none;
     position: absolute;
-    border: 1px solid red;
     margin-left: 0px;
     margin-top: 0px;
     width: var(--page-width);
@@ -212,11 +211,13 @@ select {
 
 #contentLayer {
     position: absolute;
-    /*border: 1px solid blue;*/
     margin-left: 0px;
     margin-top: 0px;
     height: var(--content-height);
     width: var(--page-width);
+}
+.contentCol{
+    margin-left: 20px;
 }
 
 /*MORE*/
