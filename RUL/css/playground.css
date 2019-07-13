@@ -203,7 +203,7 @@ select {
 #topLayer {
     pointer-events: none;
     position: absolute;
-    border: 1px solid red;
+    /*border: 1px solid red;*/
     margin-left: 0px;
     margin-top: 0px;
     width: var(--page-width);

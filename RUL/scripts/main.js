@@ -96,19 +96,32 @@ function modelLayerClicked(modelIdx, layerIdx) {
 }
 
 function drawLayerOutput(layerOutput, theDiv) {
-    //Incase of heatmap
+    //In case of heatmap
     if (layerOutput.shape.length === 3) {
+        let opts = {
+            height: 250,
+            width: 400,
+            xLabel: 'sequence',
+            yLabel: 'features'
+        };
         const heatmapData = {
             values: layerOutput.reshape([layerOutput.shape[1], layerOutput.shape[2]])
         };
-        tfvis.render.heatmap(theDiv, heatmapData, {height: 250, width: 400});
+        tfvis.render.heatmap(theDiv, heatmapData, opts);
     } else if (layerOutput.shape.length == 2) {
         const lineData = {
             values: tensor2DToPoints(layerOutput),
             series: []
         };
         if (lineData.values.length > 1) {
-            tfvis.render.linechart(theDiv, lineData);
+            let opts = {
+                height: 250,
+                width: 400,
+                xLabel: 'feature',
+                yLabel: 'value'
+            };
+
+            tfvis.render.linechart(theDiv, lineData, opts);
         }
     }
 }
@@ -118,10 +131,19 @@ function drawModelOutput(modelIdx) {
     let layerOutput = layerOutputs[layerOutputs.length - 1];
     let theDiv = document.getElementById('model' + (modelIdx) + 'Output');
     let scatterData = {
-        values: [tensor2DToPoints(layerOutput).map(d=>{return {x: engineIdx+1, y: d.y}}), [{x: engineIdx+1, y: test_RUL[engineIdx][0]}]],
+        values: [tensor2DToPoints(layerOutput).map(d => {
+            return {x: engineIdx + 1, y: d.y}
+        }), [{x: engineIdx + 1, y: test_RUL[engineIdx][0]}]],
         series: ['predicted', 'actual']
     };
-    tfvis.render.scatterplot(theDiv, scatterData, {height: 250, width: 400, xLabel: 'Engine', yLabel: 'RUL', xType: 'nominal', yAxisDomain: [0, 150]});
+    tfvis.render.scatterplot(theDiv, scatterData, {
+        height: 250,
+        width: 400,
+        xLabel: 'Engine',
+        yLabel: 'RUL',
+        xType: 'nominal',
+        yAxisDomain: [0, 150]
+    });
 
 }
 

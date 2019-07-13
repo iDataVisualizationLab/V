@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d42cede2-ea0a-4872-8e02-2ad66063882e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/RUL/scripts/loader/loader.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RUL/scripts/loader/loader.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RUL/scripts/main.js" afterDir="false" />
+    <list default="true" id="d42cede2-ea0a-4872-8e02-2ad66063882e" name="Default Changelist" comment="Add top canvas layer for top-layer graphics">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RUL/css/playground.css" beforeDir="false" afterPath="$PROJECT_DIR$/RUL/css/playground.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RUL/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/RUL/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUL/scripts/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/RUL/scripts/main.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -26,24 +24,10 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/RUL/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="358">
-              <caret line="60" column="22" lean-forward="true" selection-start-line="60" selection-start-column="22" selection-end-line="60" selection-end-column="22" />
+            <state relative-caret-position="461">
+              <caret line="30" column="43" lean-forward="true" selection-start-line="30" selection-start-column="43" selection-end-line="30" selection-end-column="43" />
               <folding>
                 <element signature="n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/RUL/scripts/main.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1696">
-              <caret line="9" column="19" lean-forward="true" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
-              <folding>
-                <element signature="n#!!block;n#populateEngineIds#0" />
-                <element signature="n#!!block;n#drawInputs#0" />
-                <element signature="n#!!block;n#getVisModel#0" />
               </folding>
             </state>
           </provider>
@@ -52,10 +36,21 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RUL/css/playground.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="421">
-              <caret line="208" column="29" lean-forward="true" selection-start-line="208" selection-start-column="29" selection-end-line="208" selection-end-column="29" />
+            <state relative-caret-position="530">
+              <caret line="206" column="14" selection-start-line="206" selection-start-column="14" selection-end-line="206" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/RUL/scripts/main.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="407">
+              <caret line="106" column="10" selection-start-line="106" selection-start-column="10" selection-end-line="106" selection-end-column="10" />
               <folding>
-                <element signature="e#146#201#0" />
+                <element signature="n#!!block;n#populateEngineIds#0" />
+                <element signature="n#!!block;n#drawInputs#0" />
+                <element signature="n#!!block;n#getVisModel#0" />
               </folding>
             </state>
           </provider>
@@ -73,7 +68,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>combine</find>
       <find>click</find>
       <find>ke</find>
       <find>legend</find>
@@ -103,6 +97,7 @@
       <find>min-width</find>
       <find>2000px</find>
       <find>topl</find>
+      <find>Computation</find>
     </findStrings>
     <replaceStrings>
       <replace>legendSettings</replace>
@@ -186,6 +181,12 @@
               <item name="V" type="b2602c69:ProjectViewProjectNode" />
               <item name="V" type="462c0819:PsiDirectoryNode" />
               <item name="RUL" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="V" type="b2602c69:ProjectViewProjectNode" />
+              <item name="V" type="462c0819:PsiDirectoryNode" />
+              <item name="RUL" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="V" type="b2602c69:ProjectViewProjectNode" />
@@ -277,21 +278,7 @@
       <workItem from="1557629603082" duration="16122000" />
       <workItem from="1559070699420" duration="7300000" />
       <workItem from="1562948283305" duration="3817000" />
-      <workItem from="1562954293286" duration="32744000" />
-    </task>
-    <task id="LOCAL-00006" summary="Added time arcs">
-      <created>1557636313761</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1557636313761</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Added time arcs">
-      <created>1557668826172</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1557668826172</updated>
+      <workItem from="1562954293286" duration="33921000" />
     </task>
     <task id="LOCAL-00008" summary="Added time arcs">
       <created>1557669563859</created>
@@ -622,11 +609,25 @@
       <option name="project" value="LOCAL" />
       <updated>1563027803843</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="Add top canvas layer for top-layer graphics">
+      <created>1563031640039</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1563031640040</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Add top canvas layer for top-layer graphics">
+      <created>1563031853833</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1563031853833</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="139428000" />
+    <option name="totallyTimeSpent" value="140605000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2560" height="1417" extended-state="6" />
@@ -645,7 +646,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.4992057" weight="0.32925898" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4992057" visible="true" weight="0.30481285" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4992057" weight="0.30481285" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5007943" side_tool="true" weight="0.32925898" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -660,7 +661,6 @@
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Updated brushing behaviors." />
     <MESSAGE value="Added some transitions for the brush" />
     <MESSAGE value="Added brushing when mouseover timeArc links" />
     <MESSAGE value="Updated arcPath for self loop" />
@@ -685,7 +685,8 @@
     <MESSAGE value="Draft structure" />
     <MESSAGE value="First version." />
     <MESSAGE value="Added new model" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added new model" />
+    <MESSAGE value="Add top canvas layer for top-layer graphics" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add top canvas layer for top-layer graphics" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/ThreatEventLog/TimeArcs/ForceDirectedNetwork/js/datatable.js" />
@@ -933,8 +934,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/RUL/scripts/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1696">
-          <caret line="9" column="19" lean-forward="true" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
+        <state relative-caret-position="407">
+          <caret line="106" column="10" selection-start-line="106" selection-start-column="10" selection-end-line="106" selection-end-column="10" />
           <folding>
             <element signature="n#!!block;n#populateEngineIds#0" />
             <element signature="n#!!block;n#drawInputs#0" />
@@ -945,8 +946,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/RUL/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="60" column="22" lean-forward="true" selection-start-line="60" selection-start-column="22" selection-end-line="60" selection-end-column="22" />
+        <state relative-caret-position="461">
+          <caret line="30" column="43" lean-forward="true" selection-start-line="30" selection-start-column="43" selection-end-line="30" selection-end-column="43" />
           <folding>
             <element signature="n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
           </folding>
@@ -955,11 +956,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/RUL/css/playground.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="421">
-          <caret line="208" column="29" lean-forward="true" selection-start-line="208" selection-start-column="29" selection-end-line="208" selection-end-column="29" />
-          <folding>
-            <element signature="e#146#201#0" />
-          </folding>
+        <state relative-caret-position="530">
+          <caret line="206" column="14" selection-start-line="206" selection-start-column="14" selection-end-line="206" selection-end-column="14" />
         </state>
       </provider>
     </entry>
