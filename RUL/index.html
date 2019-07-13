@@ -190,7 +190,7 @@
             values: [tensor2DToPoints(layerOutput).map(d=>{return {x: engineIdx+1, y: d.y}}), [{x: engineIdx+1, y: test_RUL[engineIdx][0]}]],
             series: ['predicted', 'actual']
         };
-        tfvis.render.scatterplot(theDiv, scatterData, {height: 250, width: 400, xLabel: 'Engine', yLabel: 'RUL', xType: 'nominal'});
+        tfvis.render.scatterplot(theDiv, scatterData, {height: 250, width: 400, xLabel: 'Engine', yLabel: 'RUL', xType: 'nominal', yAxisDomain: [0, 150]});
 
     }
 
