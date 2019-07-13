@@ -212,7 +212,7 @@ select {
 
 #contentLayer {
     position: absolute;
-    border: 1px solid blue;
+    /*border: 1px solid blue;*/
     margin-left: 0px;
     margin-top: 0px;
     height: var(--content-height);

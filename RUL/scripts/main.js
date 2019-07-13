@@ -1,3 +1,5 @@
+const graphWidth = 400;
+
 const numberOfEngines = 100;
 const selectedSensors = [2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 20, 21];
 const sequenceLength = 200;
@@ -100,7 +102,7 @@ function drawLayerOutput(layerOutput, theDiv) {
     if (layerOutput.shape.length === 3) {
         let opts = {
             height: 250,
-            width: 400,
+            width: graphWidth,
             xLabel: 'sequence',
             yLabel: 'features'
         };
@@ -116,7 +118,7 @@ function drawLayerOutput(layerOutput, theDiv) {
         if (lineData.values.length > 1) {
             let opts = {
                 height: 250,
-                width: 400,
+                width: graphWidth,
                 xLabel: 'feature',
                 yLabel: 'value'
             };
@@ -134,15 +136,15 @@ function drawModelOutput(modelIdx) {
         values: [tensor2DToPoints(layerOutput).map(d => {
             return {x: engineIdx + 1, y: d.y}
         }), [{x: engineIdx + 1, y: test_RUL[engineIdx][0]}]],
-        series: ['predicted', 'actual']
+        series: ['predicted', 'actual'],
     };
     tfvis.render.scatterplot(theDiv, scatterData, {
         height: 250,
-        width: 400,
+        width: Math.round(graphWidth*2/3),
         xLabel: 'Engine',
         yLabel: 'RUL',
-        xType: 'nominal',
-        yAxisDomain: [0, 150]
+        yAxisDomain: [0, 150],
+        xType: 'nominal'
     });
 
 }
@@ -173,12 +175,13 @@ function drawInputs(engineData) {
     }
     //Add the divs for inputs
     d3.select("#inputDiv").selectAll(".inputSensor").data(selectedSensors).enter().append("div").attr("id", (d, i) => "inputSensor" + d);
+    const opts = {width: graphWidth, height: 100, xLabel: 'sequence step', yLabel: 'sensor value'};
     //Draw inputs
     for (let i = 0; i < selectedSensors.length; i++) {
         tfvis.render.linechart(document.getElementById("inputSensor" + selectedSensors[i]), {
             values: inputValues[i],
             series: ['sensor' + selectedSensors[i]]
-        }, {width: 400, height: 100, xLabel: 'sequence step', yLabel: 'sensor value'});
+        }, opts);
     }
 }
 
