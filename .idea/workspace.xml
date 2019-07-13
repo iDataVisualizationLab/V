@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d42cede2-ea0a-4872-8e02-2ad66063882e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/RUL/data/models/python/best_model_set1_v17_cnn_fold3.h5" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUL/css/playground.css" beforeDir="false" afterPath="$PROJECT_DIR$/RUL/css/playground.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUL/data/models/group1-shard1of1.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUL/data/models/model.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUL/data/models/python/group1-shard1of1.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RUL/data/models/python/model.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/RUL/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/RUL/index.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -22,12 +28,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RUL/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="402">
-              <caret line="40" column="37" lean-forward="true" selection-start-line="40" selection-start-column="37" selection-end-line="40" selection-end-column="37" />
+            <state relative-caret-position="304">
+              <caret line="185" column="55" lean-forward="true" selection-start-line="185" selection-start-column="55" selection-end-line="185" selection-end-column="55" />
               <folding>
-                <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="e#2693#2709#0" />
-                <element signature="e#6442#6483#0" />
                 <element signature="e#2578#3626#0" />
                 <element signature="e#7601#7808#0" />
               </folding>
@@ -38,8 +42,13 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/RUL/css/playground.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="11" column="13" lean-forward="true" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+            <state relative-caret-position="172">
+              <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
+              <folding>
+                <element signature="e#2030#2341#0" />
+                <element signature="e#2350#2987#0" />
+                <element signature="e#3027#3460#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -56,13 +65,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>on</find>
-      <find>ti</find>
-      <find>stroke</find>
-      <find>resetBrushing</find>
-      <find>defs</find>
-      <find>mouseout</find>
-      <find>nodeElement</find>
       <find>onNodeMou</find>
       <find>document</find>
       <find>leftHand</find>
@@ -86,6 +88,13 @@
       <find>height</find>
       <find>layerIdx</find>
       <find>changeEngine</find>
+      <find>110</find>
+      <find>block</find>
+      <find>width</find>
+      <find>main-part</find>
+      <find>1528</find>
+      <find>margin-top</find>
+      <find>header</find>
     </findStrings>
     <replaceStrings>
       <replace>legendSettings</replace>
@@ -186,6 +195,22 @@
               <item name="RUL" type="462c0819:PsiDirectoryNode" />
               <item name="data" type="462c0819:PsiDirectoryNode" />
               <item name="models" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="V" type="b2602c69:ProjectViewProjectNode" />
+              <item name="V" type="462c0819:PsiDirectoryNode" />
+              <item name="RUL" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
+              <item name="cnnmodel" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="V" type="b2602c69:ProjectViewProjectNode" />
+              <item name="V" type="462c0819:PsiDirectoryNode" />
+              <item name="RUL" type="462c0819:PsiDirectoryNode" />
+              <item name="data" type="462c0819:PsiDirectoryNode" />
+              <item name="models" type="462c0819:PsiDirectoryNode" />
+              <item name="lstmmodel" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="V" type="b2602c69:ProjectViewProjectNode" />
@@ -298,14 +323,7 @@
       <workItem from="1557629603082" duration="16122000" />
       <workItem from="1559070699420" duration="7300000" />
       <workItem from="1562948283305" duration="3817000" />
-      <workItem from="1562954293286" duration="24181000" />
-    </task>
-    <task id="LOCAL-00003" summary="Added title">
-      <created>1557519710731</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1557519710731</updated>
+      <workItem from="1562954293286" duration="28687000" />
     </task>
     <task id="LOCAL-00004" summary="Changed to 3 types of links + separate edge siblings">
       <created>1557592723989</created>
@@ -643,11 +661,18 @@
       <option name="project" value="LOCAL" />
       <updated>1562977058401</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="First version.">
+      <created>1562979778580</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1562979778580</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="130865000" />
+    <option name="totallyTimeSpent" value="135371000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2560" height="1417" extended-state="6" />
@@ -659,14 +684,14 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32925898" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.17799847" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.17799847" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" sideWeight="0.4992057" weight="0.32925898" />
-      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4992057" weight="0.32925898" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.4992057" visible="true" weight="0.30481285" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5007943" side_tool="true" weight="0.32925898" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -681,7 +706,6 @@
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Added timeline" />
     <MESSAGE value="Added some brushing, but need to change these brushing behaviors" />
     <MESSAGE value="Updated brushing behaviors." />
     <MESSAGE value="Added some transitions for the brush" />
@@ -706,7 +730,8 @@
     <MESSAGE value="remove readme issue" />
     <MESSAGE value="First fixed view." />
     <MESSAGE value="Draft structure" />
-    <option name="LAST_COMMIT_MESSAGE" value="Draft structure" />
+    <MESSAGE value="First version." />
+    <option name="LAST_COMMIT_MESSAGE" value="First version." />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/ThreatEventLog/TimeArcs/ForceDirectedNetwork/data/104.12.0.0.csv" />
@@ -955,19 +980,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/RUL/css/playground.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="11" column="13" lean-forward="true" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        <state relative-caret-position="172">
+          <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
+          <folding>
+            <element signature="e#2030#2341#0" />
+            <element signature="e#2350#2987#0" />
+            <element signature="e#3027#3460#0" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/RUL/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="402">
-          <caret line="40" column="37" lean-forward="true" selection-start-line="40" selection-start-column="37" selection-end-line="40" selection-end-column="37" />
+        <state relative-caret-position="304">
+          <caret line="185" column="55" lean-forward="true" selection-start-line="185" selection-start-column="55" selection-end-line="185" selection-end-column="55" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="e#2693#2709#0" />
-            <element signature="e#6442#6483#0" />
             <element signature="e#2578#3626#0" />
             <element signature="e#7601#7808#0" />
           </folding>

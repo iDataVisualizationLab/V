@@ -1,3 +1,8 @@
+/*Some constants*/
+element {
+    --page-width: 2000px;
+}
+
 /*This file is inspired from Google Playground page: https://playground.tensorflow.org/*/
 html {
     color: rgba(0, 0, 0, .87);
@@ -10,11 +15,11 @@ body {
     font-size: 12px;
     font-weight: 400;
     width: 100%;
-    display: block;
+
 }
 
 .page {
-    width: 1500px;
+    width: var(--page-width);
     margin-left: auto;
     margin-right: auto;
 }
@@ -31,8 +36,8 @@ header {
 
 header h1 {
     font-size: 34px;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     text-align: center;
     -webkit-font-smoothing: antialiased;
     line-height: 1.45em;
@@ -77,7 +82,7 @@ div {
 }
 
 #top-controls {
-    padding: 24px 0;
+    padding: 6px 0;
     border-bottom: 1px solid #ddd;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     background: white;
@@ -85,22 +90,18 @@ div {
 
 #top-controls .control {
     flex-grow: 1;
-    max-width: 180px;
-    min-width: 110px;
+    max-width: 400px;
+    min-width: 80px;
     margin-left: 30px;
-    margin-top: 6px;
+    margin-bottom: 5px;
 }
 
 #top-controls .control label {
     color: #777;
     font-size: 13px;
-    display: block;
+    display: inline;
     margin-bottom: 6px;
     font-weight: 300;
-}
-
-label {
-    cursor: default;
 }
 
 #top-controls .control .select {
@@ -111,7 +112,7 @@ label {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    display: block;
+    display: inline;
     background: none;
     border: none;
     border-radius: 0;
@@ -144,7 +145,7 @@ select {
     text-transform: none;
     text-indent: 0px;
     text-shadow: none;
-    display: inline-block;
+    display: inline;
     text-align: start;
     margin: 0em;
     font: 400 11px system-ui;
@@ -162,7 +163,7 @@ select {
     line-height: 1;
     letter-spacing: normal;
     text-transform: none;
-    display: inline-block;
+
     white-space: nowrap;
     word-wrap: normal;
     direction: ltr;
@@ -186,6 +187,7 @@ select {
     margin-bottom: 10px;
     padding-top: 2px;
     position: relative;
+    width: var(--page-width);
 }
 
 /*MORE*/
@@ -226,7 +228,7 @@ select {
     margin: 0;
     min-width: 64px;
     padding: 0 16px;
-    display: inline-block;
+
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     font-size: 14px;
     font-weight: 500;
@@ -271,7 +273,6 @@ button {
     text-transform: none;
     text-indent: 0px;
     text-shadow: none;
-    display: inline-block;
     text-align: start;
     margin: 0em;
     font: 400 11px system-ui;
@@ -301,7 +302,7 @@ button {
     line-height: 1;
     letter-spacing: normal;
     text-transform: none;
-    display: inline-block;
+
     white-space: nowrap;
     word-wrap: normal;
     direction: ltr;
@@ -309,15 +310,16 @@ button {
     -webkit-font-smoothing: antialiased;
 }
 
+
 /*ARTICLE*/
 article {
-    display: block;
     background: white;
     padding: 20px 0;
     box-shadow: 0 0px 4px rgba(0, 0, 0, 0.1);
     border-top: 1px solid rgba(0, 0, 0, 0.08);
 
 }
-td, th{
+
+td, th {
     padding: 10px;
 }

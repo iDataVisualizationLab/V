@@ -36,7 +36,7 @@
     </div>
 </div>
 <div class="page" id="main-part">
-    <div class="row" style="width: 2000px; margin-left: auto; margin-right: auto;">
+    <div class="row" id="pageRow">
         <div class="col s3">
             <div id="inputDiv"></div>
         </div>
@@ -53,7 +53,6 @@
 </div>
 <div class="more">
     <a href="#scagStages">
-
         <button class="mdl-button mdl-js-button mdl-button--fab" data-upgraded="MaterialButton">
             <i class="material-icons">keyboard_arrow_down</i>
         </button>
@@ -74,7 +73,7 @@
     const numberOfSensors = selectedSensors.length;
     let test_FD = null;
     let test_RUL = null;
-    const modelPaths = ['data/models/model.json', 'data/models/model.json'];
+    const modelPaths = ['data/models/lstmmodel/model.json', 'data/models/cnnmodel/model.json'];
     let models = [];
     let visModels = [];
     let layerIdxs = [];
@@ -86,7 +85,8 @@
         test_FD = await d3.json('data/test_FD001.json');
         test_RUL = await d3.json('data/test_RUL_FD001.json');
         //Load models
-        models = await Promise.all(modelPaths.map(thePath => tf.loadLayersModel(thePath)));
+        models = await Promise.all(modelPaths.map(thePath => tf.loadLayersModel(thePath, {strict: false})));
+        debugger;
         //Set the default layer index to draw
         models.forEach(model => {
             //Set 1 as default layer index for every item
@@ -170,7 +170,7 @@
             const heatmapData = {
                 values: layerOutput.reshape([layerOutput.shape[1], layerOutput.shape[2]])
             };
-            tfvis.render.heatmap(theDiv, heatmapData, {height: 250});
+            tfvis.render.heatmap(theDiv, heatmapData, {height: 250, width: 400});
         } else if (layerOutput.shape.length == 2) {
             const lineData = {
                 values: tensor2DToPoints(layerOutput),
@@ -187,10 +187,10 @@
         let layerOutput = layerOutputs[layerOutputs.length - 1];
         let theDiv = document.getElementById('model' + (modelIdx) + 'Output');
         let scatterData = {
-            values: [tensor2DToPoints(layerOutput), [{x: 0, y: test_RUL[engineIdx][0]}]],
+            values: [tensor2DToPoints(layerOutput).map(d=>{return {x: engineIdx+1, y: d.y}}), [{x: engineIdx+1, y: test_RUL[engineIdx][0]}]],
             series: ['predicted', 'actual']
         };
-        tfvis.render.scatterplot(theDiv, scatterData);
+        tfvis.render.scatterplot(theDiv, scatterData, {height: 250, width: 400, xLabel: 'Engine', yLabel: 'RUL', xType: 'nominal'});
 
     }
 
