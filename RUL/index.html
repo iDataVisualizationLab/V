@@ -36,17 +36,18 @@
     </div>
 </div>
 <div class="page" id="main-part">
-    <div class="row" style="width: 1400px; margin-left: auto; margin-right: auto;">
-        <div class="col s4">
+    <div class="row" style="width: 2000px; margin-left: auto; margin-right: auto;">
+        <div class="col s3">
             <div id="inputDiv"></div>
         </div>
-        <div class="col s4">
+        <div class="col s3">
             <div id="modelDiv"></div>
         </div>
-        <div class="col s4">
-            <div id="layerOutput">
-                <div id="model0LayerOutput"></div>
-            </div>
+        <div class="col s3">
+            <div id="layerOutput"></div>
+        </div>
+        <div class="col s3">
+            <div id="modelOutput"></div>
         </div>
     </div>
 </div>
@@ -78,57 +79,65 @@
     let visModels = [];
     let layerIdxs = [];
     let modelLayerOutputs = [];
+    let engineIdx = 0;
 
     async function main() {
         //Load data
         test_FD = await d3.json('data/test_FD001.json');
         test_RUL = await d3.json('data/test_RUL_FD001.json');
         //Load models
-        models = await Promise.all(modelPaths.map(thePath =>tf.loadLayersModel(thePath)));
+        models = await Promise.all(modelPaths.map(thePath => tf.loadLayersModel(thePath)));
         //Set the default layer index to draw
-        models.forEach(model=>{
+        models.forEach(model => {
             //Set 1 as default layer index for every item
             layerIdxs.push(1);
         });
         //Get the vis model
-        visModels = models.map(model=>getVisModel(model));
+        visModels = models.map(model => getVisModel(model));
     }
 
-    main().then(()=>{
+    main().then(() => {
         //Populate engine ids.
         populateEngineIds(numberOfEngines);
         drawModels(models, modelLayerClicked);
-        //Change to default engine (engine 1)
+        //Add the divs for all output layer vis for each model
+        d3.select('#layerOutput').selectAll('div').data(models).enter().append("div").attr("id", (d, i) => 'model' + i + 'LayerOutput');
+        //Add the divs for all the final output layer for each model
+        d3.select('#modelOutput').selectAll('div').data(models).enter().append("div").attr("id", (d, i) => 'model' + i + 'Output');
+
+        //Trigger default input
         changeEngine(document.getElementById('engineSelection'));
+
     });
 
-    function changeEngine(engineSelection){
-        const engineIdx = engineSelection.selectedIndex;
+    function changeEngine(engineSelection) {
+        engineIdx = engineSelection.selectedIndex;
         const engineData = test_FD[engineIdx];
         drawInputs(engineData);
         //Create tensor for the engineData
         const tsEngineX = tf.tensor3d([engineData], [1, sequenceLength, numberOfSensors]);
         //Get output layers for all models.
-        modelLayerOutputs = visModels.map(viz_model=>{
+        modelLayerOutputs = visModels.map(viz_model => {
             const layerOutputs = viz_model.predict(tsEngineX);
             return layerOutputs;
         });
-        //Add the divs for all output layer vis for each model
-        d3.select('#layerOutput').selectAll('div').data(models).enter().append("div").attr("id", (d, i) => 'model' + i + 'LayerOutput');
         //Draw the output for all layers.
-        models.forEach((model, modelIdx)=>{
-            layerIdxs.forEach(layerIdx =>{
-                drawLayerOutput(modelLayerOutputs[modelIdx][layerIdx], document.getElementById('model'+(modelIdx)+'LayerOutput'));
-            });
+        models.forEach((model, modelIdx) => {
+            //Take the displaying layer of the model
+            let layerIdx = layerIdxs[modelIdx];
+            drawLayerOutput(modelLayerOutputs[modelIdx][layerIdx], document.getElementById('model' + (modelIdx) + 'LayerOutput'));
+            drawModelOutput(modelIdx);
         });
+
     }
 
-    function populateEngineIds(numberOfEngines){
+    function populateEngineIds(numberOfEngines) {
         const engineSelection = d3.select("#engineSelection");
         for (let i = 0; i < numberOfEngines; i++) {
-            engineSelection.append("option").attr("value", i).node().innerHTML = "Engine " + (i+1);
+            engineSelection.append("option").attr("value", i).node().innerHTML = "Engine " + (i + 1);
         }
     }
+
     function drawModels(models, modelLayerClicked) {
         //Create divs for the models
         d3.select('#modelDiv').selectAll('div').data(models).enter().append("div").attr("id", (d, i) => 'model' + i);
@@ -139,38 +148,49 @@
             tfvis.show.modelSummary(theDiv, model);
             //Set hoverable
             d3.select(theDiv).selectAll("tr").classed("hoverable", true)
-            .on("click", function(){
-                let modelIdx = +this.parentElement.parentElement.parentElement.id.split('model')[1];
-                let layerIdx = this.rowIndex-1;
-                if(layerIdx>=0){
-                    modelLayerClicked(modelIdx, layerIdx);
-                }
-            });
+                .on("click", function () {
+                    let modelIdx = +this.parentElement.parentElement.parentElement.id.split('model')[1];
+                    let layerIdx = this.rowIndex - 1;
+                    if (layerIdx >= 0) {
+                        modelLayerClicked(modelIdx, layerIdx);
+                    }
+                });
         });
     }
-    function modelLayerClicked(modelIdx, layerIdx){
+
+    function modelLayerClicked(modelIdx, layerIdx) {
         layerIdxs[modelIdx] = layerIdx;//Set the currently displaying layer for this model
         //Draw the model output
-        drawLayerOutput(modelLayerOutputs[modelIdx][layerIdx], document.getElementById('model'+(modelIdx)+'LayerOutput'));
+        drawLayerOutput(modelLayerOutputs[modelIdx][layerIdx], document.getElementById('model' + (modelIdx) + 'LayerOutput'));
     }
-    function drawLayerOutput(layerOutput, theDiv){
+
+    function drawLayerOutput(layerOutput, theDiv) {
         //Incase of heatmap
-        if(layerOutput.shape.length === 3){
+        if (layerOutput.shape.length === 3) {
             const heatmapData = {
                 values: layerOutput.reshape([layerOutput.shape[1], layerOutput.shape[2]])
             };
             tfvis.render.heatmap(theDiv, heatmapData, {height: 250});
-        }else if(layerOutput.shape.length == 2){
+        } else if (layerOutput.shape.length == 2) {
             const lineData = {
                 values: tensor2DToPoints(layerOutput),
                 series: []
             };
-            if(lineData.values.length>1){
-                tfvis.render.linechart(theDiv,lineData);
-            }else{
-                tfvis.render.scatterplot(theDiv, lineData);
+            if (lineData.values.length > 1) {
+                tfvis.render.linechart(theDiv, lineData);
             }
         }
+    }
+
+    function drawModelOutput(modelIdx) {
+        let layerOutputs = modelLayerOutputs[modelIdx];
+        let layerOutput = layerOutputs[layerOutputs.length - 1];
+        let theDiv = document.getElementById('model' + (modelIdx) + 'Output');
+        let scatterData = {
+            values: [tensor2DToPoints(layerOutput), [{x: 0, y: test_RUL[engineIdx][0]}]],
+            series: ['predicted', 'actual']
+        };
+        tfvis.render.scatterplot(theDiv, scatterData);
 
     }
 
@@ -179,13 +199,14 @@
      * @param tf2d Note that 1d is for the batch, so another 1d is for the data
      * @returns {*}
      */
-    function tensor2DToPoints(tf2d){
+    function tensor2DToPoints(tf2d) {
         let results = [];
-        tf2d.dataSync().forEach((v, i)=>{
+        tf2d.dataSync().forEach((v, i) => {
             results.push({x: i, y: v});
         });
         return results;
     }
+
     function drawInputs(engineData) {
         const inputValues = [];
         const inputSeries = [];
@@ -207,6 +228,7 @@
             }, {width: 400, height: 100, xLabel: 'sequence step', yLabel: 'sensor value'});
         }
     }
+
     function getVisModel(model) {
         const output_layers = model.layers.map(l => l.output);
         const input = model.input;

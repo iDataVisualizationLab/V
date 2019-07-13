@@ -22,12 +22,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RUL/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="500">
-              <caret line="113" column="32" lean-forward="true" selection-start-line="113" selection-start-column="32" selection-end-line="113" selection-end-column="32" />
+            <state relative-caret-position="402">
+              <caret line="40" column="37" lean-forward="true" selection-start-line="40" selection-start-column="37" selection-end-line="40" selection-end-column="37" />
               <folding>
                 <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="e#2693#2709#0" />
+                <element signature="e#6442#6483#0" />
                 <element signature="e#2578#3626#0" />
+                <element signature="e#7601#7808#0" />
               </folding>
             </state>
           </provider>
@@ -54,8 +56,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>isArray</find>
-      <find>fill</find>
       <find>on</find>
       <find>ti</find>
       <find>stroke</find>
@@ -84,6 +84,8 @@
       <find>input</find>
       <find>layerOutputs</find>
       <find>height</find>
+      <find>layerIdx</find>
+      <find>changeEngine</find>
     </findStrings>
     <replaceStrings>
       <replace>legendSettings</replace>
@@ -296,14 +298,7 @@
       <workItem from="1557629603082" duration="16122000" />
       <workItem from="1559070699420" duration="7300000" />
       <workItem from="1562948283305" duration="3817000" />
-      <workItem from="1562954293286" duration="21604000" />
-    </task>
-    <task id="LOCAL-00002" summary="Updated some color and size">
-      <created>1557461448793</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1557461448793</updated>
+      <workItem from="1562954293286" duration="24181000" />
     </task>
     <task id="LOCAL-00003" summary="Added title">
       <created>1557519710731</created>
@@ -641,23 +636,30 @@
       <option name="project" value="LOCAL" />
       <updated>1562970622340</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="Draft structure">
+      <created>1562977058401</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1562977058401</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="128288000" />
+    <option name="totallyTimeSpent" value="130865000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2560" height="1417" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24344718" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24344718" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32925898" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.17799847" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.17799847" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -960,12 +962,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/RUL/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="500">
-          <caret line="113" column="32" lean-forward="true" selection-start-line="113" selection-start-column="32" selection-end-line="113" selection-end-column="32" />
+        <state relative-caret-position="402">
+          <caret line="40" column="37" lean-forward="true" selection-start-line="40" selection-start-column="37" selection-end-line="40" selection-end-column="37" />
           <folding>
             <element signature="n#style#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="e#2693#2709#0" />
+            <element signature="e#6442#6483#0" />
             <element signature="e#2578#3626#0" />
+            <element signature="e#7601#7808#0" />
           </folding>
         </state>
       </provider>
