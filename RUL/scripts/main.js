@@ -1,5 +1,6 @@
 const graphWidth = 400;
-
+const contentWidth = 1660;
+const contentHeight = 1600;
 const numberOfEngines = 100;
 const selectedSensors = [2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 20, 21];
 const sequenceLength = 200;
@@ -12,6 +13,8 @@ let visModels = [];
 let layerIdxs = [];
 let modelLayerOutputs = [];
 let engineIdx = 0;
+//Add the canvas to the top layer
+d3.select("#mainContent").append("canvas").attr("width", contentWidth).attr("height", contentHeight).attr("id", "topLayer");
 
 async function main() {
     //Load data
@@ -41,6 +44,8 @@ main().then(() => {
     //Trigger default input
     changeEngine(document.getElementById('engineSelection'));
     hideLoader();
+
+
 });
 
 function changeEngine(engineSelection) {
