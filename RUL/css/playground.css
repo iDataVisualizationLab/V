@@ -1,9 +1,10 @@
-/*Some constants*/
-element {
-    --page-width: 2000px;
-}
-
 /*This file is inspired from Google Playground page: https://playground.tensorflow.org/*/
+/*Some constants*/
+:root {
+    --page-width: 2000px;
+    --content-height: 1600px;
+}
+/*<editor-fold desc="this is for the header section">*/
 html {
     color: rgba(0, 0, 0, .87);
 }
@@ -90,7 +91,7 @@ div {
 
 #top-controls .control {
     flex-grow: 1;
-    max-width: 400px;
+    max-width: 200px;
     min-width: 80px;
     margin-left: 30px;
     margin-bottom: 5px;
@@ -172,6 +173,7 @@ select {
     top: 6px;
     pointer-events: none;
 }
+/*</editor-fold>*/
 
 /*MAIN PART*/
 #main-part {
@@ -187,6 +189,33 @@ select {
     margin-bottom: 10px;
     padding-top: 2px;
     position: relative;
+    width: var(--page-width);
+}
+
+#mainContent {
+    width: var(--page-width);
+    height:var(--content-height);
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#topLayer {
+    pointer-events: none;
+    position: absolute;
+    border: 1px solid red;
+    margin-left: 0px;
+    margin-top: 0px;
+    width: var(--page-width);
+    height: var(--content-height);
+}
+
+#contentLayer {
+    position: absolute;
+    border: 1px solid blue;
+    margin-left: 0px;
+    margin-top: 0px;
+    height: var(--content-height);
     width: var(--page-width);
 }
 

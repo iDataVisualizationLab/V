@@ -2,13 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d42cede2-ea0a-4872-8e02-2ad66063882e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/RUL/data/models/python/best_model_set1_v17_cnn_fold3.h5" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RUL/scripts/loader/loader.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RUL/scripts/loader/loader.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RUL/scripts/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RUL/css/playground.css" beforeDir="false" afterPath="$PROJECT_DIR$/RUL/css/playground.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RUL/data/models/group1-shard1of1.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RUL/data/models/model.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RUL/data/models/python/group1-shard1of1.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RUL/data/models/python/model.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/RUL/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/RUL/index.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -25,29 +23,39 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/RUL/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="185" column="55" lean-forward="true" selection-start-line="185" selection-start-column="55" selection-end-line="185" selection-end-column="55" />
+            <state relative-caret-position="358">
+              <caret line="60" column="22" lean-forward="true" selection-start-line="60" selection-start-column="22" selection-end-line="60" selection-end-column="22" />
               <folding>
-                <element signature="e#2693#2709#0" />
-                <element signature="e#2578#3626#0" />
-                <element signature="e#7601#7808#0" />
+                <element signature="n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/RUL/scripts/main.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1696">
+              <caret line="9" column="19" lean-forward="true" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
+              <folding>
+                <element signature="n#!!block;n#populateEngineIds#0" />
+                <element signature="n#!!block;n#drawInputs#0" />
+                <element signature="n#!!block;n#getVisModel#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/RUL/css/playground.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
+            <state relative-caret-position="421">
+              <caret line="208" column="29" lean-forward="true" selection-start-line="208" selection-start-column="29" selection-end-line="208" selection-end-column="29" />
               <folding>
-                <element signature="e#2030#2341#0" />
-                <element signature="e#2350#2987#0" />
-                <element signature="e#3027#3460#0" />
+                <element signature="e#146#201#0" />
               </folding>
             </state>
           </provider>
@@ -65,12 +73,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>onNodeMou</find>
-      <find>document</find>
-      <find>leftHand</find>
-      <find>combined</find>
-      <find>keep</find>
-      <find>'</find>
       <find>combine</find>
       <find>click</find>
       <find>ke</find>
@@ -95,6 +97,12 @@
       <find>1528</find>
       <find>margin-top</find>
       <find>header</find>
+      <find>scatter</find>
+      <find>Select eng</find>
+      <find>space</find>
+      <find>min-width</find>
+      <find>2000px</find>
+      <find>topl</find>
     </findStrings>
     <replaceStrings>
       <replace>legendSettings</replace>
@@ -150,15 +158,17 @@
         <option value="$PROJECT_DIR$/Honeypots/data/node_modules/brace-expansion/README.md" />
         <option value="$PROJECT_DIR$/Honeypots/data/dataprocessing/node_modules/balanced-match/README.md" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/RUL/css/playground.css" />
+        <option value="$PROJECT_DIR$/RUL/scripts/main.js" />
         <option value="$PROJECT_DIR$/RUL/index.html" />
+        <option value="$PROJECT_DIR$/RUL/css/playground.css" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="y" value="387" />
+    <option name="x" value="785" />
+    <option name="y" value="23" />
     <option name="width" value="2560" />
-    <option name="height" value="1027" />
+    <option name="height" value="1417" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -181,62 +191,6 @@
               <item name="V" type="b2602c69:ProjectViewProjectNode" />
               <item name="V" type="462c0819:PsiDirectoryNode" />
               <item name="RUL" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="V" type="b2602c69:ProjectViewProjectNode" />
-              <item name="V" type="462c0819:PsiDirectoryNode" />
-              <item name="RUL" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="V" type="b2602c69:ProjectViewProjectNode" />
-              <item name="V" type="462c0819:PsiDirectoryNode" />
-              <item name="RUL" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="V" type="b2602c69:ProjectViewProjectNode" />
-              <item name="V" type="462c0819:PsiDirectoryNode" />
-              <item name="RUL" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-              <item name="cnnmodel" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="V" type="b2602c69:ProjectViewProjectNode" />
-              <item name="V" type="462c0819:PsiDirectoryNode" />
-              <item name="RUL" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-              <item name="lstmmodel" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="V" type="b2602c69:ProjectViewProjectNode" />
-              <item name="V" type="462c0819:PsiDirectoryNode" />
-              <item name="RUL" type="462c0819:PsiDirectoryNode" />
-              <item name="data" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-              <item name="python" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="V" type="b2602c69:ProjectViewProjectNode" />
-              <item name="V" type="462c0819:PsiDirectoryNode" />
-              <item name="RUL" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="V" type="b2602c69:ProjectViewProjectNode" />
-              <item name="V" type="462c0819:PsiDirectoryNode" />
-              <item name="RUL" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="materialize" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="V" type="b2602c69:ProjectViewProjectNode" />
-              <item name="V" type="462c0819:PsiDirectoryNode" />
-              <item name="RUL" type="462c0819:PsiDirectoryNode" />
               <item name="scripts" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -249,23 +203,23 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Honeypots/js" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/RUL/scripts" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Ignored.Files" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/ThreatEventLog/TimeArcs/ForceDirectedNetwork" />
-      <recent name="$PROJECT_DIR$/ThreatEventLog" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/RUL/scripts" />
       <recent name="$PROJECT_DIR$/Honeypots/js" />
       <recent name="$PROJECT_DIR$/Threats/css" />
       <recent name="$PROJECT_DIR$/Threats/media" />
       <recent name="$PROJECT_DIR$/Threats" />
-      <recent name="$PROJECT_DIR$/ThreatEventLog/TimeArcs" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ThreatEventLog/TimeArcs/ForceDirectedNetwork" />
+      <recent name="$PROJECT_DIR$/ThreatEventLog" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -323,21 +277,7 @@
       <workItem from="1557629603082" duration="16122000" />
       <workItem from="1559070699420" duration="7300000" />
       <workItem from="1562948283305" duration="3817000" />
-      <workItem from="1562954293286" duration="28687000" />
-    </task>
-    <task id="LOCAL-00004" summary="Changed to 3 types of links + separate edge siblings">
-      <created>1557592723989</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1557592723989</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Added table to display data">
-      <created>1557607183208</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1557607183208</updated>
+      <workItem from="1562954293286" duration="32744000" />
     </task>
     <task id="LOCAL-00006" summary="Added time arcs">
       <created>1557636313761</created>
@@ -668,11 +608,25 @@
       <option name="project" value="LOCAL" />
       <updated>1562979778580</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="Added new model">
+      <created>1563027512847</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1563027512847</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Added new model">
+      <created>1563027803843</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1563027803843</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="135371000" />
+    <option name="totallyTimeSpent" value="139428000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="2560" height="1417" extended-state="6" />
@@ -706,7 +660,6 @@
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Added some brushing, but need to change these brushing behaviors" />
     <MESSAGE value="Updated brushing behaviors." />
     <MESSAGE value="Added some transitions for the brush" />
     <MESSAGE value="Added brushing when mouseover timeArc links" />
@@ -731,10 +684,10 @@
     <MESSAGE value="First fixed view." />
     <MESSAGE value="Draft structure" />
     <MESSAGE value="First version." />
-    <option name="LAST_COMMIT_MESSAGE" value="First version." />
+    <MESSAGE value="Added new model" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added new model" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/ThreatEventLog/TimeArcs/ForceDirectedNetwork/data/104.12.0.0.csv" />
     <entry file="file://$PROJECT_DIR$/ThreatEventLog/TimeArcs/ForceDirectedNetwork/js/datatable.js" />
     <entry file="file://$PROJECT_DIR$/ThreatEventLog/TimeArcs/ForceDirectedNetwork/js/main.js" />
     <entry file="file://$PROJECT_DIR$/ThreatEventLog/TimeArcs/ForceDirectedNetwork/lib/d3.js" />
@@ -978,26 +931,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/RUL/css/playground.css">
+    <entry file="file://$PROJECT_DIR$/RUL/scripts/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
+        <state relative-caret-position="-1696">
+          <caret line="9" column="19" lean-forward="true" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
           <folding>
-            <element signature="e#2030#2341#0" />
-            <element signature="e#2350#2987#0" />
-            <element signature="e#3027#3460#0" />
+            <element signature="n#!!block;n#populateEngineIds#0" />
+            <element signature="n#!!block;n#drawInputs#0" />
+            <element signature="n#!!block;n#getVisModel#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/RUL/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="185" column="55" lean-forward="true" selection-start-line="185" selection-start-column="55" selection-end-line="185" selection-end-column="55" />
+        <state relative-caret-position="358">
+          <caret line="60" column="22" lean-forward="true" selection-start-line="60" selection-start-column="22" selection-end-line="60" selection-end-column="22" />
           <folding>
-            <element signature="e#2693#2709#0" />
-            <element signature="e#2578#3626#0" />
-            <element signature="e#7601#7808#0" />
+            <element signature="n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RUL/css/playground.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="421">
+          <caret line="208" column="29" lean-forward="true" selection-start-line="208" selection-start-column="29" selection-end-line="208" selection-end-column="29" />
+          <folding>
+            <element signature="e#146#201#0" />
           </folding>
         </state>
       </provider>
