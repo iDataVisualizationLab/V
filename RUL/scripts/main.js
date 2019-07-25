@@ -35,13 +35,15 @@ async function main() {
 main().then(() => {
     //Populate engine ids.
     populateEngineIds(numberOfEngines);
-    drawModels(models, modelLayerClicked);
+    //Create divs for the models
+    let modelRows = d3.select('#models').selectAll('.modelRow').data(models).enter().append("div").attr("id", (d, i) => 'model' + i + 'row').attr("class", "row");
+    modelRows.append("div").attr("id", (d, i)=>'model' + i).attr("class", "col s4");
     //Add the divs for all output layer vis for each model
-    d3.select('#layerOutput').selectAll('div').data(models).enter().append("div").attr("id", (d, i) => 'model' + i + 'LayerOutput');
+    modelRows.append("div").attr("id", (d, i) => 'model' + i + 'LayerOutput').attr("class", "col s4");
     //Add the divs for all the final output layer for each model
-    d3.select('#modelOutput').selectAll('div').data(models).enter().append("div").attr("id", (d, i) => 'model' + i + 'Output');
+    modelRows.append("div").attr("id", (d, i) => 'model' + i + 'Output').attr("class", "col s4");
 
-    //Trigger default input
+    drawModels(models, modelLayerClicked);//Trigger default input
     changeEngine(document.getElementById('engineSelection'));
 
     hideLoader();
@@ -79,8 +81,6 @@ function populateEngineIds(numberOfEngines) {
 }
 
 function drawModels(models, modelLayerClicked) {
-    //Create divs for the models
-    d3.select('#modelDiv').selectAll('div').data(models).enter().append("div").attr("id", (d, i) => 'model' + i);
     //Draw models
     models.forEach((model, i) => {
         //Show model
