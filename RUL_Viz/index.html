@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NN Visualization</title>
+    <!--<editor-fold desc="this section is for materialize">-->
+    <link href="lib/materialize/materialize.min.css" rel="stylesheet">
+    <script src="lib/materialize/materialize.min.js"></script>
+    <link href="lib/materialize/MaterialIcns.css" rel="stylesheet" type="text/css">
+    <style>
+        @import "css/playground.css";
+        @import "scripts/loader/loader.css";
+    </style>
+    <!--</editor-fold>-->
+    <!--<editor-fold desc="this section is for tfjs">-->
+    <script src="lib/tfjs/tfjs.js"></script>
+    <script src="lib/tfjs/tfjs-vis.js"></script>
+    <!--</editor-fold>-->
+
+    <!--<editor-fold desc="this section is for other libraries">-->
+    <script src="lib/d3.js"></script>
+    <script src="lib/tf.min.js"></script>
+    <!--</editor-fold>-->
+</head>
+<body>
+<script src="scripts/loader/loader.js"></script>
+<script>
+    showLoader();
+</script>
+<header>
+    <h1 class="page"><a href="index.html"><b>Neural Network</b></a> <span class="optional">Exploration Page</span>.</h1>
+</header>
+<div id="top-controls">
+    <div class="container page">
+        <div class="control">
+            <label for="engineSelection">Select an engine</label>
+            <div class="select">
+                <select class="select multiple" id="engineSelection" onchange="changeEngine(this);"></select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page" id="main-part">
+    <div id="mainContent">
+        <div id="contentLayer">
+            <div class="row">
+                <div class="col s3">
+                    <div id="inputDiv"></div>
+                </div>
+                <div class="col s9" id="models"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="more">
+    <a href="#scagStages">
+        <button class="mdl-button mdl-js-button mdl-button--fab" data-upgraded="MaterialButton">
+            <i class="material-icons">keyboard_arrow_down</i>
+        </button>
+    </a>
+</div>
+<article id="article-text">
+    <div class="page">
+        <h5><a name="scagStages">Articles</a></h5>
+        <div id="controlButtons"></div>
+    </div>
+</article>
+<script src="scripts/toplayercanvas.js"></script>
+<script src="scripts/main.js"></script>
+
+</body>
+</html>
