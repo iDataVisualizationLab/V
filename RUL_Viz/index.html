@@ -23,6 +23,26 @@
 <div class="container page">
     <div class="row">
         <div class="col s2 container">
+            Input
+        </div>
+        <div class="col s2 container">
+            LSTM 1
+        </div>
+        <div class="col s2 container">
+            LSTM 2
+        </div>
+        <div class="col s2 container">
+            Dense 1
+        </div>
+        <div class="col s2 container">
+            Dense 2
+        </div>
+        <div class="col s2 container">
+            Model evaluation
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s2 container">
             <div id="inputContainer"></div>
         </div>
         <div class="col s2 container">
@@ -266,7 +286,7 @@
             width: testWidth,
             height: testHeight,
             title: {
-                text: "Training loss."
+                text: "Training output (orange) vs. target (grey)."
             }
         };
         let trainLosses = [];
@@ -282,8 +302,8 @@
             paddingBottom: 20,
             width: testWidth,
             height: testHeight,
-            title:{
-                text: "Testing loss."
+            title: {
+                text: "Testing output (orange) vs. target (grey)."
             }
         };
         let trainLossBatchSettings = {
@@ -295,8 +315,8 @@
             paddingBottom: 20,
             width: testWidth,
             height: testHeight,
-            title:{
-                text: "Training loss (every batch)."
+            title: {
+                text: "Training loss (gray) vs. testing loss (orange), every batch."
             }
         };
         let xScaleTest = d3.scaleLinear().domain([0, batches]).range([0, trainLossBatchSettings.width - trainLossBatchSettings.paddingLeft - trainLossBatchSettings.paddingRight]);
