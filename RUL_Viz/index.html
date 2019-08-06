@@ -26,19 +26,49 @@
             Input
         </div>
         <div class="col s2 container">
-            LSTM 1
+            LSTM layer 1
         </div>
         <div class="col s2 container">
-            LSTM 2
+            LSTM layer 2
         </div>
         <div class="col s2 container">
-            Dense 1
+            Dense layer 1
         </div>
         <div class="col s2 container">
-            Dense 2
+            Dense layer 2
         </div>
         <div class="col s2 container">
             Model evaluation
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s2 container">
+            <svg style="overflow: visible;" height="20">
+                <g id="inputColorScale"></g>
+            </svg>
+        </div>
+        <div class="col s2 container">
+            <div class="col s2 container">
+                <svg style="overflow: visible;" height="20">
+                    <g id="lstm1ColorScale"></g>
+                </svg>
+            </div>
+        </div>
+        <div class="col s2 container">
+            <div class="col s2 container">
+                <svg style="overflow: visible;" height="20">
+                    <g id="lstm2ColorScale"></g>
+                </svg>
+            </div>
+        </div>
+        <div class="col s2 container">
+
+        </div>
+        <div class="col s2 container">
+
+        </div>
+        <div class="col s2 container">
+
         </div>
     </div>
     <div class="row">
@@ -71,8 +101,30 @@
         d3.json("data/train_RUL_FD001_100x50.json").then(y_train => {
             d3.json("data/test_FD001_100x50.json").then(X_test => {
                 d3.json("data/test_RUL_FD001_100x50.json").then(y_test => {
+
                     //Draw input
                     drawHeatmaps(X_train, "inputContainer", "inputDiv");
+
+                    //Draw color scales
+                    const colorBarW = 150;
+                    const colorBarH = 10;
+                    let flattenedZ = X_train.flat().flat();
+                    let minZ = d3.min(flattenedZ);
+                    let maxZ = d3.max(flattenedZ);
+                    let avgZ = (maxZ - minZ) / 2 + minZ;
+                    let inputColorScale = d3.scaleLinear()
+                        .domain([minZ, avgZ, maxZ])
+                        .range(["#f59322", "#e8eaeb", "#0877bd"])
+                        .clamp(true);
+                    plotColorBar(d3.select("#inputColorScale"), inputColorScale, "inputColorBar", colorBarW, colorBarH, "horizon");
+
+                    let lstm1ColorScale = d3.scaleLinear()
+                        .domain([-1, 0, 1])
+                        .range(["#f59322", "#e8eaeb", "#0877bd"])
+                        .clamp(true);
+                    plotColorBar(d3.select("#lstm1ColorScale"), lstm1ColorScale, "lstm1ColorScale", colorBarW, colorBarH, "horizon");
+                    plotColorBar(d3.select("#lstm2ColorScale"), lstm1ColorScale, "lstm2ColorScale", colorBarW, colorBarH, "horizon");
+
                     const inputShape = [X_train[0].length, X_train[0][0].length];
                     createModel(16, 8, 8, 4, inputShape).then(model => {
                         trainModel(model, X_train, y_train, X_test, y_test);
@@ -385,7 +437,7 @@
             let ts5 = model.predict(X_train_T);
             tensor2DToArray2DAsync(ts5).then(data => {
                 //We don't normalize the final result.
-                drawLineCharts(data, null, y_train_flat, "layer5Container", "layer5", outputSettings).then(()=>{
+                drawLineCharts(data, null, y_train_flat, "layer5Container", "layer5", outputSettings).then(() => {
                     //Update the training loss
                     updateGraphTitle("layer5Container", "Training output (orange) vs. target (grey). MSE: " + logs.loss.toFixed(2));
                 });
@@ -395,7 +447,7 @@
             let test = model.predict(X_test_T);
             tensor2DToArray2DAsync(test).then(data => {
                 //We don't normalize the final result.
-                drawLineCharts(data, null, y_test_flat, "testContainer", "test", trainTestSettings).then(()=>{
+                drawLineCharts(data, null, y_test_flat, "testContainer", "test", trainTestSettings).then(() => {
                     //Update test loss
                     let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
                     updateGraphTitle("testContainer", "Testing output (orange) vs. target (grey). MSE: " + testLoss.toFixed(2));
@@ -403,10 +455,12 @@
             });
         }
     }
-    function updateGraphTitle(graphId, newText){
-        let theNode = d3.select("#"+graphId).select(".graphTitle").node();
+
+    function updateGraphTitle(graphId, newText) {
+        let theNode = d3.select("#" + graphId).select(".graphTitle").node();
         theNode.innerHTML = newText;
     }
+
     function normalizeTarget(data, min2, max2) {
         const min1 = d3.min(data);
         const max1 = d3.max(data);
@@ -419,6 +473,34 @@
             return min2 + ((d - min1) / range1) * range2;
         });
         return result;
+    }
+
+    function plotColorBar(theSvg, colorScale, id, width, height, orientation) {
+        const domain = colorScale.domain();
+        const minVal = domain[0];
+        const domainSize = domain[domain.length - 1] - domain[0];
+        const legend = theSvg.append('defs')
+            .append('linearGradient')
+            .attr('id', 'gradient' + id)
+            .attr('x1', '0%') // left
+            .attr('y1', '100%')
+            .attr('x2', '100%') // to right
+            .attr('y2', '100%')
+            .attr('spreadMethod', 'pad');
+        colorScale.domain().forEach((dVal) => {
+            legend.append("stop").attr("offset", Math.round((dVal - minVal) * 100 / domainSize) + "%").attr("stop-color", colorScale(dVal))
+                .attr("stop-opacity", 1);
+        });
+        theSvg.append("g").append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("fill", `url(#gradient${id})`)
+            .attr("transform", "translate(0,0)");
+
+        let axisG = theSvg.append("g").attr("transform", `translate(0,${height})`);
+        let axisScale = d3.scaleLinear().domain(d3.extent(domain)).range([0, width]);
+        let axisBottom = d3.axisBottom().scale(axisScale).ticks(5);
+        axisG.call(axisBottom);
     }
 </script>
 </body>

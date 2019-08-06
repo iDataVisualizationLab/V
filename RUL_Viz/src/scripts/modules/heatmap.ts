@@ -165,8 +165,29 @@ export class HeatMap {
         //TODO: we may need to recalculate the scale.
         this.plot();
     }
-    public async plotColorBar(theDiv){
-        d3.select(theDiv)
+    public async plotColorBar(theGroup, id, width, height, orientation){
+        const cs = this.settings.colorScale;
+        const domain = cs.domain();
+        const minVal = domain[0];
+        const domainSize = domain[domain.length-1] - domain[0];
+        var legend = theGroup.append('defs')
+            .append('linearGradient')
+            .attr('id', 'gradient'+id)
+            .attr('x1', '0%') // left
+            .attr('y1', '100%')
+            .attr('x2', '100%') // to right
+            .attr('y2', '100%')
+            .attr('spreadMethod', 'pad');
+        cs.domain().forEach((dVal)=>{
+            legend.append("stop").attr("offset", Math.round((dVal-minVal)/domainSize)+"%").attr("stop-color", cs(dVal))
+                .attr("stop-opacity", 1);
+        });
+        theGroup.append("rect")
+            .attr("width", width)
+            .attr("height", height - 30)
+            .style("fill", `url(#gradient)${id}`)
+            .attr("transform", "translate(0,10)");
+
     }
     private async drawRect(x: number, y: number, width: number, height: number, lineWidth: number, strokeStyle: string, fillColor: string) {
         let ctx = this.canvas.node().getContext("2d");
