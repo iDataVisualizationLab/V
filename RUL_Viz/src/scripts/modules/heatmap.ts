@@ -165,7 +165,9 @@ export class HeatMap {
         //TODO: we may need to recalculate the scale.
         this.plot();
     }
-
+    public async plotColorBar(theDiv){
+        d3.select(theDiv)
+    }
     private async drawRect(x: number, y: number, width: number, height: number, lineWidth: number, strokeStyle: string, fillColor: string) {
         let ctx = this.canvas.node().getContext("2d");
         ctx.beginPath();
