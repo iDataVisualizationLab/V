@@ -141,7 +141,7 @@ export class LineChart {
         }
         //Show title
         if (this.settings.title) {
-            let title = this.svg.append("g").append("text").attr("x", this.settings.paddingLeft + contentWidth / 2).attr("y", this.settings.paddingTop / 2)
+            let title = this.svg.append("g").append("text").attr("class", "graphTitle").attr("x", this.settings.paddingLeft + contentWidth / 2).attr("y", this.settings.paddingTop / 2)
                 .text(this.settings.title.text).attr("alignment-baseline", "middle").attr("text-anchor", "middle");
             if(this.settings.title.fontFamily){
                 title.attr("font-family", this.settings.title.fontFamily);

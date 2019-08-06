@@ -357,7 +357,6 @@
         }
 
         function onEpochEnd(batch, logs) {
-            console.log(`Epoch ${batch}, loss: ${logs.loss}`);
             //Draw layer 0
             let ts0 = model.layers[0].apply(X_train_T);
             tensor3DToArray3DAsync(ts0).then(data => {
@@ -386,19 +385,29 @@
             let ts5 = model.predict(X_train_T);
             tensor2DToArray2DAsync(ts5).then(data => {
                 //We don't normalize the final result.
-                drawLineCharts(data, null, y_train_flat, "layer5Container", "layer5", outputSettings);
+                drawLineCharts(data, null, y_train_flat, "layer5Container", "layer5", outputSettings).then(()=>{
+                    //Update the training loss
+                    updateGraphTitle("layer5Container", "Training output (orange) vs. target (grey). MSE: " + logs.loss.toFixed(2));
+                });
             });
 
             //Draw the testing data.
             let test = model.predict(X_test_T);
             tensor2DToArray2DAsync(test).then(data => {
                 //We don't normalize the final result.
-                drawLineCharts(data, null, y_test_flat, "testContainer", "test", trainTestSettings);
+                drawLineCharts(data, null, y_test_flat, "testContainer", "test", trainTestSettings).then(()=>{
+                    //Update test loss
+                    let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
+                    updateGraphTitle("testContainer", "Testing output (orange) vs. target (grey). MSE: " + testLoss.toFixed(2));
+                });
             });
 
         }
     }
-
+    function updateGraphTitle(graphId, newText){
+        let theNode = d3.select("#"+graphId).select(".graphTitle").node();
+        theNode.innerHTML = newText;
+    }
     function normalizeTarget(data, min2, max2) {
         const min1 = d3.min(data);
         const max1 = d3.max(data);
