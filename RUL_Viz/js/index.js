@@ -1,11 +1,12 @@
 const mapObjects = {};
+let sortOrder;
 //Read data
 d3.json("data/train_FD001_100x50.json").then(X_train => {
     d3.json("data/train_RUL_FD001_100x50.json").then(y_train => {
         d3.json("data/test_FD001_100x50.json").then(X_test => {
             d3.json("data/test_RUL_FD001_100x50.json").then(y_test => {
                 //We build the sorting order.
-                let sortOrder = Array.from(y_train, (x, i) => i);
+                sortOrder = Array.from(y_train, (x, i) => i);
                 sortOrder.sort((a, b) => y_train[a] - y_train[b]);
                 //Draw input
                 drawHeatmaps(X_train, "inputContainer", "inputDiv").then(()=>{
@@ -78,7 +79,9 @@ async function tensor3DToArray3DAsync(ts) {
     });
 }
 
-async function drawHeatmaps(data, container, selector) {
+async function drawHeatmaps(data0, container, selector) {
+    //TODO: may need to do this order once only to improve performance
+    let data = sortOrder.map(d=>data0[d]);
     let noOfItems = data.length;
     let noOfSteps = data[0].length;
     let noOfFeatures = data[0][0].length;
@@ -122,7 +125,10 @@ async function drawHeatmaps(data, container, selector) {
     }
 }
 
-async function drawLineCharts(data, normalizer, targetY, container, selector, lineChartSettings) {
+async function drawLineCharts(data0, normalizer, targetY0, container, selector, lineChartSettings) {
+    //TODO: may need to do this order once only to improve performance
+    let data = sortOrder.map(d=>data0[d]);
+    let targetY = sortOrder.map(d=>targetY0[d]);
     let noOfItems = data.length;
     let noOfFeatures = data[0].length;
     //Generate steps
@@ -142,13 +148,15 @@ async function drawLineCharts(data, normalizer, targetY, container, selector, li
                 x: x,
                 y: y,
                 series: 'output',
-                marker: 'o'
+                marker: 'o',
+                // type: 'scatter'
             },
             {
                 x: x,
                 y: targetY,
                 series: 'target',
-                marker: 'x'
+                marker: 'x',
+                // type: 'scatter'
             }
         ];
         if (!mapObjects[selector + featureIdx]) {
@@ -207,7 +215,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     let y_train_T = tf.tensor(y_train);
     let X_test_T = tf.tensor(X_test);
     let y_test_T = tf.tensor(y_test);
-    const epochs = 25;
+    const epochs = 45;
     const batchSize = 8;
     model.fit(X_train_T, y_train_T, {
         batchSize: batchSize,

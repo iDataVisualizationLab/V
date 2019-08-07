@@ -8,7 +8,8 @@ export type LineChartTrace = {
     x: number[],
     y: number[],
     series: string,
-    marker?: string
+    marker?: string,
+    type?: string
 }
 export type Title = {
     text: string,
@@ -19,6 +20,7 @@ export type Legend = {
     x: number,
     y: number
 }
+
 export interface LineChartSettings {
     [key: string]: any;
 
@@ -147,10 +149,10 @@ export class LineChart {
         if (this.settings.title) {
             let title = this.svg.append("g").append("text").attr("class", "graphTitle").attr("x", this.settings.paddingLeft + contentWidth / 2).attr("y", this.settings.paddingTop / 2)
                 .text(this.settings.title.text).attr("alignment-baseline", "middle").attr("text-anchor", "middle");
-            if(this.settings.title.fontFamily){
+            if (this.settings.title.fontFamily) {
                 title.attr("font-family", this.settings.title.fontFamily);
             }
-            if(this.settings.title.fontSize){
+            if (this.settings.title.fontSize) {
                 title.attr("font-size", this.settings.title.fontSize);
             }
         }
@@ -172,10 +174,10 @@ export class LineChart {
                 .call(yAxis);
         }
         //Show legend
-        if(this.settings.legend){
+        if (this.settings.legend) {
             let legendg = this.svg.append("g").attr("class", "legend").attr("transform", `translate(${this.settings.legend.x}, ${this.settings.legend.y})`);
-            this.data.forEach((trace, i)=>{
-                legendg.append("text").attr("fill", this.settings.colorScale(trace.series)).attr("dy", `${i}em`).node().innerHTML = `<tspan text-decoration='line-through'>&nbsp;${trace.marker?trace.marker:" "}&nbsp;</tspan> ` + trace.series;
+            this.data.forEach((trace, i) => {
+                legendg.append("text").attr("fill", this.settings.colorScale(trace.series)).attr("dy", `${i}em`).node().innerHTML = `<tspan text-decoration='line-through'>&nbsp;${trace.marker ? trace.marker : " "}&nbsp;</tspan> ` + trace.series;
             });
         }
     }
@@ -189,7 +191,9 @@ export class LineChart {
             let x = trace.x;
             let y = trace.y;
             let color = this.settings.colorScale(trace.series);
-            this.drawLine(x, y, this.settings.lineWidth, color, trace.marker);
+
+            this.draw(x, y, this.settings.lineWidth, color, trace.marker, trace.type);
+
         });
     }
 
@@ -199,7 +203,8 @@ export class LineChart {
         this.plot();
     }
 
-    private async drawLine(x: number[], y: number[], lineWidth: number, strokeStyle: string, marker: string) {
+    private async draw(x: number[], y: number[], lineWidth: number, strokeStyle: string, marker: string, type: string) {
+
         //Convert data to d3 format.
         let lineData = x.map((xVal, i) => {
             return {
@@ -208,16 +213,19 @@ export class LineChart {
             }
         });
 
+
         let ctx = this.canvas.node().getContext("2d");
         let xScale = this.settings.xScale;
         let yScale = this.settings.yScale;
-        let line = d3.line().x(d => xScale(d.x)).y(d => yScale(d.y)).context(ctx);
 
-        ctx.beginPath();
-        ctx.lineWidth = lineWidth;
-        ctx.strokeStyle = strokeStyle;
-        line(lineData);
-        ctx.stroke();
+        if (type !== 'scatter') {
+            let line = d3.line().x(d => xScale(d.x)).y(d => yScale(d.y)).context(ctx);
+            ctx.beginPath();
+            ctx.lineWidth = lineWidth;
+            ctx.strokeStyle = strokeStyle;
+            line(lineData);
+            ctx.stroke();
+        }
 
         //Marker
         if (marker) {
