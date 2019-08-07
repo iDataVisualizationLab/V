@@ -1,13 +1,16 @@
 const mapObjects = {};
-let sortOrder;
+let trainRULOrder;
+let testRULOrder;
 //Read data
 d3.json("data/train_FD001_100x50.json").then(X_train => {
     d3.json("data/train_RUL_FD001_100x50.json").then(y_train => {
         d3.json("data/test_FD001_100x50.json").then(X_test => {
             d3.json("data/test_RUL_FD001_100x50.json").then(y_test => {
                 //We build the sorting order.
-                sortOrder = Array.from(y_train, (x, i) => i);
-                sortOrder.sort((a, b) => y_train[a] - y_train[b]);
+                trainRULOrder = Array.from(y_train, (x, i) => i);
+                trainRULOrder.sort((a, b) => y_train[a] - y_train[b]);
+                testRULOrder = Array.from(y_test, (x, i) => i);
+                testRULOrder.sort((a, b) => y_test[a] - y_test[b]);
                 //Draw input
                 drawHeatmaps(X_train, "inputContainer", "inputDiv").then(()=>{
                     hideLoader();
@@ -81,7 +84,7 @@ async function tensor3DToArray3DAsync(ts) {
 
 async function drawHeatmaps(data0, container, selector) {
     //TODO: may need to do this order once only to improve performance
-    let data = sortOrder.map(d=>data0[d]);
+    let data = trainRULOrder.map(d=>data0[d]);
     let noOfItems = data.length;
     let noOfSteps = data[0].length;
     let noOfFeatures = data[0][0].length;
@@ -125,38 +128,43 @@ async function drawHeatmaps(data0, container, selector) {
     }
 }
 
-async function drawLineCharts(data0, normalizer, targetY0, container, selector, lineChartSettings) {
+async function drawLineCharts(data0, normalizer, target0, container, selector, lineChartSettings, order) {
     //TODO: may need to do this order once only to improve performance
-    let data = sortOrder.map(d=>data0[d]);
-    let targetY = sortOrder.map(d=>targetY0[d]);
+    let data = data0;
+    let target = target0;
+    if(order){
+        data = order.map(d=>data0[d]);
+        target = order.map(d=>target0[d]);
+    }
+
     let noOfItems = data.length;
     let noOfFeatures = data[0].length;
     //Generate steps
-    let x = Array.from(Array(noOfItems), (x, i) => i);
+    let y = Array.from(Array(noOfItems), (yV, i) => i);
     //Generate div for the inputs
     d3.select(`#${container}`).selectAll(`.${selector}`).data(Array.from(Array(noOfFeatures), (x, i) => i), d => d)
         .enter().append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px");
     //Generate data.
     for (let featureIdx = 0; featureIdx < noOfFeatures; featureIdx++) {
-        let y = [];
+        let x = [];
         for (let itemIdx = 0; itemIdx < noOfItems; itemIdx++) {
-            y.push(data[itemIdx][featureIdx]);
+            x.push(data[itemIdx][featureIdx]);
         }
-        y = normalizer ? normalizer(y, -1.0, 1.0) : y;
+        x = normalizer ? normalizer(x, -1.0, 1.0) : x;
         const lineChartData = [
             {
                 x: x,
                 y: y,
                 series: 'output',
                 marker: 'o',
-                // type: 'scatter'
+                type: 'scatter'
             },
             {
-                x: x,
-                y: targetY,
+                x: target,
+                y: y,
                 series: 'target',
                 marker: 'x',
-                // type: 'scatter'
+                type: 'scatter'
             }
         ];
         if (!mapObjects[selector + featureIdx]) {
@@ -343,19 +351,19 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         //Draw layer 3
         let ts3 = model.layers[3].apply(ts2);
         tensor2DToArray2DAsync(ts3).then(data => {
-            drawLineCharts(data, normalizeTarget, target, "layer3Container", "layer3", lineChartSettings);
+            drawLineCharts(data, normalizeTarget, target, "layer3Container", "layer3", lineChartSettings, trainRULOrder);
         });
         //Draw layer 4
         let ts4 = model.layers[4].apply(ts3);
         tensor2DToArray2DAsync(ts4).then(data => {
-            drawLineCharts(data, normalizeTarget, target, "layer4Container", "layer4", lineChartSettings);
+            drawLineCharts(data, normalizeTarget, target, "layer4Container", "layer4", lineChartSettings, trainRULOrder);
         });
 
         //Draw output
         let ts5 = model.predict(X_train_T);
         tensor2DToArray2DAsync(ts5).then(data => {
             //We don't normalize the final result.
-            drawLineCharts(data, null, y_train_flat, "layer5Container", "layer5", outputSettings).then(() => {
+            drawLineCharts(data, null, y_train_flat, "layer5Container", "layer5", outputSettings, trainRULOrder).then(() => {
                 //Update the training loss
                 updateGraphTitle("layer5Container", "Training output vs. target. MSE: " + logs.loss.toFixed(2));
             });
@@ -365,7 +373,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         let test = model.predict(X_test_T);
         tensor2DToArray2DAsync(test).then(data => {
             //We don't normalize the final result.
-            drawLineCharts(data, null, y_test_flat, "testContainer", "test", trainTestSettings).then(() => {
+            drawLineCharts(data, null, y_test_flat, "testContainer", "test", trainTestSettings, testRULOrder).then(() => {
                 //Update test loss
                 let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
                 updateGraphTitle("testContainer", "Testing output vs. target. MSE: " + testLoss.toFixed(2));
