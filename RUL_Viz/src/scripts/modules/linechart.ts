@@ -20,11 +20,11 @@ export type Legend = {
     x: number,
     y: number
 }
-export type XAxis = {
-    label: string
+export type XAxisLabel = {
+    text: string
 }
-export type YAxis = {
-    label: string
+export type YAxisLabel = {
+    text: string
 }
 export interface LineChartSettings {
     [key: string]: any;
@@ -42,8 +42,8 @@ export interface LineChartSettings {
     lineWidth?: number;
     title?: Title;
     legend?: any;
-    xAxis?: XAxis,
-    yAxis?: YAxis
+    xAxisLabel?: XAxisLabel,
+    yAxisLabel?: YAxisLabel
 }
 
 export class LineChart {
@@ -162,6 +162,7 @@ export class LineChart {
                 title.attr("font-size", this.settings.title.fontSize);
             }
         }
+        //Show axes
         if (this.settings.showAxes) {
             let xAxis = d3.axisBottom()
                 .scale(this.settings.xScale);
@@ -178,6 +179,20 @@ export class LineChart {
                 .attr("class", "y axis")
                 .attr("transform", `translate(${this.settings.paddingLeft},${this.settings.paddingTop})`)
                 .call(yAxis);
+        }
+        //Show axis labels
+        if(this.settings.xAxisLabel){
+            this.svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("transform", "translate("+ (this.settings.width/2) +","+(this.settings.height)+")")  // centre below axis at the bottom
+                .text(this.settings.xAxisLabel.text);
+        }
+        if(this.settings.yAxisLabel){
+            this.svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("alignment-baseline", "hanging")
+                .attr("transform", "translate(0,"+(this.settings.height/2)+")rotate(-90)")
+                .text(this.settings.yAxisLabel.text).attr("dx", "1em");//Also move right one text size.
         }
         //Show legend
         if (this.settings.legend) {

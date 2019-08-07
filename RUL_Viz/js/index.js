@@ -281,22 +281,30 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         }
     };
     let trainLossW = 800;
+    let trainLossH = 200;
     let trainLossBatchSettings = {
         noSvg: false,
         showAxes: true,
-        paddingLeft: 40,
+        paddingLeft: 60,
         paddingRight: 0,
         paddingTop: 20,
-        paddingBottom: 20,
+        paddingBottom: 40,
         width:trainLossW,
-        height: testHeight,
+        height: trainLossH,
         title: {
             text: 'Training loss vs. testing loss, every batch.'
         },
         legend: {
             x: trainLossW-50,
             y: 35
+        },
+        xAxisLabel:{
+            text: 'Batch'
+        },
+        yAxisLabel:{
+            text: 'Loss'
         }
+
     };
     let xScaleTest = d3.scaleLinear().domain([0, batches]).range([0, trainLossBatchSettings.width - trainLossBatchSettings.paddingLeft - trainLossBatchSettings.paddingRight]);
     trainLossBatchSettings.xScale = xScaleTest;
