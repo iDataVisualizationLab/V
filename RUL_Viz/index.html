@@ -17,28 +17,28 @@
 <body>
 <header style="border-bottom: 1px solid black;">
     <div class="container page">
-        <h1 class="center">RUL ML Exploration Page</h1>
+        <h3 class="center">RUL ML Exploration Page</h3>
     </div>
 </header>
 <div class="container page">
     <div class="row">
         <div class="col s2 container">
-            Input
+            <b>Input</b>
         </div>
         <div class="col s2 container">
-            LSTM layer 1
+            <b>LSTM layer 1</b>
         </div>
         <div class="col s2 container">
-            LSTM layer 2
+            <b>LSTM layer 2</b>
         </div>
         <div class="col s2 container">
-            Dense layer 1
+            <b>Dense layer 1</b>
         </div>
         <div class="col s2 container">
-            Dense layer 2
+            <b>Dense layer 2</b>
         </div>
         <div class="col s2 container">
-            Model evaluation
+            <b>Model evaluation</b>
         </div>
     </div>
     <div class="row">
@@ -62,13 +62,16 @@
             </div>
         </div>
         <div class="col s2 container">
-
+            <span style="color: darkgray;"><s>&nbsp;x&nbsp;</s>: target</span>
+            <span style="color: darkorange;"><s>&nbsp;o&nbsp;</s>: output</span>
         </div>
         <div class="col s2 container">
-
+            <span style="color: darkgray;"><s>&nbsp;x&nbsp;</s>: target</span>
+            <span style="color: darkorange;"><s>&nbsp;o&nbsp;</s>: output</span>
         </div>
         <div class="col s2 container">
-
+            <span style="color: darkgray;"><s>&nbsp;x&nbsp;</s>: target</span>
+            <span style="color: darkorange;"><s>&nbsp;o&nbsp;</s>: output</span>
         </div>
     </div>
     <div class="row">
@@ -338,7 +341,7 @@
             width: testWidth,
             height: testHeight,
             title: {
-                text: "Training output (orange) vs. target (grey)."
+                text: "Training output vs. target."
             }
         };
         let trainLosses = [];
@@ -355,7 +358,7 @@
             width: testWidth,
             height: testHeight,
             title: {
-                text: "Testing output (orange) vs. target (grey)."
+                text: "Testing output vs. target."
             }
         };
         let trainLossBatchSettings = {
@@ -368,7 +371,7 @@
             width: testWidth,
             height: testHeight,
             title: {
-                text: "Training loss (gray) vs. testing loss (orange), every batch."
+                text: 'Training loss vs. testing loss, every batch.'
             }
         };
         let xScaleTest = d3.scaleLinear().domain([0, batches]).range([0, trainLossBatchSettings.width - trainLossBatchSettings.paddingLeft - trainLossBatchSettings.paddingRight]);
@@ -439,7 +442,7 @@
                 //We don't normalize the final result.
                 drawLineCharts(data, null, y_train_flat, "layer5Container", "layer5", outputSettings).then(() => {
                     //Update the training loss
-                    updateGraphTitle("layer5Container", "Training output (orange) vs. target (grey). MSE: " + logs.loss.toFixed(2));
+                    updateGraphTitle("layer5Container", "Training output vs. target. MSE: " + logs.loss.toFixed(2));
                 });
             });
 
@@ -450,7 +453,7 @@
                 drawLineCharts(data, null, y_test_flat, "testContainer", "test", trainTestSettings).then(() => {
                     //Update test loss
                     let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
-                    updateGraphTitle("testContainer", "Testing output (orange) vs. target (grey). MSE: " + testLoss.toFixed(2));
+                    updateGraphTitle("testContainer", "Testing output vs. target. MSE: " + testLoss.toFixed(2));
                 });
             });
         }
