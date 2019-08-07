@@ -15,7 +15,10 @@ export type Title = {
     fontSize?: number,
     fontFamily?: string
 }
-
+export type Legend = {
+    x: number,
+    y: number
+}
 export interface LineChartSettings {
     [key: string]: any;
 
@@ -32,6 +35,7 @@ export interface LineChartSettings {
     paddingBottom?: number;
     lineWidth?: number;
     title?: Title;
+    legend?: any;
 }
 
 export class LineChart {
@@ -59,7 +63,7 @@ export class LineChart {
                 this.settings[prop] = lineChartSettings[prop];
             }
         }
-        if (this.settings.showAxes || this.settings.title) {
+        if (this.settings.showAxes || this.settings.title || this.settings.legend) {
             this.settings.noSvg = false;
         }
         //Find width and height
@@ -167,10 +171,18 @@ export class LineChart {
                 .attr("transform", `translate(${this.settings.paddingLeft},${this.settings.paddingTop})`)
                 .call(yAxis);
         }
+        //Show legend
+        if(this.settings.legend){
+            let legendg = this.svg.append("g").attr("class", "legend").attr("transform", `translate(${this.settings.legend.x}, ${this.settings.legend.y})`);
+            this.data.forEach((trace, i)=>{
+                legendg.append("text").attr("fill", this.settings.colorScale(trace.series)).attr("dy", `${i}em`).node().innerHTML = `<tspan text-decoration='line-through'>&nbsp;${trace.marker?trace.marker:" "}&nbsp;</tspan> ` + trace.series;
+            });
+        }
     }
 
     public async plot() {
         //clear the canvas
+
         this.canvas.node().getContext("2d").clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         //start the drawing
         this.data.forEach(trace => {
@@ -178,7 +190,7 @@ export class LineChart {
             let y = trace.y;
             let color = this.settings.colorScale(trace.series);
             this.drawLine(x, y, this.settings.lineWidth, color, trace.marker);
-        })
+        });
     }
 
     public async update(newData) {

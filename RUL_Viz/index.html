@@ -104,10 +104,11 @@
         d3.json("data/train_RUL_FD001_100x50.json").then(y_train => {
             d3.json("data/test_FD001_100x50.json").then(X_test => {
                 d3.json("data/test_RUL_FD001_100x50.json").then(y_test => {
-
+                    //We build the sorting order.
+                    let sortOrder = Array.from(y_train, (x, i)=>i);
+                    sortOrder.sort((a, b)=> y_train[a] - y_train[b]);
                     //Draw input
                     drawHeatmaps(X_train, "inputContainer", "inputDiv");
-
                     //Draw color scales
                     const colorBarW = 150;
                     const colorBarH = 10;
@@ -372,6 +373,10 @@
             height: testHeight,
             title: {
                 text: 'Training loss vs. testing loss, every batch.'
+            },
+            legend:{
+                x: 300,
+                y: 35
             }
         };
         let xScaleTest = d3.scaleLinear().domain([0, batches]).range([0, trainLossBatchSettings.width - trainLossBatchSettings.paddingLeft - trainLossBatchSettings.paddingRight]);
@@ -396,7 +401,7 @@
                 {
                     x: xTest,
                     y: testLosses,
-                    series: 'target',
+                    series: 'test',
                 }
             ];
             if (!mapObjects['trainTestLoss']) {
