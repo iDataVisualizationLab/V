@@ -144,7 +144,7 @@ async function drawLineCharts(data0, normalizer, target0, container, selector, l
     //Generate div for the inputs
     let elms = d3.select(`#${container}`).selectAll(`.${selector}`).data(Array.from(Array(noOfFeatures), (x, i) => i), d => d)
         .enter().append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px");
-    if (!noBorder) {
+    if (typeof noBorder === 'undefined' || !noBorder) {
         elms.style("border", "1px solid black").style("display", "inline-block");
     }
     //Generate data.
