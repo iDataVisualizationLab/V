@@ -12,7 +12,7 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
                 testRULOrder = Array.from(y_test, (x, i) => i);
                 testRULOrder.sort((a, b) => y_test[a] - y_test[b]);
                 //Draw input
-                drawHeatmaps(X_train, "inputContainer", "inputDiv").then(()=>{
+                drawHeatmaps(X_train, "inputContainer", "inputDiv").then(() => {
                     hideLoader();
                 });
                 //Draw color scales
@@ -84,7 +84,7 @@ async function tensor3DToArray3DAsync(ts) {
 
 async function drawHeatmaps(data0, container, selector) {
     //TODO: may need to do this order once only to improve performance
-    let data = trainRULOrder.map(d=>data0[d]);
+    let data = trainRULOrder.map(d => data0[d]);
     let noOfItems = data.length;
     let noOfSteps = data[0].length;
     let noOfFeatures = data[0][0].length;
@@ -94,7 +94,7 @@ async function drawHeatmaps(data0, container, selector) {
     let y = Array.from(Array(noOfItems), (x, i) => i);
     //Generate div for the inputs
     d3.select(`#${container}`).selectAll(`.${selector}`).data(Array.from(Array(noOfFeatures), (x, i) => i), d => d)
-        .enter().append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px");
+        .enter().append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px").style("border", "1px solid black").style("display", "inline-block");
     //Generate data.
     for (let featureIdx = 0; featureIdx < noOfFeatures; featureIdx++) {
         let z = [];
@@ -128,13 +128,13 @@ async function drawHeatmaps(data0, container, selector) {
     }
 }
 
-async function drawLineCharts(data0, normalizer, target0, container, selector, lineChartSettings, order) {
+async function drawLineCharts(data0, normalizer, target0, container, selector, lineChartSettings, order, noBorder) {
     //TODO: may need to do this order once only to improve performance
     let data = data0;
     let target = target0;
-    if(order){
-        data = order.map(d=>data0[d]);
-        target = order.map(d=>target0[d]);
+    if (order) {
+        data = order.map(d => data0[d]);
+        target = order.map(d => target0[d]);
     }
 
     let noOfItems = data.length;
@@ -142,8 +142,11 @@ async function drawLineCharts(data0, normalizer, target0, container, selector, l
     //Generate steps
     let y = Array.from(Array(noOfItems), (yV, i) => i);
     //Generate div for the inputs
-    d3.select(`#${container}`).selectAll(`.${selector}`).data(Array.from(Array(noOfFeatures), (x, i) => i), d => d)
+    let elms = d3.select(`#${container}`).selectAll(`.${selector}`).data(Array.from(Array(noOfFeatures), (x, i) => i), d => d)
         .enter().append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px");
+    if (!noBorder) {
+        elms.style("border", "1px solid black").style("display", "inline-block");
+    }
     //Generate data.
     for (let featureIdx = 0; featureIdx < noOfFeatures; featureIdx++) {
         let x = [];
@@ -289,19 +292,19 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         paddingRight: 0,
         paddingTop: 20,
         paddingBottom: 40,
-        width:trainLossW,
+        width: trainLossW,
         height: trainLossH,
         title: {
             text: 'Training loss vs. testing loss, every batch.'
         },
         legend: {
-            x: trainLossW-50,
+            x: trainLossW - 50,
             y: 35
         },
-        xAxisLabel:{
+        xAxisLabel: {
             text: 'Batch'
         },
-        yAxisLabel:{
+        yAxisLabel: {
             text: 'Loss'
         }
 
@@ -372,7 +375,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         let ts5 = model.predict(X_train_T);
         tensor2DToArray2DAsync(ts5).then(data => {
             //We don't normalize the final result.
-            drawLineCharts(data, null, y_train_flat, "layer5Container", "layer5", outputSettings, trainRULOrder).then(() => {
+            drawLineCharts(data, null, y_train_flat, "layer5Container", "layer5", outputSettings, trainRULOrder, true).then(() => {
                 //Update the training loss
                 updateGraphTitle("layer5Container", "Training output vs. target. MSE: " + logs.loss.toFixed(2));
             });
@@ -382,7 +385,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         let test = model.predict(X_test_T);
         tensor2DToArray2DAsync(test).then(data => {
             //We don't normalize the final result.
-            drawLineCharts(data, null, y_test_flat, "testContainer", "test", trainTestSettings, testRULOrder).then(() => {
+            drawLineCharts(data, null, y_test_flat, "testContainer", "test", trainTestSettings, testRULOrder, true).then(() => {
                 //Update test loss
                 let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
                 updateGraphTitle("testContainer", "Testing output vs. target. MSE: " + testLoss.toFixed(2));
