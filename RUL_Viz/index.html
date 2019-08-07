@@ -22,10 +22,15 @@
 </script>
 <header style="border-bottom: 1px solid black;">
     <div class="container page">
-        <h3 class="center">Remaining Useful Life Machine Learning Exploration Page</h3>
+        <h3 class="center">Remaining Useful Life (RUL) Machine Learning Exploration Page</h3>
     </div>
 </header>
 <div class="container page">
+    <div class="row center">
+        <div class="col s12 container center">
+            <div id="trainTestLoss" class="center" style="margin-left: auto; display: inline-block;"></div>
+        </div>
+    </div>
     <div class="row">
         <div class="col s2 container">
             <b>Input</b>
@@ -64,6 +69,10 @@
         </div>
         <div class="col s2 container">
             <b>Model evaluation</b>
+            <br/>
+            x-axis: RUL
+            <br/>
+            y-axis: engines
         </div>
     </div>
     <div class="row">
@@ -116,7 +125,6 @@
             <div id="layer4Container"></div>
         </div>
         <div class="col s2 container">
-            <div id="trainTestLoss"></div>
             <div id="layer5Container"></div>
             <div id="testContainer"></div>
         </div>

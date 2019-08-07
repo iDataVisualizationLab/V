@@ -20,10 +20,14 @@ export type Legend = {
     x: number,
     y: number
 }
-
+export type XAxis = {
+    label: string
+}
+export type YAxis = {
+    label: string
+}
 export interface LineChartSettings {
     [key: string]: any;
-
     showAxes?: boolean;
     noSvg?: boolean;
     width?: number;
@@ -38,6 +42,8 @@ export interface LineChartSettings {
     lineWidth?: number;
     title?: Title;
     legend?: any;
+    xAxis?: XAxis,
+    yAxis?: YAxis
 }
 
 export class LineChart {

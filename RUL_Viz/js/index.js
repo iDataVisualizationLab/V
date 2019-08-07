@@ -280,6 +280,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
             text: "Testing output vs. target."
         }
     };
+    let trainLossW = 800;
     let trainLossBatchSettings = {
         noSvg: false,
         showAxes: true,
@@ -287,13 +288,13 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         paddingRight: 0,
         paddingTop: 20,
         paddingBottom: 20,
-        width: testWidth,
+        width:trainLossW,
         height: testHeight,
         title: {
             text: 'Training loss vs. testing loss, every batch.'
         },
         legend: {
-            x: 300,
+            x: trainLossW-50,
             y: 35
         }
     };
