@@ -253,7 +253,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         height: 100
     };
 
-    const testWidth = 300;
+    const testWidth = 250;
     const testHeight = 230;
     let outputSettings = {
         noSvg: false,
@@ -265,7 +265,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         width: testWidth,
         height: testHeight,
         title: {
-            text: "Training output vs. target."
+            text: "Training"
         }
     };
     let trainLosses = [];
@@ -282,7 +282,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         width: testWidth,
         height: testHeight,
         title: {
-            text: "Testing output vs. target."
+            text: "Testing"
         }
     };
     let trainLossW = 800;
@@ -379,7 +379,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
             //We don't normalize the final result.
             drawLineCharts(data, null, y_train_flat_ordered, "layer5Container", "layer5", outputSettings, true).then(() => {
                 //Update the training loss
-                updateGraphTitle("layer5Container", "Training output vs. target. MSE: " + logs.loss.toFixed(2));
+                updateGraphTitle("layer5Container", "Training, MSE: " + logs.loss.toFixed(2));
             });
         });
 
@@ -390,7 +390,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
             drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", trainTestSettings, true).then(() => {
                 //Update test loss
                 let testLoss = model.evaluate(X_test_T_ordered, y_test_T_ordered).dataSync()[0];
-                updateGraphTitle("testContainer", "Testing output vs. target. MSE: " + testLoss.toFixed(2));
+                updateGraphTitle("testContainer", "Testing, MSE: " + testLoss.toFixed(2));
             });
         });
     }
