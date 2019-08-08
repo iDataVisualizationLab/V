@@ -6,15 +6,6 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
     d3.json("data/train_RUL_FD001_100x50.json").then(y_train => {
         d3.json("data/test_FD001_100x50.json").then(X_test => {
             d3.json("data/test_RUL_FD001_100x50.json").then(y_test => {
-                //We build the sorting order.
-                trainRULOrder = Array.from(y_train, (x, i) => i);
-                trainRULOrder.sort((a, b) => y_train[a] - y_train[b]);
-                testRULOrder = Array.from(y_test, (x, i) => i);
-                testRULOrder.sort((a, b) => y_test[a] - y_test[b]);
-                //Draw input
-                drawHeatmaps(X_train, "inputContainer", "inputDiv").then(() => {
-                    hideLoader();
-                });
                 //Draw color scales
                 const colorBarW = 150;
                 const colorBarH = 10;
@@ -82,9 +73,7 @@ async function tensor3DToArray3DAsync(ts) {
     });
 }
 
-async function drawHeatmaps(data0, container, selector) {
-    //TODO: may need to do this order once only to improve performance
-    let data = trainRULOrder.map(d => data0[d]);
+async function drawHeatmaps(data, container, selector) {
     let noOfItems = data.length;
     let noOfSteps = data[0].length;
     let noOfFeatures = data[0][0].length;
@@ -128,15 +117,7 @@ async function drawHeatmaps(data0, container, selector) {
     }
 }
 
-async function drawLineCharts(data0, normalizer, target0, container, selector, lineChartSettings, order, noBorder) {
-    //TODO: may need to do this order once only to improve performance
-    let data = data0;
-    let target = target0;
-    if (order) {
-        data = order.map(d => data0[d]);
-        target = order.map(d => target0[d]);
-    }
-
+async function drawLineCharts(data, normalizer, target, container, selector, lineChartSettings, noBorder) {
     let noOfItems = data.length;
     let noOfFeatures = data[0].length;
     //Generate steps
@@ -226,19 +207,40 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     let y_train_T = tf.tensor(y_train);
     let X_test_T = tf.tensor(X_test);
     let y_test_T = tf.tensor(y_test);
+
+    //We build the sorting order.
+    trainRULOrder = Array.from(y_train, (val, i) => i);
+    trainRULOrder = trainRULOrder.sort((a, b) => y_train[a] - y_train[b]);
+    testRULOrder = Array.from(y_test, (val, i) => i);
+    testRULOrder = testRULOrder.sort((a, b) => y_test[a] - y_test[b]);
+
+    let X_train_ordered = trainRULOrder.map(d => X_train[d]);
+    let y_train_ordered = trainRULOrder.map(d => y_train[d]);
+
+    let X_test_ordered = testRULOrder.map(d => X_test[d]);
+    let y_test_ordered = testRULOrder.map(d => y_test[d]);
+
+    let X_train_T_ordered = tf.tensor(X_train_ordered);
+    let X_test_T_ordered = tf.tensor(X_test_ordered);
+    let y_test_T_ordered = tf.tensor(y_test_ordered);
+
+    let y_train_flat_ordered = y_train_ordered.flat();
+    let y_test_flat_ordered = y_test_ordered.flat();
+    let target_ordered = normalizeTarget(y_train_flat_ordered, -1.0, 1.0);
+
+    //Draw input
+    drawHeatmaps(X_train_ordered, "inputContainer", "inputDiv").then(() => {
+        hideLoader();
+    });
+
     const epochs = 45;
     const batchSize = 8;
     model.fit(X_train_T, y_train_T, {
         batchSize: batchSize,
         epochs: epochs,
-        shuffle: true,
+        // shuffle: true,
         callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd}
     });
-
-    let y_train_flat = y_train.flat();
-    let y_test_flat = y_test.flat();
-
-    let target = normalizeTarget(y_train_flat, -1.0, 1.0);
 
     let lineChartSettings = {
         noSvg: true,
@@ -251,13 +253,13 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         height: 100
     };
 
-    const testWidth = 400;
-    const testHeight = 140;
+    const testWidth = 300;
+    const testHeight = 230;
     let outputSettings = {
         noSvg: false,
         showAxes: true,
         paddingLeft: 40,
-        paddingRight: 0,
+        paddingRight: 10,
         paddingTop: 20,
         paddingBottom: 20,
         width: testWidth,
@@ -268,13 +270,13 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     };
     let trainLosses = [];
     let testLosses = [];
-    let batches = Math.ceil(y_test_flat.length / batchSize) * epochs;
+    let batches = Math.ceil(y_test_flat_ordered.length / batchSize) * epochs;
     let xTest = Array.from(Array(batches), (x, i) => i);
     let trainTestSettings = {
         noSvg: false,
         showAxes: true,
         paddingLeft: 40,
-        paddingRight: 0,
+        paddingRight: 10,
         paddingTop: 20,
         paddingBottom: 20,
         width: testWidth,
@@ -295,7 +297,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         width: trainLossW,
         height: trainLossH,
         title: {
-            text: 'Training loss vs. testing loss, every batch.'
+            text: 'Training loss vs. testing loss.'
         },
         legend: {
             x: trainLossW - 50,
@@ -348,7 +350,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
 
     function onEpochEnd(batch, logs) {
         //Draw layer 0
-        let ts0 = model.layers[0].apply(X_train_T);
+        let ts0 = model.layers[0].apply(X_train_T_ordered);
         tensor3DToArray3DAsync(ts0).then(data => {
             drawHeatmaps(data, "layer0Container", "layer0");
         });
@@ -363,31 +365,31 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         //Draw layer 3
         let ts3 = model.layers[3].apply(ts2);
         tensor2DToArray2DAsync(ts3).then(data => {
-            drawLineCharts(data, normalizeTarget, target, "layer3Container", "layer3", lineChartSettings, trainRULOrder);
+            drawLineCharts(data, normalizeTarget, target_ordered, "layer3Container", "layer3", lineChartSettings, false);
         });
         //Draw layer 4
         let ts4 = model.layers[4].apply(ts3);
         tensor2DToArray2DAsync(ts4).then(data => {
-            drawLineCharts(data, normalizeTarget, target, "layer4Container", "layer4", lineChartSettings, trainRULOrder);
+            drawLineCharts(data, normalizeTarget, target_ordered, "layer4Container", "layer4", lineChartSettings, false);
         });
 
         //Draw output
-        let ts5 = model.predict(X_train_T);
+        let ts5 = model.predict(X_train_T_ordered);
         tensor2DToArray2DAsync(ts5).then(data => {
             //We don't normalize the final result.
-            drawLineCharts(data, null, y_train_flat, "layer5Container", "layer5", outputSettings, trainRULOrder, true).then(() => {
+            drawLineCharts(data, null, y_train_flat_ordered, "layer5Container", "layer5", outputSettings, true).then(() => {
                 //Update the training loss
                 updateGraphTitle("layer5Container", "Training output vs. target. MSE: " + logs.loss.toFixed(2));
             });
         });
 
         //Draw the testing data.
-        let test = model.predict(X_test_T);
+        let test = model.predict(X_test_T_ordered);
         tensor2DToArray2DAsync(test).then(data => {
             //We don't normalize the final result.
-            drawLineCharts(data, null, y_test_flat, "testContainer", "test", trainTestSettings, testRULOrder, true).then(() => {
+            drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", trainTestSettings, true).then(() => {
                 //Update test loss
-                let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
+                let testLoss = model.evaluate(X_test_T_ordered, y_test_T_ordered).dataSync()[0];
                 updateGraphTitle("testContainer", "Testing output vs. target. MSE: " + testLoss.toFixed(2));
             });
         });
