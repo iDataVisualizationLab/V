@@ -19,6 +19,7 @@ export interface HeatMapSettings {
     height?: number;
     xScale?: any;
     yScale?: any;
+    colorScheme?:any;
     colorScale?: any;
     paddingLeft?: number;
     paddingRight?: number;
@@ -99,7 +100,7 @@ export class HeatMap {
             let avgZ = (maxZ - minZ) / 2 + minZ;
             this.settings.colorScale = d3.scaleLinear<string, number>()
                 .domain([minZ, avgZ, maxZ])
-                .range(["#f59322", "#e8eaeb", "#0877bd"])
+                .range(this.settings.colorScheme?this.settings.colorScheme:["#0877bd", "#e8eaeb", "#f59322"])
                 .clamp(true);
         }
         let container = d3.select(htmlContainer).append("div")

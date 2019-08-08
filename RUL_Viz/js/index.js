@@ -15,13 +15,13 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
                 let avgZ = (maxZ - minZ) / 2 + minZ;
                 let inputColorScale = d3.scaleLinear()
                     .domain([minZ, avgZ, maxZ])
-                    .range(["#f59322", "#e8eaeb", "#0877bd"])
+                    .range(["#0877bd", "#e8eaeb", "#f59322"])
                     .clamp(true);
                 plotColorBar(d3.select("#inputColorScale"), inputColorScale, "inputColorBar", colorBarW, colorBarH, "horizon");
 
                 let lstm1ColorScale = d3.scaleLinear()
-                    .domain([-1, 0, 1])
-                    .range(["#f59322", "#e8eaeb", "#0877bd"])
+                    .domain([0, 0.5, 1])
+                    .range(["#0877bd", "#e8eaeb", "#f59322"])
                     .clamp(true);
                 plotColorBar(d3.select("#lstm1ColorScale"), lstm1ColorScale, "lstm1ColorScale", colorBarW, colorBarH, "horizon");
                 plotColorBar(d3.select("#lstm2ColorScale"), lstm1ColorScale, "lstm2ColorScale", colorBarW, colorBarH, "horizon");
@@ -250,7 +250,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         paddingTop: 0,
         paddingBottom: 0,
         width: 200,
-        height: 100
+        height: 100,
+        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
     };
 
     const testWidth = 250;
@@ -266,7 +267,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         height: testHeight,
         title: {
             text: "Training"
-        }
+        },
+        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
     };
     let trainLosses = [];
     let testLosses = [];
@@ -283,7 +285,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         height: testHeight,
         title: {
             text: "Testing"
-        }
+        },
+        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
     };
     let trainLossW = 800;
     let trainLossH = 200;

@@ -34,6 +34,7 @@ export interface LineChartSettings {
     height?: number;
     xScale?: any;
     yScale?: any;
+    colorScheme?: any;
     colorScale?: any;
     paddingLeft?: number;
     paddingRight?: number;
@@ -114,7 +115,7 @@ export class LineChart {
             let seriesLength = series.length;
             let colorScale = d3.scaleLinear<number, string>()
                 .domain([0, 0.5, 1])
-                .range(["#f59322", "#a0a0a0", "#0877bd"])
+                .range(this.settings.colorScheme?this.settings.colorScheme:["#f59322", "#a0a0a0", "#0877bd"])
                 .clamp(true);
             this.settings.colorScale = d3.scaleOrdinal()
                 .domain(series)
