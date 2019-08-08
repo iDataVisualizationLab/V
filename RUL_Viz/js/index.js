@@ -7,7 +7,7 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
         d3.json("data/test_FD001_100x50.json").then(X_test => {
             d3.json("data/test_RUL_FD001_100x50.json").then(y_test => {
                 //Draw color scales
-                const colorBarW = 150;
+                const colorBarW = 100;
                 const colorBarH = 10;
                 let flattenedZ = X_train.flat().flat();
                 let minZ = d3.min(flattenedZ);
@@ -83,7 +83,7 @@ async function drawHeatmaps(data, container, selector) {
     let y = Array.from(Array(noOfItems), (x, i) => i);
     //Generate div for the inputs
     d3.select(`#${container}`).selectAll(`.${selector}`).data(Array.from(Array(noOfFeatures), (x, i) => i), d => d)
-        .enter().append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px").style("border", "1px solid black").style("display", "inline-block");
+        .enter().append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px").style("margin-bottom", "0px").style("border", "1px solid black").style("display", "inline-block");
     //Generate data.
     for (let featureIdx = 0; featureIdx < noOfFeatures; featureIdx++) {
         let z = [];
@@ -104,7 +104,7 @@ async function drawHeatmaps(data, container, selector) {
                 paddingTop: 0,
                 paddingBottom: 0,
                 borderWidth: 0,
-                width: 200,
+                width: 100,
                 height: 100
             });
             hm.plot();
@@ -249,7 +249,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         paddingRight: 0,
         paddingTop: 0,
         paddingBottom: 0,
-        width: 200,
+        width: 100,
         height: 100,
         colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
     };
@@ -352,10 +352,38 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     }
 
     function onEpochEnd(batch, logs) {
+        //Display weights0
+        let weights0 = model.layers[0].getWeights()[0];
+        buildWeightPositionData(weights0, 100, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
+
+            d3.select("#weights0Container").selectAll(".weightLine")
+                .data(result.lineData, d => d.idx).join('path')
+                .attr("class", "weightLine")
+                .attr("d", d => link(d))
+                .attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("stroke-width", d => result.strokeWidthScale(d.weight))
+                .attr("opacity", d => result.opacityScaler(d.weight));
+        });
+
+
         //Draw layer 0
         let ts0 = model.layers[0].apply(X_train_T_ordered);
         tensor3DToArray3DAsync(ts0).then(data => {
             drawHeatmaps(data, "layer0Container", "layer0");
+        });
+        //Draw weights1
+        let weights1 = model.layers[1].getWeights()[0];
+        buildWeightPositionData(weights1, 100, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
+
+            d3.select("#weights1Container").selectAll(".weightLine")
+                .data(result.lineData, d => d.idx).join('path')
+                .attr("class", "weightLine")
+                .attr("d", d => link(d))
+                .attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("stroke-width", d => result.strokeWidthScale(d.weight))
+                .attr("opacity", d => result.opacityScaler(d.weight));
         });
         //Draw layer 1
         let ts1 = model.layers[1].apply(ts0);
@@ -370,12 +398,35 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         tensor2DToArray2DAsync(ts3).then(data => {
             drawLineCharts(data, normalizeTarget, target_ordered, "layer3Container", "layer3", lineChartSettings, false);
         });
+        //Draw weights 4
+        let weights4 = model.layers[4].getWeights()[0];
+        buildWeightPositionData(weights4, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.05, 0.7).then((result) => {
+            d3.select("#weights4Container").selectAll(".weightLine")
+                .data(result.lineData, d => d.idx).join('path')
+                .attr("class", "weightLine")
+                .attr("d", d => link(d))
+                .attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("stroke-width", d => result.strokeWidthScale(d.weight))
+                .attr("opacity", d => result.opacityScaler(d.weight));
+        });
         //Draw layer 4
         let ts4 = model.layers[4].apply(ts3);
         tensor2DToArray2DAsync(ts4).then(data => {
             drawLineCharts(data, normalizeTarget, target_ordered, "layer4Container", "layer4", lineChartSettings, false);
         });
-
+        //Draw weights 4
+        let weights5 = model.layers[5].getWeights()[0];
+        buildWeightPositionData(weights5, 100, 17.5, 250, 17.5, 100, 1, 0, 0.5, 3, 0.3, 0.7).then((result) => {
+            d3.select("#weights5Container").selectAll(".weightLine")
+                .data(result.lineData, d => d.idx).join('path')
+                .attr("class", "weightLine")
+                .attr("d", d => link(d))
+                .attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("stroke-width", d => result.strokeWidthScale(d.weight))
+                .attr("opacity", d => result.opacityScaler(d.weight));
+        });
         //Draw output
         let ts5 = model.predict(X_train_T_ordered);
         tensor2DToArray2DAsync(ts5).then(data => {
@@ -444,4 +495,56 @@ function plotColorBar(theSvg, colorScale, id, width, height, orientation) {
     let axisScale = d3.scaleLinear().domain(d3.extent(domain)).range([0, width]);
     let axisBottom = d3.axisBottom().scale(axisScale).ticks(5);
     axisG.call(axisBottom);
+}
+
+let link = d3.linkHorizontal()
+    .x(function (d) {
+        return d.x;
+    })
+    .y(function (d) {
+        return d.y;
+    });
+
+async function buildWeightPositionData(weightsT, leftNodeHeight, leftNodeMarginTop, rightNodeHeight, rightNodeMarginTop, weightWidth, noOfWeightTypes, spanForWeightTypes, minStrokeWidth, maxStrokeWidth, minOpacity, maxOpacity) {
+    return new Promise((resolve, reject) => {
+        let weightData = weightsT.dataSync();
+        let strokeWidthScale = d3.scaleLinear().domain(d3.extent(weightData)).range([minStrokeWidth, maxStrokeWidth]);
+        let opacityScaler = d3.scaleLinear().domain(d3.extent(weightData)).range([minOpacity, maxOpacity]);
+        let lineData = [];
+        let wShape = weightsT.shape;
+        let noOfLeftNodes = wShape[0];
+        noOfWeightTypes = noOfWeightTypes ? noOfWeightTypes : 1;
+        spanForWeightTypes = spanForWeightTypes ? spanForWeightTypes : 0;
+        let noOfRightNodes = wShape[1] / noOfWeightTypes;
+        for (let leftIdx = 0; leftIdx < noOfLeftNodes; leftIdx++) {
+            let leftNodeCenterY = leftIdx * (leftNodeHeight + leftNodeMarginTop) + (leftNodeHeight + leftNodeMarginTop) / 2;
+            let leftNodeStartY = leftNodeCenterY - (noOfWeightTypes - 1) * spanForWeightTypes / 2;
+            for (let rightIdx = 0; rightIdx < noOfRightNodes; rightIdx++) {
+                let rightNodeCenterY = rightIdx * (rightNodeHeight + rightNodeMarginTop) + (rightNodeHeight + rightNodeMarginTop) / 2;
+                let rightNodeStartY = rightNodeCenterY - (noOfWeightTypes - 1) * spanForWeightTypes / 2;
+                for (let typeIdx = 0; typeIdx < noOfWeightTypes; typeIdx++) {
+                    let leftNodeY = leftNodeStartY + typeIdx * spanForWeightTypes;
+                    let rightNodeY = rightNodeStartY + typeIdx * spanForWeightTypes;
+                    let idx = leftIdx * (wShape[1]) + typeIdx * noOfRightNodes + rightIdx;
+                    let item = {
+                        source: {
+                            x: 0,
+                            y: leftNodeY
+                        },
+                        target: {
+                            x: weightWidth,
+                            y: rightNodeY
+                        },
+                        idx: idx,
+                        weight: weightData[idx]
+                    };
+                    lineData.push(item);
+                    // //TODO: may not break, but for now break for better performance
+                    // break;
+                }
+            }
+        }
+
+        resolve({lineData: lineData, strokeWidthScale: strokeWidthScale, opacityScaler: opacityScaler});
+    });
 }

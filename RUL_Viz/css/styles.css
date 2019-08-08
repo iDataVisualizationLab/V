@@ -1,6 +1,22 @@
-:root{
+:root {
     --page-width: 2400px;
 }
-.page{
+
+.page {
     width: var(--page-width);
+}
+
+.weightsContainer {
+    overflow: visible;
+}
+
+.weightLine {
+    stroke-dasharray: 5;
+    animation: dash 5s linear;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: 1000;
+    }
 }
