@@ -314,9 +314,21 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         batchSize: batchSize,
         epochs: epochs,
         // shuffle: true,
-        callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd}
+        callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd, onTrainEnd: onTrainEnd}
     });
 
+    //Draw the legends for weights
+    d3.select("#weights0Container").selectAll(".legend").data(["input", "forget", "cell", "output"]).join("text").text(d=>"-- " + d)
+        .attr("font-size", 10)
+        .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i+1}em`).attr("fill", (d, i)=>weightTypeColorScheme[i]);
+    d3.select("#weights1Container").selectAll(".legend").data(["input", "forget", "cell", "output"]).join("text").text(d=>"-- " + d)
+        .attr("font-size", 10)
+        .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i+1}em`).attr("fill", (d, i)=>weightTypeColorScheme[i]);
+
+
+    function onTrainEnd(batch, logs){
+        d3.selectAll(".weightLine").classed("weightLine", false);//Done training, stop animating
+    }
     function onBatchEnd(batch, logs) {
         let trainLoss = logs.loss;
         let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
@@ -529,11 +541,11 @@ async function buildWeightPositionData(weightsT, leftNodeHeight, leftNodeMarginT
                     let idx = leftIdx * (wShape[1]) + typeIdx * noOfRightNodes + rightIdx;
                     let item = {
                         source: {
-                            x: 0,
+                            x: -5,
                             y: leftNodeY
                         },
                         target: {
-                            x: weightWidth,
+                            x: weightWidth + 5,
                             y: rightNodeY
                         },
                         idx: idx,
