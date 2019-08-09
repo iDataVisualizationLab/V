@@ -125,7 +125,18 @@
             <div id="layer1Container"></div>
         </div>
         <div class="col s1 container">
-            <svg width="100" height="1870" id="weights3Container" style="overflow: visible"></svg>
+            <svg width="100" height="1870" id="weights3Container" style="overflow: visible">
+                <defs>
+                    <marker id="arrow" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto"
+                            markerUnits="userSpaceOnUse">
+                        <path d="M0,0 L5,2.5 L0,5 z"></path>
+                    </marker>
+                </defs>
+                <!--                d="M12,30C5,20 2,15 12,0"-->
+                <path d="M50,25 C65,35 65,45 50,57" marker-end="url(#arrow)" fill="none" stroke="black">
+                </path>
+            </svg>
+            </svg>
         </div>
         <div class="col s1 container">
             <div id="layer3Container"></div>

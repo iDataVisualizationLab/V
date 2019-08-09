@@ -324,7 +324,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     d3.select("#weights1Container").selectAll(".legend").data(["input", "forget", "cell", "output"]).join("text").text(d => "-- " + d)
         .attr("font-size", 10)
         .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`).attr("fill", (d, i) => weightTypeColorScheme[i]);
-    d3.select("#weights3Container").selectAll(".legend").data(["Flatten layer", "(cumulative weights)"]).join("text").text(d=>d)
+    let weights3Svg = d3.select("#weights3Container");
+    weights3Svg.selectAll(".legend").data(["Flatten layer", "(cumulative weights)"]).join("text").text(d=>d)
         .attr("font-size", 10)
         .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`);
 
