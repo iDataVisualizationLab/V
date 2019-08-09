@@ -235,12 +235,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
 
     const epochs = 45;
     const batchSize = 8;
-    model.fit(X_train_T, y_train_T, {
-        batchSize: batchSize,
-        epochs: epochs,
-        // shuffle: true,
-        callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd}
-    });
 
     let lineChartSettings = {
         noSvg: true,
@@ -253,7 +247,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         height: 100,
         colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
     };
-
     const testWidth = 250;
     const testHeight = 230;
     let outputSettings = {
@@ -316,6 +309,13 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     };
     let xScaleTest = d3.scaleLinear().domain([0, batches]).range([0, trainLossBatchSettings.width - trainLossBatchSettings.paddingLeft - trainLossBatchSettings.paddingRight]);
     trainLossBatchSettings.xScale = xScaleTest;
+    let weightTypeColorScheme = ["#000000", "#6896ba", "#b64800", "#1e773b"];
+    model.fit(X_train_T, y_train_T, {
+        batchSize: batchSize,
+        epochs: epochs,
+        // shuffle: true,
+        callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd}
+    });
 
     function onBatchEnd(batch, logs) {
         let trainLoss = logs.loss;
@@ -355,7 +355,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         //Display weights0
         let weights0 = model.layers[0].getWeights()[0];
         buildWeightPositionData(weights0, 100, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
-
             d3.select("#weights0Container").selectAll(".weightLine")
                 .data(result.lineData, d => d.idx).join('path')
                 .attr("class", "weightLine")
@@ -363,7 +362,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
                 .attr("fill", "none")
                 .attr("stroke", "black")
                 .attr("stroke-width", d => result.strokeWidthScale(d.weight))
-                .attr("opacity", d => result.opacityScaler(d.weight));
+                .attr("opacity", d => result.opacityScaler(d.weight))
+                .attr("stroke", d=>weightTypeColorScheme[d.type]);
         });
 
 
@@ -383,7 +383,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
                 .attr("fill", "none")
                 .attr("stroke", "black")
                 .attr("stroke-width", d => result.strokeWidthScale(d.weight))
-                .attr("opacity", d => result.opacityScaler(d.weight));
+                .attr("opacity", d => result.opacityScaler(d.weight))
+                .attr("stroke", d=>weightTypeColorScheme[d.type]);
         });
         //Draw layer 1
         let ts1 = model.layers[1].apply(ts0);
@@ -536,6 +537,7 @@ async function buildWeightPositionData(weightsT, leftNodeHeight, leftNodeMarginT
                             y: rightNodeY
                         },
                         idx: idx,
+                        type: typeIdx,
                         weight: weightData[idx]
                     };
                     lineData.push(item);
