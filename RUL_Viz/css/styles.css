@@ -11,12 +11,15 @@
 }
 
 .weightLine {
-    stroke-dasharray: 5;
-    animation: dash 5s linear;
+    stroke-dasharray: 9 1;
+    stroke-dashoffset: 1;
+    animation: 0.5s linear 0s infinite flowing;
+    -webkit-animation: 0.5s linear 0s infinite flowing;
 }
 
-@keyframes dash {
-    to {
-        stroke-dashoffset: 1000;
-    }
+@keyframes flowing {
+    from { stroke-dashoffset: 0; } to { stroke-dashoffset: 10; }
+}
+@-webkit-keyframes flowing {
+    from { stroke-dashoffset: 0; } to { stroke-dashoffset: 10; }
 }
