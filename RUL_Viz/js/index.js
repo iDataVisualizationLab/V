@@ -1,6 +1,8 @@
 const mapObjects = {};
 let trainRULOrder;
 let testRULOrder;
+let lstmWeightTypes = ["input gate", "forget gate", "cell state", "output gate"];
+let lstmWeightTypeDisplay = [1, 1, 1, 1];
 //Read data
 d3.json("data/train_FD001_100x50.json").then(X_train => {
     d3.json("data/train_RUL_FD001_100x50.json").then(y_train => {
@@ -309,7 +311,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     };
     let xScaleTest = d3.scaleLinear().domain([0, batches]).range([0, trainLossBatchSettings.width - trainLossBatchSettings.paddingLeft - trainLossBatchSettings.paddingRight]);
     trainLossBatchSettings.xScale = xScaleTest;
-    let weightTypeColorScheme = ["#000000", "#6896ba", "#b64800", "#1e773b"];
+    let weightValueColorScheme = ["red", "blue"];
     model.fit(X_train_T, y_train_T, {
         batchSize: batchSize,
         epochs: epochs,
@@ -317,25 +319,50 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd, onTrainEnd: onTrainEnd}
     });
     let weightsPathData = {};
+
     //Draw the legends for weights
-    d3.select("#weights0Container").selectAll(".legend").data(["1. input", "2. forget", "3. cell", "4. output"]).join("text").text(d => d)
+    let weights0Container = d3.select("#weights0Container");
+
+    let weights0LSTMTypes = weights0Container.append("g").attr("transform", "translate(0, 0)").selectAll(".legend").data(lstmWeightTypes);
+    //Create the rect for clicking
+    weights0LSTMTypes.join("rect")
+        .attr("x", 0).attr("y", (d, i) => i * 10)
+        .attr("fill", "white")
+        .attr("width", 60).attr("height", 9)
+        .style("cursor", "pointer")
+        .on("click", function (d, i) {
+            onLSTMWeightTypeClick(i);
+        });
+
+    weights0LSTMTypes.join("text").text(d => d)
         .attr("font-size", 10)
         .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`)
-        // .attr("fill", (d, i) => weightTypeColorScheme[i])
+        .style("cursor", "pointer")
         .on("click", function (d, i) {
-            onLSTMWeightTypeClick("weights0Container", i);
+            onLSTMWeightTypeClick(i);
+        })
+        .on("mouseover", function () {
+            d3.select(this).attr("stroke", "red");
+        })
+        .on("mouseleave", function () {
+            d3.select(this).attr("stroke", "none");
         });
-    d3.select("#weights1Container").selectAll(".legend").data(["1. input", "2. forget", "3. cell", "4. output"]).join("text").text(d => d)
+
+    let weights1Container = d3.select("#weights1Container");
+    weights1Container.append("g").selectAll(".weightColor").data(["negative", "positive"]).join("text").text(d => "-- " + d)
         .attr("font-size", 10)
-        .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`);
-        // .attr("fill", (d, i) => weightTypeColorScheme[i]);
-    let weights3Svg = d3.select("#weights3Container");
-    weights3Svg.selectAll(".legend").data(["Flatten layer", "(cumulative weights)"]).join("text").text(d => d)
+        .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`)
+        .attr("fill", (d, i) => weightValueColorScheme[i]);
+
+    let weights3Container = d3.select("#weights3Container");
+    weights3Container.selectAll(".legend").data(["Flatten layer", "(cumulative weights)"]).join("text").text(d => d)
         .attr("font-size", 10)
         .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`);
 
-    function onLSTMWeightTypeClick(containerId, typeIdx) {
-
+    function onLSTMWeightTypeClick(typeIdx) {
+        lstmWeightTypeDisplay[typeIdx] = 1 - 1 * lstmWeightTypeDisplay[typeIdx];//toggle.
+        drawLSTMWeights("weights0Container");
+        drawLSTMWeights("weights1Container");
     }
 
     function onTrainEnd(batch, logs) {
@@ -376,20 +403,26 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
 
     }
 
+    function drawLSTMWeights(containerId) {
+        let result = weightsPathData[containerId];
+        if (result) {
+            d3.select("#" + containerId).selectAll(".weightLine")
+                .data(result.lineData.filter(d => lstmWeightTypeDisplay[d.type] === 1), d => d.idx).join('path')
+                .attr("class", "weightLine")
+                .attr("d", d => link(d))
+                .attr("fill", "none")
+                .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
+                .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
+                .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight));
+        }
+    }
+
     function onEpochEnd(batch, logs) {
         //Display weights0
         let weights0 = model.layers[0].getWeights()[0];
         buildWeightPositionData(weights0, 100, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
-            weightsPathData["weights0Container"] = result.lineData;
-            d3.select("#weights0Container").selectAll(".weightLine")
-                .data(result.lineData, d => d.idx).join('path')
-                .attr("class", "weightLine")
-                .attr("d", d => link(d))
-                .attr("fill", "none")
-                .attr("stroke", d => d.weight > 0 ? "blue" : "red")
-                .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
-                .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight));
-                // .attr("stroke", d => weightTypeColorScheme[d.type]);
+            weightsPathData["weights0Container"] = result;
+            drawLSTMWeights("weights0Container");
         });
 
 
@@ -401,16 +434,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         //Draw weights1
         let weights1 = model.layers[1].getWeights()[0];
         buildWeightPositionData(weights1, 100, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
-            weightsPathData["weights0Container"] = result.lineData;
-            d3.select("#weights1Container").selectAll(".weightLine")
-                .data(result.lineData, d => d.idx).join('path')
-                .attr("class", "weightLine")
-                .attr("d", d => link(d))
-                .attr("fill", "none")
-                .attr("stroke", d => d.weight > 0 ? "blue" : "red")
-                .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
-                .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight));
-                // .attr("stroke", d => weightTypeColorScheme[d.type]);
+            weightsPathData["weights1Container"] = result;
+            drawLSTMWeights("weights1Container");
         });
         //Draw layer 1
         let ts1 = model.layers[1].apply(ts0);
@@ -427,7 +452,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
                     .attr("class", "weightLine")
                     .attr("d", d => link(d))
                     .attr("fill", "none")
-                    .attr("stroke", d => d.weight > 0 ? "blue" : "red")
+                    .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
                     .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
                     .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight));
             });
@@ -445,7 +470,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
                 .attr("class", "weightLine")
                 .attr("d", d => link(d))
                 .attr("fill", "none")
-                .attr("stroke", d => d.weight > 0 ? "blue" : "red")
+                .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
                 .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
                 .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight));
         });
@@ -462,7 +487,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
                 .attr("class", "weightLine")
                 .attr("d", d => link(d))
                 .attr("fill", "none")
-                .attr("stroke", d => d.weight > 0 ? "blue" : "red")
+                .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
                 .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
                 .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight));
         });
