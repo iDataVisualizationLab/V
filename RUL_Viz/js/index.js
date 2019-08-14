@@ -1,7 +1,7 @@
 const mapObjects = {};
 let trainRULOrder;
 let testRULOrder;
-let lstmWeightTypes = ["input gate", "forget gate", "cell state", "output gate"];
+let lstmWeightTypes = ["(click to toggle)", "input gate", "forget gate", "cell state", "output gate"];
 let lstmWeightTypeDisplay = [1, 0, 0, 0];
 let isTraining = true;
 //Read data
@@ -326,7 +326,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     let weights0LSTMTypes = weights0Container.append("g").attr("transform", "translate(0, 0)").selectAll(".legend").data(lstmWeightTypes);
     //Create the rect for clicking
     weights0LSTMTypes.join("rect")
-        .attr("x", 0).attr("y", (d, i) => i * 10)
+        .attr("x", 0).attr("y", (d, i) => (i-1) * 10)
         .attr("fill", "white")
         .attr("width", 60).attr("height", 9)
         .style("cursor", "pointer")
@@ -336,7 +336,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
 
     weights0LSTMTypes.join("text").text(d => d)
         .attr("font-size", 10)
-        .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`)
+        .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i}em`)
         .style("cursor", "pointer")
         .on("click", function (d, i) {
             onLSTMWeightTypeClick(i);
