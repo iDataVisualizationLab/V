@@ -10,8 +10,10 @@
     overflow: visible;
 }
 
-.weightLine {
+.weightLine{
     stroke-dasharray: 9 1;
+}
+.weightLineTraining {
     stroke-dashoffset: 1;
     animation: 0.5s linear 0s infinite flowing;
     -webkit-animation: 0.5s linear 0s infinite flowing;

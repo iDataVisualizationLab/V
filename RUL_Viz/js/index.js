@@ -2,7 +2,8 @@ const mapObjects = {};
 let trainRULOrder;
 let testRULOrder;
 let lstmWeightTypes = ["input gate", "forget gate", "cell state", "output gate"];
-let lstmWeightTypeDisplay = [1, 1, 1, 1];
+let lstmWeightTypeDisplay = [1, 0, 0, 0];
+let isTraining = true;
 //Read data
 d3.json("data/train_FD001_100x50.json").then(X_train => {
     d3.json("data/train_RUL_FD001_100x50.json").then(y_train => {
@@ -267,8 +268,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     };
     let trainLosses = [];
     let testLosses = [];
-    let batches = Math.ceil(y_test_flat_ordered.length / batchSize) * epochs;
-    let xTest = Array.from(Array(batches), (x, i) => i);
+    let batches = Math.ceil(y_train_flat_ordered.length / batchSize) * epochs;
+    let trainBatches = Array.from(Array(batches), (x, i) => i);
     let trainTestSettings = {
         noSvg: false,
         showAxes: true,
@@ -307,7 +308,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         yAxisLabel: {
             text: 'Loss'
         }
-
     };
     let xScaleTest = d3.scaleLinear().domain([0, batches]).range([0, trainLossBatchSettings.width - trainLossBatchSettings.paddingLeft - trainLossBatchSettings.paddingRight]);
     trainLossBatchSettings.xScale = xScaleTest;
@@ -366,7 +366,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     }
 
     function onTrainEnd(batch, logs) {
-        d3.selectAll(".weightLine").classed("weightLine", false);//Done training, stop animating
+        isTraining = false;
+        d3.selectAll(".weightLineTraining").classed("weightLineTraining", isTraining);//Done training, stop animating
     }
 
     function onBatchEnd(batch, logs) {
@@ -381,12 +382,12 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
 
         const lineChartData = [
             {
-                x: xTest,
+                x: trainBatches,
                 y: trainLosses,
                 series: 'train',
             },
             {
-                x: xTest,
+                x: trainBatches,
                 y: testLosses,
                 series: 'test',
             }
@@ -409,6 +410,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
             d3.select("#" + containerId).selectAll(".weightLine")
                 .data(result.lineData.filter(d => lstmWeightTypeDisplay[d.type] === 1), d => d.idx).join('path')
                 .attr("class", "weightLine")
+                .classed("weightLineTraining", isTraining)
                 .attr("d", d => link(d))
                 .attr("fill", "none")
                 .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
@@ -447,9 +449,11 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         //(we skip flatten layer, layer 2)
         buildWeightForFlattenLayer(model.layers[3].getWeights()[0]).then(cumulativeT => {
             buildWeightPositionData(cumulativeT, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.05, 0.7).then((result) => {
+
                 d3.select("#weights3Container").selectAll(".weightLine")
                     .data(result.lineData, d => d.idx).join('path')
                     .attr("class", "weightLine")
+                    .classed("weightLineTraining", isTraining)
                     .attr("d", d => link(d))
                     .attr("fill", "none")
                     .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
@@ -468,6 +472,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
             d3.select("#weights4Container").selectAll(".weightLine")
                 .data(result.lineData, d => d.idx).join('path')
                 .attr("class", "weightLine")
+                .classed("weightLineTraining", isTraining)
                 .attr("d", d => link(d))
                 .attr("fill", "none")
                 .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
@@ -485,6 +490,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
             d3.select("#weights5Container").selectAll(".weightLine")
                 .data(result.lineData, d => d.idx).join('path')
                 .attr("class", "weightLine")
+                .classed("class", "weightLineTraining")
                 .attr("d", d => link(d))
                 .attr("fill", "none")
                 .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])

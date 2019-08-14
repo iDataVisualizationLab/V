@@ -206,14 +206,12 @@ export class LineChart {
 
     public async plot() {
         //clear the canvas
-
         this.canvas.node().getContext("2d").clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         //start the drawing
         this.data.forEach(trace => {
             let x = trace.x;
             let y = trace.y;
             let color = this.settings.colorScale(trace.series);
-
             this.draw(x, y, this.settings.lineWidth, color, trace.marker, trace.type);
 
         });
