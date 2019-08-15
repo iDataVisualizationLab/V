@@ -326,7 +326,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     let weights0LSTMTypes = weights0Container.append("g").attr("transform", "translate(0, 0)").selectAll(".legend").data(lstmWeightTypes);
     //Create the rect for clicking
     weights0LSTMTypes.join("rect")
-        .attr("x", 0).attr("y", (d, i) => (i-1) * 10)
+        .attr("x", 0).attr("y", (d, i) => (i - 1) * 10)
         .attr("fill", "white")
         .attr("width", 60).attr("height", 9)
         .style("cursor", "pointer")
@@ -360,7 +360,13 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`);
 
     function onLSTMWeightTypeClick(typeIdx) {
-        lstmWeightTypeDisplay[typeIdx] = 1 - 1 * lstmWeightTypeDisplay[typeIdx];//toggle.
+        if (typeIdx == 0) {//toggle all
+            for (let i = 0; i < lstmWeightTypeDisplay.length; i++) {
+                lstmWeightTypeDisplay[i] = 1 - 1 * lstmWeightTypeDisplay[i];//toggle all in this case.
+            }
+        } else {
+            lstmWeightTypeDisplay[typeIdx-1] = 1 - 1 * lstmWeightTypeDisplay[typeIdx-1];//toggle. -1 because the first one is for toggle all command
+        }
         drawLSTMWeights("weights0Container");
         drawLSTMWeights("weights1Container");
     }
