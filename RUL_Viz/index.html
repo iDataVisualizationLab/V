@@ -10,11 +10,11 @@
         @import "js/loader/loader.css";
         @import "lib/playpausebutton/playpause.css";
     </style>
-    <script src="lib/playpausebutton/playpause.js"></script>
     <script src="lib/materialize/js/materialize.js"></script>
     <!--Tensorflow-->
     <script src="lib/tf.min.js"></script>
     <!--custom-->
+    <script src="lib/playpausebutton/playpause.js"></script>
     <script src="build/js/index.min.js"></script>
 </head>
 <body>
@@ -170,7 +170,13 @@
 </div>
 <footer style="border-top: 1px solid black;">
     <div class="container page">
-    <h3><a name="article">The article</a></h3>
+        <h3><a name="article">The article</a></h3>
+        <p>
+            Click the start/pause button to start/pause the training process accordingly. The training loss vs. testing
+            loss graph will be updated every batch. The intermediate outputs, final training output, final testing
+            output, and weights are updated every epoch.
+
+        </p>
     </div>
 </footer>
 <script src="js/index.js"></script>
