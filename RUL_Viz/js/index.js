@@ -1,10 +1,21 @@
 const mapObjects = {};
+const modelConfigObj = {};
+let currentModel = null;
 let trainRULOrder;
 let testRULOrder;
 let lstmWeightTypes = ["(click to toggle)", "input gate", "forget gate", "cell state", "output gate"];
 let lstmWeightTypeDisplay = [1, 0, 0, 0];
 let weightTypeDisplay = [1, 1];
+let lstm1Nodes = 6,
+    lstm2Nodes = 6,
+    flattenSplits = lstm2Nodes,
+    dense1Nodes = 6,
+    dense2Nodes = 4;
+
 let isTraining = true;
+let trainLosses;
+let testLosses;
+
 let link = d3.linkHorizontal()
     .x(function (d) {
         return d.x;
@@ -17,6 +28,12 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
     d3.json("data/train_RUL_FD001_100x50.json").then(y_train => {
         d3.json("data/test_FD001_100x50.json").then(X_test => {
             d3.json("data/test_RUL_FD001_100x50.json").then(y_test => {
+                //We build the sorting order.
+                trainRULOrder = Array.from(y_train, (val, i) => i);
+                trainRULOrder = trainRULOrder.sort((a, b) => y_train[a] - y_train[b]);
+                testRULOrder = Array.from(y_test, (val, i) => i);
+                testRULOrder = testRULOrder.sort((a, b) => y_test[a] - y_test[b]);
+
                 //Draw color scales
                 const colorBarW = 100;
                 const colorBarH = 10;
@@ -37,9 +54,34 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
                 plotColorBar(d3.select("#lstm1ColorScale"), lstm1ColorScale, "lstm1ColorScale", colorBarW, colorBarH, "horizon");
                 plotColorBar(d3.select("#lstm2ColorScale"), lstm1ColorScale, "lstm2ColorScale", colorBarW, colorBarH, "horizon");
 
+                //Draw input
+                let X_train_ordered = trainRULOrder.map(d => X_train[d]);
+                drawHeatmaps(X_train_ordered, "inputContainer", "inputDiv").then(() => {
+                    hideLoader();
+                });
+
                 const inputShape = [X_train[0].length, X_train[0][0].length];
-                createModel(16, 8, 8, 4, inputShape).then(model => {
-                    trainModel(model, X_train, y_train, X_test, y_test);
+                createButton("trainingButtonContainer", (action) => {
+                    if (action === "start") {
+                        isTraining = true;
+                        if (currentModel === null) {
+                            createModel(lstm1Nodes, lstm2Nodes, dense1Nodes, dense2Nodes, inputShape).then(model => {
+                                currentModel = model;
+                                //Reset train losses, test losses for the first creation.
+                                trainLosses = [];
+                                testLosses = [];
+                                trainModel(currentModel, X_train, y_train, X_test, y_test);
+                            });
+                        } else {
+                            trainModel(currentModel, X_train, y_train, X_test, y_test);
+                        }
+                    }
+                    if (action === "pause") {
+                        isTraining = false;
+                        if (currentModel !== null) {
+                            currentModel.stopTraining = true;
+                        }
+                    }
                 });
             });
         });
@@ -175,7 +217,7 @@ async function drawLineCharts(data, normalizer, target, container, selector, lin
     }
 }
 
-function createModel(lstm1Nodes, lstm2Nodes, dense1Nodes, dense2Nodes, inputShape) {
+async function createModel(lstm1Nodes, lstm2Nodes, dense1Nodes, dense2Nodes, inputShape) {
     return new Promise((resolve, reject) => {
         const model = tf.sequential({
             layers: [
@@ -219,15 +261,9 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     let X_test_T = tf.tensor(X_test);
     let y_test_T = tf.tensor(y_test);
 
-    //We build the sorting order.
-    trainRULOrder = Array.from(y_train, (val, i) => i);
-    trainRULOrder = trainRULOrder.sort((a, b) => y_train[a] - y_train[b]);
-    testRULOrder = Array.from(y_test, (val, i) => i);
-    testRULOrder = testRULOrder.sort((a, b) => y_test[a] - y_test[b]);
 
-    let X_train_ordered = trainRULOrder.map(d => X_train[d]);
     let y_train_ordered = trainRULOrder.map(d => y_train[d]);
-
+    let X_train_ordered = trainRULOrder.map(d => X_train[d]);
     let X_test_ordered = testRULOrder.map(d => X_test[d]);
     let y_test_ordered = testRULOrder.map(d => y_test[d]);
 
@@ -239,10 +275,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     let y_test_flat_ordered = y_test_ordered.flat();
     let target_ordered = normalizeTarget(y_train_flat_ordered, -1.0, 1.0);
 
-    //Draw input
-    drawHeatmaps(X_train_ordered, "inputContainer", "inputDiv").then(() => {
-        hideLoader();
-    });
 
     const epochs = 45;
     const batchSize = 8;
@@ -274,8 +306,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         },
         colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
     };
-    let trainLosses = [];
-    let testLosses = [];
+
     let batches = Math.ceil(y_train_flat_ordered.length / batchSize) * epochs;
     let trainBatches = Array.from(Array(batches), (x, i) => i);
     let trainTestSettings = {
@@ -357,6 +388,13 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
             d3.select(this).attr("stroke", "none");
         });
 
+    //Draw weight type.
+    weights0Container.selectAll(".guidePath").data(["M60,5 C85,5 85,5 103,43", "M60,15 C85,15 85,15 103,53", "M60,25 C85,25 85,25 103,63", "M60,35 C85,35 85,35 103,73"]).join("path")
+        .attr("d", d => d)
+        .attr("marker-end", "url(#arrow0)")
+        .attr("fill", "none")
+        .attr("stroke", "black");
+
     let weights1Container = d3.select("#weights1Container");
     weights1Container.append("g").selectAll(".weightColor").data(["(click to toggle)", "-- negative", "-- positive"]).join("text").text(d => d)
         .attr("font-size", 10)
@@ -377,6 +415,12 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     weights3Container.selectAll(".legend").data(["Flatten layer", "(cumulative weights)"]).join("text").text(d => d)
         .attr("font-size", 10)
         .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`);
+    //Draw the guide.
+    weights3Container.selectAll(".guidePath").data(["M50,25 C50,40 25,57 0,57"]).join("path")
+        .attr("d", d => d)
+        .attr("marker-end", "url(#arrow1)")
+        .attr("fill", "none")
+        .attr("stroke", "black");
 
     //Also toggle the weight displaying menu according to the default display.
     toggleWeightsMenu();
@@ -479,7 +523,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         let ts2 = model.layers[2].apply(ts1);
 
         //(we skip flatten layer, layer 2)
-        buildWeightForFlattenLayer(model.layers[3].getWeights()[0]).then(cumulativeT => {
+        buildWeightForFlattenLayer(model.layers[3].getWeights()[0], flattenSplits).then(cumulativeT => {
             buildWeightPositionData(cumulativeT, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.05, 0.7).then((result) => {
                 weightsPathData["weights3Container"] = result;
                 drawDenseWeights("weights3Container");
@@ -660,7 +704,7 @@ async function buildWeightPositionData(weightsT, leftNodeHeight, leftNodeMarginT
 
 async function buildWeightForFlattenLayer(weightsT, noOfLeftNodes) {
     return new Promise((resolve, reject) => {
-        let cumulativeT = tf.tensor(weightsT.split(8).map(t => {
+        let cumulativeT = tf.tensor(weightsT.split(noOfLeftNodes).map(t => {
             let arr = t.cumsum().arraySync();
             return arr[arr.length - 1];
         }));
