@@ -9,7 +9,6 @@ function createDefaultLayers() {
         createLayerGUI(layerInfo);
     });
 }
-
 /**
  * Used to create a layer in the background, push it to the array of layersConfig and return it.
  * @param layerType
@@ -51,6 +50,12 @@ function createLayerGUI(layerInfo) {
     //Create the div.
     let div = $(`<div class='grid-item' id="${idVal}">
                     <a class="btn-small btn-floating"><i class="material-icons grey" onclick="deleteLayer('${idVal}')">delete</i></a> ${layerInfoStr}
+                    <div class="divider" style="margin-bottom: 5px;"></div>
+                    <div class="col s6 container">
+                        <svg style="overflow: visible; margin-left: -20px;" height="20">
+                            <g id="colorScale${layerInfo.timeStamp}"></g>
+                        </svg>
+                    </div>
                     <div class="row">
                         <div class="col s6" id="layerContainer${layerInfo.timeStamp}"></div>
                         <div class="col s6">
