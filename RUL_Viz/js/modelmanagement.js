@@ -47,9 +47,7 @@ async function createModel(layers, inputShape) {
                     layerOption.activation = l.activation;
                 }
                 mLayers.push(tf.layers[l.layerType](layerOption));
-
             });
-
             const model = tf.sequential({
                 layers: mLayers
             });
@@ -329,7 +327,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         isTraining = false;
         d3.selectAll(".weightLineTraining").classed("weightLineTraining", isTraining);//Done training, stop animating
         //Toggle button.
-        btnTrain.classList.toggle("paused");
+        btnTrain.classList.remove("paused");
     }
 
     async function displayLayerWeights(model, i, containerId) {

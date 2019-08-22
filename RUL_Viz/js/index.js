@@ -34,12 +34,8 @@ function displayAddLayerDialog() {
 }
 
 dispatch.on("change", () => {
-    console.log("change");
     //If it is training toggle button
-    //Toggle btnTrain if it is
-    if (btnTrain && isTraining) {
-        btnTrain.classList.toggle("paused");
-    }
+    btnTrain.classList.remove("paused");
     stopTraining();
     currentModel = null;
 });
@@ -145,10 +141,10 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
                         $("#batchSize").prop("disabled", false);
                         $("#epochs").prop("disabled", false);
                     }
-                    showLoader();
                     //Process
                     if (action === "start") {
                         isTraining = true;
+                        showLoader();
                         if (currentModel === null) {
                             createModel(layersConfig, inputShape).then(model => {
                                 //Clear all current outputs if there are
