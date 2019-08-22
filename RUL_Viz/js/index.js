@@ -1,14 +1,3 @@
-const mapObjects = {};
-let currentModel = null;
-let trainRULOrder;
-let testRULOrder;
-let lstmWeightTypes = ["(click to toggle)", "input gate", "forget gate", "cell state", "output gate"];
-let lstmWeightTypeDisplay = [1, 0, 0, 0];
-let weightTypeDisplay = [1, 1];
-let isTraining = false;
-let trainLosses;
-let testLosses;
-
 let link = d3.linkHorizontal()
     .x(function (d) {
         return d.x;
@@ -16,39 +5,6 @@ let link = d3.linkHorizontal()
     .y(function (d) {
         return d.y;
     });
-
-//Layer
-/***
- * Used to add layer from GUI (click button)
- */
-function addLayer() {
-    let layerType = $("#layerType").val();
-    let units = +$("#noOfUnits").val();
-    let activation = $("#activationType").val();
-    let layerInfo = createLayer(layerType, units, activation);
-    createLayerGUI(layerInfo);
-}
-
-function displayAddLayerDialog() {
-    dispatch.call("change", null, undefined);
-}
-
-dispatch.on("change", () => {
-    //If it is training toggle button
-    btnTrain.classList.remove("paused");
-    stopTraining();
-    currentModel = null;
-});
-
-function stopTraining() {
-    isTraining = false;
-    if (currentModel !== null) {
-        currentModel.stopTraining = true;
-    }
-    //Enable the batch size, epochs form.
-    $("#batchSize").prop("disabled", false);
-    $("#epochs").prop("disabled", false);
-}
 
 async function drawColorScales(modelsConfig) {
     return new Promise(() => {
@@ -133,16 +89,18 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
                 const inputShape = [X_train[0].length, X_train[0][0].length];
 
                 btnTrain = createButton("trainingButtonContainer", (action) => {
-                    //Toggle
-                    if (action === "start") {
-                        $("#batchSize").prop("disabled", true);
-                        $("#epochs").prop("disabled", true);
-                    } else {
-                        $("#batchSize").prop("disabled", false);
-                        $("#epochs").prop("disabled", false);
-                    }
                     //Process
                     if (action === "start") {
+                        if ($("#saveSnapshot").is(":checked") && !$("#snapshotName").val()) {
+                            toast("Please insert snapshot name");
+                            btnTrain.classList.remove("paused");
+                            return;
+                        }
+                        //Toggle
+
+                        $("#batchSize").prop("disabled", true);
+                        $("#epochs").prop("disabled", true);
+
                         isTraining = true;
                         showLoader();
                         if (currentModel === null) {

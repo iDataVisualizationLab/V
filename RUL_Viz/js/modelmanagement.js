@@ -65,10 +65,6 @@ async function createModel(layers, inputShape) {
 }
 
 async function trainModel(model, X_train, y_train, X_test, y_test) {
-    //Set some variables for displaying purpose
-    let displayedLSTMWeightTypes = false;
-    let displayedWeightTypes = false;
-    let displayedFlattenNotification = false;
 
     let X_train_T = tf.tensor(X_train);
     let y_train_T = tf.tensor(y_train);

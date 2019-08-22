@@ -25,10 +25,6 @@
             margin-bottom: 0px !important;
         }
 
-        input {
-            height: 1.5rem !important;
-        }
-
     </style>
     <!--GUI Lib-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -69,11 +65,11 @@
     <div class="container">
         <div class="row" style="height: 205px;">
             <div class="col s4">
-                <div class="row">
-                    <!--                    <a href="#" class="btn-menu">train data</a>-->
-                    <!--                    <a href="#" class="btn-menu">testing data</a>-->
-                    <!--                    <a href="#" class="btn-menu">save model</a>-->
-                    <!--                    <a href="#" class="btn-menu">load model</a>-->
+                <div class="row center">
+                    <!--<a href="#" class="btn-menu">train data</a>-->
+                    <!--<a href="#" class="btn-menu">testing data</a>-->
+                    <!--<a href="#" class="btn-menu" onclick="saveModel()">save model</a>-->
+                    <!--<a href="#" class="btn-menu">load model</a>-->
                 </div>
                 <div class="row">
                     <div class="container center" style="display: table;">
@@ -83,13 +79,23 @@
                 <div class="row">
                     <div class="container">
                         <div class="col s12">
-                            <div class="input-field col s6">
+                            <div class="input-field col s3">
                                 <input id="epochs" type="number" value="50">
-                                <label for="epochs">Epochs</label>
+                                <label for="epochs">epochs</label>
                             </div>
-                            <div class="input-field col s6">
+                            <div class="input-field col s3">
                                 <input id="batchSize" type="number" value="8">
-                                <label for="batchSize">Batch size</label>
+                                <label for="batchSize">batch</label>
+                            </div>
+                            <div class="input-field col s1">
+                                <label>
+                                    <input type="checkbox" class="filled-in" checked="checked" id="saveSnapshot"/>
+                                    <span></span>
+                                </label>
+                            </div>
+                            <div class="input-field col s5" title="Click to toggle saving training snapshot.">
+                                <label for="snapshotName">snapshots</label>
+                                <input type="text" id="snapshotName">
                             </div>
                         </div>
                     </div>
@@ -196,7 +202,7 @@
     </div>
 </div>
 <div class="divider"></div>
-<footer>
+<footer style="margin-bottom: 10px;">
     <div class="container page">
         <h3><a name="article">The article</a></h3>
         <h5>Quick start:</h5>
@@ -218,8 +224,13 @@
                     class="material-icons">add</i></a> button to add more layer.
             </li>
             <li class="collection-item">
-                Change number of epochs/batch size if needed and click on <i
-                    class="material-icons grey-text">play_arrow</i> button to start training process.
+                Change number of epochs/batch size if needed.
+            </li>
+            <li class="collection-item">
+                Click on <label><input type="checkbox" class="filled-in" checked="checked"/><span>snapshots</span></label> checkbox to enable/disable saving training snapshots, so user could review the training process later on.
+            </li>
+            <li class="collection-item">
+                Click on <i class="material-icons grey-text">play_arrow</i> button to start training process.
             </li>
             <li class="collection-header"><b>Model weights and intermediate outputs view</b></li>
             <li class="collection-item">
@@ -246,6 +257,7 @@
 </script>
 <!--Scripting-->
 <script src="js/tooltip/tooltip.js"></script>
+<script src="js/menu.js"></script>
 <script src="js/layerManagement.js"></script>
 <script src="js/tensorutils.js"></script>
 <script src="js/drawcharts.js"></script>
