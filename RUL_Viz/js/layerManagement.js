@@ -1,10 +1,10 @@
 let layersConfig = [];
 
 function createDefaultLayers() {
-    createLayer("lstm", 4, "default", 0);
-    createLayer("lstm", 2, "default", 1);
-    createLayer("dense", 4, "relu", 2);
-    createLayer("dense", 2, "relu", 3);
+    createLayer("lstm", 8, "default", 0);
+    createLayer("lstm", 8, "default", 1);
+    createLayer("dense", 8, "relu", 2);
+    createLayer("dense", 4, "relu", 3);
     layersConfig.forEach(layerInfo => {
         createLayerGUI(layerInfo);
     });
