@@ -503,7 +503,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
                 .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
                 .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight))
                 .on("mouseover", (d) => {
-                    showTip(d);
+                    showTip(`Current weight: ${d.weight.toFixed(2)}`);
                 })
                 .on("mouseout", () => {
                     hideTip();
