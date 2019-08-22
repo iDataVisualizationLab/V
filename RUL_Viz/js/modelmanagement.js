@@ -243,7 +243,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     }
 
     function onLSTMWeightTypeClick(typeIdx) {
-        if (typeIdx == 0) {//toggle all
+        if (typeIdx === 0) {//toggle all
             for (let i = 0; i < lstmWeightTypeDisplay.length; i++) {
                 lstmWeightTypeDisplay[i] = 1 - 1 * lstmWeightTypeDisplay[i];//toggle all in this case.
             }
@@ -253,7 +253,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         //Redraw all the lstm weights.
         layersConfig.forEach((l, i) => {
             if (l.layerType === "lstm") {
-                drawLSTMWeights("weightsContainer" + l.timeStamp);
+                drawLSTMWeights(getWeightsContainerId(i));
             }
         });
         //Todo: Fix this.
@@ -328,6 +328,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     function onTrainEnd(batch, logs) {
         isTraining = false;
         d3.selectAll(".weightLineTraining").classed("weightLineTraining", isTraining);//Done training, stop animating
+        //Toggle button.
+        btnTrain.classList.toggle("paused");
     }
 
     async function displayLayerWeights(model, i, containerId) {
@@ -430,6 +432,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     }
 
     function onEpochEnd(batch, logs) {
+        hideLoader();
         if (isTraining) {//Only update if it is training (Since we may pause already but the event is still called because of asychronous)
             for (let i = 0; i < layersConfig.length; i++) {
                 let containerId = getWeightsContainerId(i);
@@ -464,8 +467,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
 
     function toggleWeightsMenu() {
         //Toggle menu opacity.
-        d3.select("#weights0Container").selectAll(".lstmWeightType").attr("opacity", (d, i) => i === 0 ? 1 : 0.5 + 0.5 * lstmWeightTypeDisplay[i - 1]);//The first one is for click to toggle and will be visible by default
-        d3.select("#weights1Container").selectAll(".weightColor").attr("opacity", (d, i) => i === 0 ? 1 : 0.5 + 0.5 * weightTypeDisplay[i - 1]);//The first one is for click to toggle and will be visible by default
+        d3.selectAll(".lstmWeightType").attr("opacity", (d, i) => i === 0 ? 1 : 0.5 + 0.5 * lstmWeightTypeDisplay[i - 1]);//The first one is for click to toggle and will be visible by default
+        d3.selectAll(".weightColor").attr("opacity", (d, i) => i === 0 ? 1 : 0.5 + 0.5 * weightTypeDisplay[i - 1]);//The first one is for click to toggle and will be visible by default
     }
 
     function drawDenseWeights(containerId) {
@@ -479,7 +482,13 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
                 .attr("fill", "none")
                 .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
                 .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
-                .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight));
+                .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight))
+                .on("mouseover", (d) => {
+                    showTip(`Current weight: ${d.weight.toFixed(2)}`);
+                })
+                .on("mouseout", () => {
+                    hideTip();
+                });
         }
     }
 
@@ -494,7 +503,14 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
                 .attr("fill", "none")
                 .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
                 .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
-                .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight));
+                .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight))
+                .on("mouseover", (d) => {
+                    showTip(d);
+                })
+                .on("mouseout", () => {
+                    hideTip();
+                });
         }
     }
+
 }

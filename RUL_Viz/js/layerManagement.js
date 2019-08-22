@@ -9,6 +9,7 @@ function createDefaultLayers() {
         createLayerGUI(layerInfo);
     });
 }
+
 /**
  * Used to create a layer in the background, push it to the array of layersConfig and return it.
  * @param layerType

@@ -52,7 +52,6 @@ function stopTraining() {
     //Enable the batch size, epochs form.
     $("#batchSize").prop("disabled", false);
     $("#epochs").prop("disabled", false);
-
 }
 
 async function drawColorScales(modelsConfig) {
@@ -104,9 +103,11 @@ async function drawInputColorScale(minZ, avgZ, maxZ) {
         plotColorBar(d3.select("#inputColorScale"), inputColorScale, "inputColorBar", colorBarW, colorBarH, "horizon");
     });
 }
+
 async function drawOutputColorScale() {
     drawDenseColorScale("outputColorScale");
 }
+
 //Read data
 d3.json("data/train_FD001_100x50.json").then(X_train => {
     d3.json("data/train_RUL_FD001_100x50.json").then(y_train => {
@@ -117,7 +118,6 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
                 trainRULOrder = trainRULOrder.sort((a, b) => y_train[a] - y_train[b]);
                 testRULOrder = Array.from(y_test, (val, i) => i);
                 testRULOrder = testRULOrder.sort((a, b) => y_test[a] - y_test[b]);
-
                 let flattenedZ = X_train.flat().flat();
                 let minZ = d3.min(flattenedZ);
                 let maxZ = d3.max(flattenedZ);
@@ -145,6 +145,7 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
                         $("#batchSize").prop("disabled", false);
                         $("#epochs").prop("disabled", false);
                     }
+                    showLoader();
                     //Process
                     if (action === "start") {
                         isTraining = true;
