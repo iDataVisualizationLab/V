@@ -51,11 +51,12 @@ function createLayerGUI(layerInfo) {
     let div = $(`<div class='grid-item' id="${idVal}">
                     <a class="btn-small btn-floating"><i class="material-icons grey" onclick="deleteLayer('${idVal}')">delete</i></a> ${layerInfoStr}
                     <div class="divider" style="margin-bottom: 5px;"></div>
-                    <div class="col s6 container">
+                    <div class="row">
                         <svg style="overflow: visible; margin-left: -20px;" height="20">
                             <g id="colorScale${layerInfo.timeStamp}"></g>
                         </svg>
                     </div>
+                    <div class="divider" style="margin-bottom: 10px; margin-top: 5px;"></div>
                     <div class="row">
                         <div class="col s6" id="layerContainer${layerInfo.timeStamp}"></div>
                         <div class="col s6">
