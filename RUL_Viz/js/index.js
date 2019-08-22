@@ -1,18 +1,11 @@
 const mapObjects = {};
-const modelConfigObj = {};
 let currentModel = null;
 let trainRULOrder;
 let testRULOrder;
 let lstmWeightTypes = ["(click to toggle)", "input gate", "forget gate", "cell state", "output gate"];
 let lstmWeightTypeDisplay = [1, 0, 0, 0];
 let weightTypeDisplay = [1, 1];
-let lstm1Nodes = 6,
-    lstm2Nodes = 6,
-    flattenSplits = lstm2Nodes,
-    dense1Nodes = 6,
-    dense2Nodes = 4;
-
-let isTraining = true;
+let isTraining = false;
 let trainLosses;
 let testLosses;
 
@@ -23,6 +16,45 @@ let link = d3.linkHorizontal()
     .y(function (d) {
         return d.y;
     });
+
+//Layer
+/***
+ * Used to add layer from GUI (click button)
+ */
+function addLayer() {
+    let layerType = $("#layerType").val();
+    let units = +$("#noOfUnits").val();
+    let activation = $("#activationType").val();
+    let layerInfo = createLayer(layerType, units, activation);
+    createLayerGUI(layerInfo);
+}
+
+function displayAddLayerDialog() {
+    dispatch.call("change", null, undefined);
+}
+
+dispatch.on("change", () => {
+    console.log("change");
+    //If it is training toggle button
+    //Toggle btnTrain if it is
+    if (btnTrain && isTraining) {
+        btnTrain.classList.toggle("paused");
+    }
+    stopTraining();
+    currentModel = null;
+});
+
+function stopTraining() {
+    isTraining = false;
+    if (currentModel !== null) {
+        currentModel.stopTraining = true;
+    }
+    //Enable the batch size, epochs form.
+    $("#batchSize").prop("disabled", false);
+    $("#epoch").prop("disabled", false);
+
+}
+
 //Read data
 d3.json("data/train_FD001_100x50.json").then(X_train => {
     d3.json("data/train_RUL_FD001_100x50.json").then(y_train => {
@@ -60,29 +92,45 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
                     hideLoader();
                 });
 
+                //Create default layersConfig.
+                createDefaultLayers();
+
                 const inputShape = [X_train[0].length, X_train[0][0].length];
-                createButton("trainingButtonContainer", (action) => {
+
+
+                btnTrain = createButton("trainingButtonContainer", (action) => {
+                    //Toggle
+                    if (action === "start") {
+                        $("#batchSize").prop("disabled", true);
+                        $("#epoch").prop("disabled", true);
+                    } else {
+                        $("#batchSize").prop("disabled", false);
+                        $("#epoch").prop("disabled", false);
+                    }
+                    //Process
                     if (action === "start") {
                         isTraining = true;
                         if (currentModel === null) {
-                            createModel(lstm1Nodes, lstm2Nodes, dense1Nodes, dense2Nodes, inputShape).then(model => {
-                                currentModel = model;
-                                //Reset train losses, test losses for the first creation.
-                                trainLosses = [];
-                                testLosses = [];
-                                trainModel(currentModel, X_train, y_train, X_test, y_test);
+                            createModel(layersConfig, inputShape).then(model => {
+                                //Clear all current outputs if there are
+                                d3.selectAll(".weightLine").remove();
+                                if (model !== null) {
+                                    currentModel = model;
+                                    //Reset train losses, test losses for the first creation.
+                                    trainLosses = [];
+                                    testLosses = [];
+                                    trainModel(currentModel, X_train, y_train, X_test, y_test);
+                                }
                             });
                         } else {
                             trainModel(currentModel, X_train, y_train, X_test, y_test);
                         }
                     }
                     if (action === "pause") {
-                        isTraining = false;
-                        if (currentModel !== null) {
-                            currentModel.stopTraining = true;
-                        }
+                        stopTraining();
                     }
                 });
+                btnTrain.style.margin = 10 + "px";
             });
         });
 
@@ -205,7 +253,10 @@ async function drawLineCharts(data, normalizer, target, container, selector, lin
             }
         ];
         if (!mapObjects[selector + featureIdx]) {
-            //Draw the feature.
+            if (document.getElementById(selector + featureIdx) === null) {//In case the layer is deleted, just move on.
+                console.log("continued");
+                continue;
+            }
             let lc = new LineChart(document.getElementById(selector + featureIdx), lineChartData, lineChartSettings);
             lc.plot();
             mapObjects[selector + featureIdx] = lc;
@@ -217,45 +268,76 @@ async function drawLineCharts(data, normalizer, target, container, selector, lin
     }
 }
 
-async function createModel(lstm1Nodes, lstm2Nodes, dense1Nodes, dense2Nodes, inputShape) {
+async function createModel(layers, inputShape) {
+    //Process layer.
+    //Add one layer for the output, if it doesn't contain one yet.
+    if (layers.find(l => l.id === "output") === undefined) {
+        layers.push({
+            id: "output",
+            timeStamp: "output",
+            layerType: "dense",
+            units: 1,
+            activation: "relu"
+        });
+    }
+    //Add flatten layer if needed
+    layers.forEach((l, i) => {
+        //If this layer is lstm and the next one is dense => we need a flatten layer.
+        if (l.layerType === "lstm" && layers[i + 1].layerType === "dense") {
+            layers.splice(i + 1, 0, {
+                id: 'layerFlatten' + i,
+                timeStamp: 'Flatten' + i,
+                layerType: "flatten",
+            });
+        }
+    });
+    //Now create model
     return new Promise((resolve, reject) => {
-        const model = tf.sequential({
-            layers: [
-                tf.layers.lstm({
-                    inputShape: inputShape,
-                    units: lstm1Nodes,
-                    returnSequences: true,
-                    // kernelRegularizer: tf.regularizers.l2(0.01)
-                }),
-                tf.layers.lstm({
-                    units: lstm2Nodes,
-                    returnSequences: true,
-                    // kernelRegularizer: tf.regularizers.l2(0.01)
-                }),
-                tf.layers.flatten(),
-                tf.layers.dense({
-                    units: dense1Nodes,
-                    activation: 'relu',
-                    // kernelRegularizer: tf.regularizers.l2(0.01)
-                }),
-                tf.layers.dense({
-                    units: dense2Nodes,
-                    activation: 'relu',
-                    // kernelRegularizer: tf.regularizers.l2(0.01)
-                }),
-                tf.layers.dense({units: 1, activation: 'relu'})
-            ]
-        });
-        model.compile({
-            optimizer: 'adam',
-            loss: 'meanSquaredError',
-        });
-        resolve(model);
+        try {
+            let mLayers = [];
+            //Input layer
+            layers.forEach((l, i) => {
+                let layerOption = {
+                    units: l.units
+                };
+                //If it is the first one we input inputShape.
+                if (i == 0) {
+                    layerOption.inputShape = inputShape;
+                }
+                //If it is LSTM we add return sequence.
+                if (l.layerType === "lstm") {
+                    layerOption.returnSequences = true;
+                }
+                //If it has activation we add it
+                if (l.activation !== "default") {
+                    layerOption.activation = l.activation;
+                }
+                mLayers.push(tf.layers[l.layerType](layerOption));
+
+            });
+
+            const model = tf.sequential({
+                layers: mLayers
+            });
+            model.compile({
+                optimizer: 'adam',
+                loss: 'meanSquaredError',
+            });
+            resolve(model);
+        } catch (e) {
+            alert("Error: " + e.message);
+            resolve(null);
+        }
+
     });
 }
 
-
 async function trainModel(model, X_train, y_train, X_test, y_test) {
+    //Set some variables for displaying purpose
+    let displayedLSTMWeightTypes = false;
+    let displayedWeightTypes = false;
+    let displayedFlattenNotification = false;
+
     let X_train_T = tf.tensor(X_train);
     let y_train_T = tf.tensor(y_train);
     let X_test_T = tf.tensor(X_test);
@@ -351,79 +433,78 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     let xScaleTest = d3.scaleLinear().domain([0, batches]).range([0, trainLossBatchSettings.width - trainLossBatchSettings.paddingLeft - trainLossBatchSettings.paddingRight]);
     trainLossBatchSettings.xScale = xScaleTest;
     let weightValueColorScheme = ["red", "blue"];
+    let weightsPathData = {};
     model.fit(X_train_T, y_train_T, {
         batchSize: batchSize,
         epochs: epochs,
         // shuffle: true,
         callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd, onTrainEnd: onTrainEnd}
     });
-    let weightsPathData = {};
-
     //Draw the legends for weights
-    let weights0Container = d3.select("#weights0Container");
+    //Draw weights type on the last layer (to avoid conflict with other types), and also this one sure always there is one.
+    drawWeightTypes(d3.select("#" + getWeightsContainerId(layersConfig.length - 1)));
 
-    let weights0LSTMTypes = weights0Container.append("g").attr("transform", "translate(0, 0)").selectAll(".lstmWeightType").data(lstmWeightTypes);
-    //Create the rect for clicking
-    weights0LSTMTypes.join("rect")
-        .attr("x", 0).attr("y", (d, i) => (i - 1) * 10)
-        .attr("fill", "white")
-        .attr("width", 60).attr("height", 9)
-        .style("cursor", "pointer")
-        .on("click", function (d, i) {
-            onLSTMWeightTypeClick(i);
-        });
-
-    weights0LSTMTypes.join("text").text(d => d)
-        .attr("class", "lstmWeightType")
-        .attr("font-size", 10)
-        .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i}em`)
-        .style("cursor", "pointer")
-        .on("click", function (d, i) {
-            onLSTMWeightTypeClick(i);
-        })
-        .on("mouseover", function () {
-            d3.select(this).attr("stroke", "red");
-        })
-        .on("mouseleave", function () {
-            d3.select(this).attr("stroke", "none");
-        });
-
-    //Draw weight type.
-    weights0Container.selectAll(".guidePath").data(["M60,5 C85,5 85,5 103,43", "M60,15 C85,15 85,15 103,53", "M60,25 C85,25 85,25 103,63", "M60,35 C85,35 85,35 103,73"]).join("path")
-        .attr("d", d => d)
-        .attr("marker-end", "url(#arrow0)")
-        .attr("fill", "none")
-        .attr("stroke", "black");
-
-    let weights1Container = d3.select("#weights1Container");
-    weights1Container.append("g").selectAll(".weightColor").data(["(click to toggle)", "-- negative", "-- positive"]).join("text").text(d => d)
-        .attr("font-size", 10)
-        .attr("class", "weightColor")
-        .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`)
-        .attr("fill", (d, i) => i == 0 ? "black" : weightValueColorScheme[i - 1])
-        .on("click", function (d, i) {
-            onWeightTypeClick(i);
-        })
-        .on("mouseover", function () {
-            d3.select(this).attr("stroke", "red");
-        })
-        .on("mouseleave", function () {
-            d3.select(this).attr("stroke", "none");
-        });
-
-    let weights3Container = d3.select("#weights3Container");
-    weights3Container.selectAll(".legend").data(["Flatten layer", "(cumulative weights)"]).join("text").text(d => d)
-        .attr("font-size", 10)
-        .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`);
-    //Draw the guide.
-    weights3Container.selectAll(".guidePath").data(["M50,25 C50,40 25,57 0,57"]).join("path")
-        .attr("d", d => d)
-        .attr("marker-end", "url(#arrow1)")
-        .attr("fill", "none")
-        .attr("stroke", "black");
+    //Draw the lstm to the first layer.
+    for (let i = 0; i < layersConfig.length; i++) {
+        let l = layersConfig[i];
+        if (layersConfig[i].layerType === "lstm") {
+            let containerId = getWeightsContainerId(i);
+            let theContainer = d3.select("#" + containerId);
+            drawLSTMWeightTypes(theContainer);
+            break;//Draw only one => so break after this.
+        }
+    }
+    //Draw the flatten notification for every flatten layer (to the layer before that, in term of display grid element.).
+    for (let i = 0; i < layersConfig.length; i++) {
+        if (layersConfig[i].layerType === "flatten") {
+            let containerId = getWeightsContainerId(i);
+            let theContainer = d3.select("#" + containerId);
+            drawFlattenNotification(theContainer);
+        }
+    }
 
     //Also toggle the weight displaying menu according to the default display.
     toggleWeightsMenu();
+
+    //<editor-fold desc="For LSTM weight types" and its toggling menu">
+    async function drawLSTMWeightTypes(container) {
+        return new Promise((resolve, reject) => {
+            let lstmTypes = container.append("g")
+                .attr("transform", "translate(3, 0)")//3 is for the margin.
+                .selectAll(".lstmWeightType")
+                .data(lstmWeightTypes);
+            //Create the rect for clicking
+            lstmTypes.join("rect")
+                .attr("x", 0).attr("y", (d, i) => (i - 1) * 10)
+                .attr("fill", "white")
+                .attr("width", 60).attr("height", 9)
+                .style("cursor", "pointer")
+                .on("click", function (d, i) {
+                    onLSTMWeightTypeClick(i);
+                });
+            lstmTypes.join("text").text(d => d)
+                .attr("class", "lstmWeightType")
+                .attr("font-size", 10)
+                .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i}em`)
+                .style("cursor", "pointer")
+                .on("click", function (d, i) {
+                    onLSTMWeightTypeClick(i);
+                })
+                .on("mouseover", function () {
+                    d3.select(this).attr("stroke", "red");
+                })
+                .on("mouseleave", function () {
+                    d3.select(this).attr("stroke", "none");
+                });
+            //Draw weight guide.
+            container.selectAll(".guidePath").data(["M60,5 C85,5 85,5 100,43", "M60,15 C85,15 85,15 100,53", "M60,25 C85,25 85,25 100,63", "M60,35 C85,35 85,35 100,73"]).join("path")
+                .attr("d", d => d)
+                .attr("marker-end", "url(#arrow)")
+                .attr("fill", "none")
+                .attr("stroke", "black");
+            resolve(true);
+        });
+    }
 
     function onLSTMWeightTypeClick(typeIdx) {
         if (typeIdx == 0) {//toggle all
@@ -433,9 +514,37 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         } else {
             lstmWeightTypeDisplay[typeIdx - 1] = 1 - 1 * lstmWeightTypeDisplay[typeIdx - 1];//toggle. -1 because the first one is for toggle all command
         }
-        drawLSTMWeights("weights0Container");
-        drawLSTMWeights("weights1Container");
+        //Redraw all the lstm weights.
+        layersConfig.forEach((l, i) => {
+            if (l.layerType === "lstm") {
+                drawLSTMWeights("weightsContainer" + l.timeStamp);
+            }
+        });
+        //Todo: Fix this.
         toggleWeightsMenu();
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="For positive/negative weight types">
+    async function drawWeightTypes(container) {
+        return new Promise((resolve, reject) => {
+            container.append("g").selectAll(".weightColor").data(["(click to toggle)", "-- negative", "-- positive"]).join("text").text(d => d)
+                .attr("font-size", 10)
+                .attr("class", "weightColor")
+                .attr("x", 0).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`)
+                .attr("fill", (d, i) => i == 0 ? "black" : weightValueColorScheme[i - 1])
+                .on("click", function (d, i) {
+                    onWeightTypeClick(i);
+                })
+                .on("mouseover", function () {
+                    d3.select(this).attr("stroke", "red");
+                })
+                .on("mouseleave", function () {
+                    d3.select(this).attr("stroke", "none");
+                });
+            resolve(true);
+        });
     }
 
     function onWeightTypeClick(typeIdx) {
@@ -446,19 +555,96 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         } else {
             weightTypeDisplay[typeIdx - 1] = 1 - 1 * weightTypeDisplay[typeIdx - 1];//toggle. -1 because the first one is for toggle all command
         }
-        //Redraw all weights
-        drawLSTMWeights("weights0Container");
-        drawLSTMWeights("weights1Container");
-        drawDenseWeights("weights3Container");
-        drawDenseWeights("weights4Container");
-        drawDenseWeights("weights5Container");
+        //Redraw all weights without having to rebuild them (since there is no update).
+        for (let i = 0; i < layersConfig.length; i++) {
+            let containerId = getWeightsContainerId(i);
+
+            if (layersConfig[i].layerType === "lstm") {
+                drawLSTMWeights(containerId);
+            }
+            if (layersConfig[i].layerType === "dense") {
+                drawDenseWeights(containerId);
+            }
+        }
         toggleWeightsMenu();
     }
 
+    //</editor-fold>
+
+    //<editor-fold desc="For flatten layer notification">
+    async function drawFlattenNotification(container) {
+        return new Promise((resolve, reject) => {
+            container.selectAll(".legend").data(["Flatten layer", "(cumulative weights)"]).join("text").text(d => d)
+                .attr("font-size", 10)
+                .attr("x", 3).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`);
+            //Draw the guide.
+            container.selectAll(".guidePath").data(["M50,25 C50,40 25,57 3,57"]).join("path")
+                .attr("d", d => d)
+                .attr("marker-end", "url(#arrow)")
+                .attr("fill", "none")
+                .attr("stroke", "black");
+            resolve(true);
+        });
+    }
+
+    //</editor-fold>
 
     function onTrainEnd(batch, logs) {
         isTraining = false;
         d3.selectAll(".weightLineTraining").classed("weightLineTraining", isTraining);//Done training, stop animating
+    }
+
+    async function displayLayerWeights(model, i, containerId) {
+
+        let layer = model.layers[i];
+        let weights = layer.getWeights()[0];
+
+        if (layer.name.indexOf("lstm") >= 0) {
+            buildWeightPositionData(weights, 100, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
+                weightsPathData[containerId] = result;//Store to use on click
+                drawLSTMWeights(containerId);
+            });
+        } else if (layer.name.indexOf("dense") >= 0 && i - 1 >= 0 && model.layers[i - 1].name.indexOf("flatten") >= 0) {//Is dense, but its previous one is flatten
+            let flattenSplits = model.layers[i - 2].units;//Number of splits (divide weights in these number of splits then combine them in each split)
+            buildWeightForFlattenLayer(weights, flattenSplits).then(cumulativeT => {
+                buildWeightPositionData(cumulativeT, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.05, 0.7).then((result) => {
+                    weightsPathData[containerId] = result;
+                    drawDenseWeights(containerId);
+                });
+            });
+        } else if (model.layers[i].name.indexOf("dense") >= 0) {//Remember this must be else if to avoid conflict with prev case.
+            buildWeightPositionData(weights, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.3, 0.7).then((result) => {
+                weightsPathData[containerId] = result;
+                drawDenseWeights(containerId);
+            });
+        }
+        //Don't have to draw weights of flatten, will only use it next layer (model.layersConfig[i].name.indexOf("flatten"))
+
+    }
+
+    async function displayLayersOutputs(model, i, input) {
+        if (i >= model.layers.length - 1) {
+            return;//Do not draw the final output
+        }
+        return new Promise((resolve, reject) => {
+            let layer = model.layers[i];
+            let ts = layer.apply(input);
+            if (layer.name.indexOf("lstm") >= 0) {
+                tensor3DToArray3DAsync(ts).then(data => {
+                    drawHeatmaps(data, "layerContainer" + layersConfig[i].timeStamp, "layer" + layersConfig[i].timeStamp);
+                });
+            } else if (layer.name.indexOf("flatten") >= 0) {
+                //For flatten we don't have to do anything.
+            } else if (layer.name.indexOf("dense") >= 0) {
+                tensor2DToArray2DAsync(ts).then(data => {
+                    drawLineCharts(data, normalizeTarget, target_ordered, "layerContainer" + layersConfig[i].timeStamp, "layer" + layersConfig[i].timeStamp, lineChartSettings, false);
+                });
+            }
+            //Recurse
+            if (i < model.layers.length - 1) {//We will draw the output separately.
+                displayLayersOutputs(model, i + 1, ts);
+            }
+        });
     }
 
     function onBatchEnd(batch, logs) {
@@ -495,82 +681,48 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
 
     }
 
+    //The container id is a bit involving because of the weights is displayed in prev layer, and also we prev 2 layer if the prev layer is flatten layer.
+    function getWeightsContainerId(i) {
+        let containerId = "layer0Weights";
+        if (i !== 0 && layersConfig[i - 1].layerType.indexOf("flatten") >= 0) {
+            containerId = "weightsContainer" + layersConfig[i - 2].timeStamp;//Prev 2 layers if it is lstm
+        } else if (i !== 0) {
+            containerId = "weightsContainer" + layersConfig[i - 1].timeStamp;//Otherwise prev layer.
+        }
+        return containerId;
+    }
+
     function onEpochEnd(batch, logs) {
-        //Display weights0
-        let weights0 = model.layers[0].getWeights()[0];
-        buildWeightPositionData(weights0, 100, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
-            weightsPathData["weights0Container"] = result;
-            drawLSTMWeights("weights0Container");
-        });
+        if (isTraining) {//Only update if it is training (Since we may pause already but the event is still called because of asychronous)
+            for (let i = 0; i < layersConfig.length; i++) {
+                let containerId = getWeightsContainerId(i);
+                displayLayerWeights(model, i, containerId);
+            }
+            //it will display recursively.
+            displayLayersOutputs(model, 0, X_train_T_ordered);
 
-
-        //Draw layer 0
-        let ts0 = model.layers[0].apply(X_train_T_ordered);
-        tensor3DToArray3DAsync(ts0).then(data => {
-            drawHeatmaps(data, "layer0Container", "layer0");
-        });
-        //Draw weights1
-        let weights1 = model.layers[1].getWeights()[0];
-        buildWeightPositionData(weights1, 100, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
-            weightsPathData["weights1Container"] = result;
-            drawLSTMWeights("weights1Container");
-        });
-        //Draw layer 1
-        let ts1 = model.layers[1].apply(ts0);
-        tensor3DToArray3DAsync(ts1).then(data => {
-            drawHeatmaps(data, "layer1Container", "layer1");
-        });
-        let ts2 = model.layers[2].apply(ts1);
-
-        //(we skip flatten layer, layer 2)
-        buildWeightForFlattenLayer(model.layers[3].getWeights()[0], flattenSplits).then(cumulativeT => {
-            buildWeightPositionData(cumulativeT, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.05, 0.7).then((result) => {
-                weightsPathData["weights3Container"] = result;
-                drawDenseWeights("weights3Container");
+            //Draw output
+            let ts = model.predict(X_train_T_ordered);
+            tensor2DToArray2DAsync(ts).then(data => {
+                //We don't normalize the final result.
+                drawLineCharts(data, null, y_train_flat_ordered, "outputContainer", "output", outputSettings, true).then(() => {
+                    //Update the training loss
+                    updateGraphTitle("outputContainer", "Training, MSE: " + logs.loss.toFixed(2));
+                });
             });
-        });
-        //Draw layer 3
-        let ts3 = model.layers[3].apply(ts2);
-        tensor2DToArray2DAsync(ts3).then(data => {
-            drawLineCharts(data, normalizeTarget, target_ordered, "layer3Container", "layer3", lineChartSettings, false);
-        });
-        //Draw weights 4
-        let weights4 = model.layers[4].getWeights()[0];
-        buildWeightPositionData(weights4, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.05, 0.7).then((result) => {
-            weightsPathData["weights4Container"] = result;
-            drawDenseWeights("weights4Container");
-        });
-        //Draw layer 4
-        let ts4 = model.layers[4].apply(ts3);
-        tensor2DToArray2DAsync(ts4).then(data => {
-            drawLineCharts(data, normalizeTarget, target_ordered, "layer4Container", "layer4", lineChartSettings, false);
-        });
-        //Draw weights 4
-        let weights5 = model.layers[5].getWeights()[0];
-        buildWeightPositionData(weights5, 100, 17.5, 250, 17.5, 100, 1, 0, 0.5, 3, 0.3, 0.7).then((result) => {
-            weightsPathData["weights5Container"] = result;
-            drawDenseWeights("weights5Container");
-        });
-        //Draw output
-        let ts5 = model.predict(X_train_T_ordered);
-        tensor2DToArray2DAsync(ts5).then(data => {
-            //We don't normalize the final result.
-            drawLineCharts(data, null, y_train_flat_ordered, "layer5Container", "layer5", outputSettings, true).then(() => {
-                //Update the training loss
-                updateGraphTitle("layer5Container", "Training, MSE: " + logs.loss.toFixed(2));
+            //Draw the testing data.
+            let test = model.predict(X_test_T_ordered);
+            tensor2DToArray2DAsync(test).then(data => {
+                //We don't normalize the final result.
+                drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", trainTestSettings, true).then(() => {
+                    //Update test loss
+                    let testLoss = model.evaluate(X_test_T_ordered, y_test_T_ordered).dataSync()[0];
+                    updateGraphTitle("testContainer", "Testing, MSE: " + testLoss.toFixed(2));
+                });
             });
-        });
+        }
 
-        //Draw the testing data.
-        let test = model.predict(X_test_T_ordered);
-        tensor2DToArray2DAsync(test).then(data => {
-            //We don't normalize the final result.
-            drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", trainTestSettings, true).then(() => {
-                //Update test loss
-                let testLoss = model.evaluate(X_test_T_ordered, y_test_T_ordered).dataSync()[0];
-                updateGraphTitle("testContainer", "Testing, MSE: " + testLoss.toFixed(2));
-            });
-        });
+
     }
 
     function toggleWeightsMenu() {
@@ -680,11 +832,11 @@ async function buildWeightPositionData(weightsT, leftNodeHeight, leftNodeMarginT
                     let idx = leftIdx * (wShape[1]) + typeIdx * noOfRightNodes + rightIdx;
                     let item = {
                         source: {
-                            x: -5,
+                            x: 0,
                             y: leftNodeY
                         },
                         target: {
-                            x: weightWidth + 5,
+                            x: weightWidth,
                             y: rightNodeY
                         },
                         idx: idx,

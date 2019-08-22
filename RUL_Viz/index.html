@@ -3,187 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <title>RUL ML Explained</title>
-    <!--materialize-->
     <style>
         @import "lib/materialize/css/materialize.css";
+    </style>
+    <style>
+        @import "lib/playpausebutton/playpause.css";
         @import "css/styles.css";
         @import "js/loader/loader.css";
-        @import "lib/playpausebutton/playpause.css";
+
+        .btn-menu {
+            height: 24px;
+            line-height: 24px;
+            padding: 0 0.5rem;
+            border-bottom: 1px solid #8b1014;
+            border-top: 1px solid #8b1014;
+        }
+
+        .row {
+            margin-bottom: 0px !important;
+        }
+
+        input {
+            height: 1.5rem !important;
+        }
+
     </style>
+    <!--GUI Lib-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="lib/materialize/js/materialize.js"></script>
-    <!--Tensorflow-->
+    <script src="lib/jquery-3.4.1.js"></script>
+    <!--ML Lib-->
     <script src="lib/tf.min.js"></script>
     <!--custom-->
     <script src="lib/playpausebutton/playpause.js"></script>
+    <script src="lib/cssvariable/cssvariables.js"></script>
     <script src="build/js/index.min.js"></script>
+    <script src="js/globalvariables.js"></script>
 </head>
 <body>
+<!--loader-->
 <script src="js/loader/loader.js"></script>
 <script>
     showLoader();
 </script>
-<header style="border-bottom: 1px solid black;">
-    <div class="container page">
-        <h3 class="center"><a href="https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/#turbofan"
-                              target="_blank">Remaining Useful Life (RUL)</a> Machine Learning Exploration Page</h3>
-        <h4 class="center"><a href="#article">Read article</a></h4>
+
+<!--<editor-fold desc="Header">-->
+<nav class="nav-wrapper indigo">
+    <div class="container">
+        <a href="#" class="brand-logo">Remaining Useful Life Machine Learning Exploration</a>
+        <ul class="right">
+            <li><a href="#"><span>Article</span></a></li>
+            <li><a href="#"><span>Github</span></a></li>
+            <li><a href="#"><span>Contact</span></a></li>
+        </ul>
     </div>
-</header>
-<div class="container">
-    <div class="row center">
-        <div class="col s4 container center" style="height: 205px; display: table;">
-            <div id="trainingButtonContainer" style="display: table-cell; vertical-align:middle;"></div>
-        </div>
-        <div class="col s8 container center">
-            <div id="trainTestLoss" class="center" style="margin-left: auto; display: inline-block;"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s2 container">
-            <b>Input</b>
-            <br/>
-            x-axis: feature sequences
-            <br/>
-            y-axis: engines
-        </div>
-        <div class="col s2 container">
-            <b>LSTM layer 1 (6 units)</b>
-            <br/>
-            x-axis: output sequences
-            <br/>
-            y-axis: engines
-        </div>
-        <div class="col s2 container">
-            <b>LSTM layer 2 (6 units)</b>
-            <br/>
-            x-axis: output sequences
-            <br/>
-            y-axis: engines
-        </div>
-        <div class="col s2 container">
-            <b>Dense layer 1 (6 units)</b>
-            <br/>
-            x-axis: output values
-            <br/>
-            y-axis: engines
-        </div>
-        <div class="col s2 container">
-            <b>Dense layer 2 (4 units)</b>
-            <br/>
-            x-axis: output values
-            <br/>
-            y-axis: engines
-        </div>
-        <div class="col s2 container">
-            <b>Model evaluation</b>
-            <br/>
-            x-axis: RUL
-            <br/>
-            y-axis: engines
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s2 container">
-            <svg style="overflow: visible;" height="20">
-                <g id="inputColorScale"></g>
-            </svg>
-        </div>
-        <div class="col s2 container">
-            <div class="col s2 container">
-                <svg style="overflow: visible;" height="20">
-                    <g id="lstm1ColorScale"></g>
-                </svg>
+</nav>
+<div class="divider" style="margin-bottom: 10px;"></div>
+<div class="row">
+    <div class="container">
+        <div class="row" style="height: 205px;">
+            <div class="col s4">
+                <div class="row">
+<!--                    <a href="#" class="btn-menu">train data</a>-->
+<!--                    <a href="#" class="btn-menu">testing data</a>-->
+<!--                    <a href="#" class="btn-menu">save model</a>-->
+<!--                    <a href="#" class="btn-menu">load model</a>-->
+                </div>
+                <div class="row">
+                    <div class="container center" style="display: table;">
+                        <div id="trainingButtonContainer" style="display: table-cell; vertical-align:middle;"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container">
+                        <div class="col s12">
+                            <div class="input-field col s6">
+                                <input id="epoch" type="number" value="50">
+                                <label for="epoch">Epochs</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="batchSize" type="number" value="8">
+                                <label for="batchSize">Batch size</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col s2 container">
-            <div class="col s2 container">
-                <svg style="overflow: visible;" height="20">
-                    <g id="lstm2ColorScale"></g>
-                </svg>
+            <div class="col s8">
+                <div id="trainTestLoss" class="center" style="margin-left: auto; display: inline-block;"></div>
             </div>
-        </div>
-        <div class="col s2 container">
-            <span style="color: darkgray;">&nbsp;x&nbsp;: target</span>
-            <span style="color: darkgreen;">&nbsp;o&nbsp;: output</span>
-        </div>
-        <div class="col s2 container">
-            <span style="color: darkgray;">&nbsp;x&nbsp;: target</span>
-            <span style="color: darkgreen;">&nbsp;o&nbsp;: output</span>
-        </div>
-        <div class="col s2 container">
-            <span style="color: darkgray;">&nbsp;x&nbsp;: target</span>
-            <span style="color: darkgreen;">&nbsp;o&nbsp;: predicted</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s1 container">
-            <div id="inputContainer"></div>
-        </div>
-        <div class="col s1 container">
-            <svg width="100" height="1870" id="weights0Container" style="overflow: visible; z-index: 999">
-                <defs>
-                    <marker id="arrow0" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto"
-                            markerUnits="userSpaceOnUse">
-                        <path d="M0,0 L5,2.5 L0,5 z"></path>
-                    </marker>
-                </defs>
-            </svg>
-        </div>
-        <div class="col s1 container">
-            <div id="layer0Container">
-            </div>
-        </div>
-        <div class="col s1 container">
-            <svg width="100" height="1870" id="weights1Container" style="overflow: visible"></svg>
-        </div>
-        <div class="col s1 container">
-            <div id="layer1Container"></div>
-        </div>
-        <div class="col s1 container">
-            <svg width="100" height="1870" id="weights3Container" style="overflow: visible">
-                <defs>
-                    <marker id="arrow1" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto"
-                            markerUnits="userSpaceOnUse">
-                        <path d="M0,0 L5,2.5 L0,5 z"></path>
-                    </marker>
-                </defs>
-            </svg>
-            </svg>
-        </div>
-        <div class="col s1 container">
-            <div id="layer3Container"></div>
-        </div>
-        <div class="col s1 container">
-            <svg width="100" height="1870" id="weights4Container" style="overflow: visible"></svg>
-        </div>
-        <div class="col s1 container">
-            <div id="layer4Container"></div>
-        </div>
-        <div class="col s1 container">
-            <svg width="100" height="1870" id="weights5Container" style="overflow: visible"></svg>
-        </div>
-        <div class="col s2 container">
-            <div id="layer5Container"></div>
-            <div id="testContainer"></div>
         </div>
     </div>
 </div>
-<footer style="border-top: 1px solid black;">
-    <div class="container page">
-        <h3><a name="article">The article</a></h3>
-        <h5>Quick guide:</h5>
-        <p>
-            Click the start/pause button to start/pause the training process accordingly. The training loss vs. testing
-            loss graph will be updated every batch. The intermediate outputs, final training output, final testing
-            output, and weights are updated every epoch.
-
-        </p>
-        <h5>Dataset</h5>
-        This ML Solution works on the <a href="https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/#turbofan"
-           target="_blank">Turbofan Engine Degradation Simulation Data Set</a>.
-
+<div class="modal" id="addLayerMenu" style="width: 630px;">
+    <div class="modal-content" style="height: 200px;">
+        <div class="row">
+            <div class="input-field col">
+                <select id="layerType">
+                    <option value="dense" selected>Dense</option>
+                    <option value="lstm">LSTM</option>
+                </select>
+                <label>Layer</label>
+            </div>
+            <div class="input-field col">
+                <input id="noOfUnits" type="number" value="8">
+                <label for="noOfUnits">Units</label>
+            </div>
+            <div class="input-field col">
+                <select id="activationType">
+                    <option value="default" selected>default</option>
+                    <option value="relu">relu</option>
+                    <option value="tanh">tanh</option>
+                    <option value="sigmoid">sigmoid</option>
+                </select>
+                <label>Activation</label>
+            </div>
+        </div>
     </div>
-</footer>
+    <div class="modal-footer">
+        <div class="row" style="padding-right: 10px; height: 20px;">
+            <a href="#" class="modal-close" onclick="addLayer()">Add & close</a>&nbsp;&nbsp;
+            <a href="#" class="modal-close">Cancel</a>
+        </div>
+    </div>
+</div>
+<!--</editor-fold>-->
+<div class="container pageWidth" style="margin: auto;">
+    <div class="columnWrapper">
+        <div class="grid-item" id="layerInput">
+            <div class="row">
+                <a href="#" class="btn-small btn-floating modal-trigger"><i
+                        class="material-icons">input</i></a>
+                <b>Input</b>
+                <br/>
+                x-axis: feature sequences
+                <br/>
+                y-axis: engines
+                <div class="row">
+                    <div id="inputContainer" class="col s6"></div>
+                    <div class="col s6">
+                        <!--for the first svg, add also the defs for arrow (to be used in all other places)-->
+                        <svg id="layer0Weights" width="100" style="overflow: visible;">
+                            <defs>
+                                <marker id="arrow" markerWidth="5" markerHeight="5" refX="5" refY="2.5" orient="auto"
+                                        markerUnits="userSpaceOnUse">
+                                    <path d="M0,0 L5,2.5 L0,5 z"></path>
+                                </marker>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Dynamic part here. -->
+        <div class="grid-item" style="width: 400px !important;" id="layerOutput">
+            <div class="row">
+                <a href="#addLayerMenu" class="btn-small btn-floating modal-trigger"><i
+                        class="material-icons" onclick="displayAddLayerDialog()">add</i></a>
+                <b>Output</b>
+                <br/>
+                x-axis: RUL
+                <br/>
+                y-axis: engines
+                <div class="row">
+                    <div id="outputContainer" class="col s12" style="width: 400px;"></div>
+                </div>
+                <div class="row">
+                    <div id="testContainer" class="col s12" style="width: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--UI initialization-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let selectElems = document.querySelectorAll('select');
+        let selectInstances = M.FormSelect.init(selectElems);
+        let modalElems = document.querySelectorAll('.modal');
+        let modalInstances = M.Modal.init(modalElems);
+    });
+</script>
+<!--Scripting-->
+<script src="js/layerManagement.js"></script>
 <script src="js/index.js"></script>
+
 </body>
 </html>

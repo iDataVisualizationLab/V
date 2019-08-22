@@ -1,18 +1,34 @@
 :root {
-    --page-width: 2400px;
+    --colNum: 1;
+    --page-width: calc(var(--colNum) * 200px + 400px);
 }
 
-.page {
+.pageWidth {
     width: var(--page-width);
+    max-width: var(--page-width) !important;
 }
 
+/*For the columns*/
+.columnWrapper {
+    display: grid;
+    grid-template-columns: repeat(calc(var(--colNum) + 2), 200px);
+    width: calc(var(--colNum) * 400px);
+}
+
+.grid-item {
+    grid-column-start: auto;
+    margin: 0px;
+}
+
+/*For the weights layout*/
 .weightsContainer {
     overflow: visible;
 }
 
-.weightLine{
+.weightLine {
     stroke-dasharray: 9 1;
 }
+
 .weightLineTraining {
     stroke-dashoffset: 1;
     animation: 0.5s linear 0s infinite flowing;
@@ -20,8 +36,19 @@
 }
 
 @keyframes flowing {
-    from { stroke-dashoffset: 0; } to { stroke-dashoffset: 10; }
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: 10;
+    }
 }
+
 @-webkit-keyframes flowing {
-    from { stroke-dashoffset: 0; } to { stroke-dashoffset: 10; }
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: 10;
+    }
 }

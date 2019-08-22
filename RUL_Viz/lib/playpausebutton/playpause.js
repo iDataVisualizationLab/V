@@ -12,4 +12,5 @@ function createButton(containerId, clickAction) {
             clickAction("pause");
         }
     });
+    return btn;
 }
