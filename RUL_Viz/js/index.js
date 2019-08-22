@@ -51,7 +51,7 @@ function stopTraining() {
     }
     //Enable the batch size, epochs form.
     $("#batchSize").prop("disabled", false);
-    $("#epoch").prop("disabled", false);
+    $("#epochs").prop("disabled", false);
 
 }
 
@@ -102,10 +102,10 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
                     //Toggle
                     if (action === "start") {
                         $("#batchSize").prop("disabled", true);
-                        $("#epoch").prop("disabled", true);
+                        $("#epochs").prop("disabled", true);
                     } else {
                         $("#batchSize").prop("disabled", false);
-                        $("#epoch").prop("disabled", false);
+                        $("#epochs").prop("disabled", false);
                     }
                     //Process
                     if (action === "start") {
@@ -358,8 +358,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     let target_ordered = normalizeTarget(y_train_flat_ordered, -1.0, 1.0);
 
 
-    const epochs = 45;
-    const batchSize = 8;
+    let epochs = 50;
+    let batchSize = 8;
 
     let lineChartSettings = {
         noSvg: true,
@@ -434,6 +434,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     trainLossBatchSettings.xScale = xScaleTest;
     let weightValueColorScheme = ["red", "blue"];
     let weightsPathData = {};
+    epochs = +$("#epochs").val();
+    batchSize = +$("#batchSize").val();
     model.fit(X_train_T, y_train_T, {
         batchSize: batchSize,
         epochs: epochs,
