@@ -27,7 +27,7 @@ async function createModel(layers, inputShape) {
     await processLayers(layers);
     //Save model config.
     let modelName = saveSnapshot();
-    if(modelName){
+    if (modelName) {
         saveModelData(modelName, "layersConfig", layersConfig);
     }
     //Now create model
@@ -69,7 +69,7 @@ async function createModel(layers, inputShape) {
     });
 }
 
-async function trainModel(model, X_train, y_train, X_test, y_test) {
+async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, batchSize = 8, isPreviewing = false) {
 
     let X_train_T = tf.tensor(X_train);
     let y_train_T = tf.tensor(y_train);
@@ -90,9 +90,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     let y_test_flat_ordered = y_test_ordered.flat();
     let target_ordered = normalizeTarget(y_train_flat_ordered, -1.0, 1.0);
 
-
-    let epochs = 50;
-    let batchSize = 8;
 
     let lineChartSettings = {
         noSvg: true,
@@ -167,12 +164,10 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     trainLossBatchSettings.xScale = xScaleTest;
     let weightValueColorScheme = ["red", "blue"];
     let weightsPathData = {};
-    epochs = +$("#epochs").val();
-    batchSize = +$("#batchSize").val();
 
     //Save training data
     let modelName = saveSnapshot();
-    if(modelName){
+    if (modelName) {
         saveModelData(modelName, "epochs", epochs);
         saveModelData(modelName, "batchSize", batchSize);
     }
@@ -183,6 +178,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         // shuffle: true,
         callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd, onTrainEnd: onTrainEnd}
     });
+
     //Draw the legends for weights
     //Draw weights type on the last layer (to avoid conflict with other types), and also this one sure always there is one.
     drawWeightTypes(d3.select("#" + getWeightsContainerId(layersConfig.length - 1)));
@@ -376,13 +372,13 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
             let ts = layer.apply(input);
             let timeStamp = layersConfig[i].timeStamp;
             if (layer.name.indexOf("lstm") >= 0) {
-                tensor3DToArray3DAsync(ts).then(data => {
+                ts.array().then(data => {
                     drawHeatmaps(data, "layerContainer" + timeStamp, "layer" + timeStamp);
                 });
             } else if (layer.name.indexOf("flatten") >= 0) {
                 //For flatten we don't have to do anything.
             } else if (layer.name.indexOf("dense") >= 0) {
-                tensor2DToArray2DAsync(ts).then(data => {
+                ts.array().then(data => {
                     drawLineCharts(data, normalizeTarget, target_ordered, "layerContainer" + timeStamp, "layer" + timeStamp, lineChartSettings, false);
                 });
             }
@@ -441,8 +437,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     function onEpochEnd(epoch, logs) {
         hideLoader();
         //Save snapshot if needed
-        let modelName=saveSnapshot();
-        if(modelName){
+        let modelName = saveSnapshot();
+        if (modelName) {
             saveModelData(modelName, "trainLosses", trainLosses);
             saveModelData(modelName, "testLosses", testLosses);
             saveModel(modelName, epoch, model);
@@ -457,7 +453,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
 
             //Draw output
             let ts = model.predict(X_train_T_ordered);
-            tensor2DToArray2DAsync(ts).then(data => {
+            ts.array().then(data => {
                 //We don't normalize the final result.
                 drawLineCharts(data, null, y_train_flat_ordered, "outputContainer", "output", outputSettings, true).then(() => {
                     //Update the training loss
@@ -466,7 +462,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
             });
             //Draw the testing data.
             let test = model.predict(X_test_T_ordered);
-            tensor2DToArray2DAsync(test).then(data => {
+            test.array().then(data => {
                 //We don't normalize the final result.
                 drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", trainTestSettings, true).then(() => {
                     //Update test loss

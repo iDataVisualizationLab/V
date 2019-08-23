@@ -5,10 +5,8 @@ function createDefaultLayers() {
     createLayer("lstm", 8, "default", 1);
     createLayer("dense", 8, "relu", 2);
     createLayer("dense", 4, "relu", 3);
-    layersConfig.forEach(layerInfo => {
-        createLayerGUI(layerInfo);
-    });
 }
+
 
 /**
  * Used to create a layer in the background, push it to the array of layersConfig and return it.
@@ -53,7 +51,7 @@ function createLayerGUI(layerInfo) {
                     <a class="btn-small btn-floating"><i class="material-icons grey" onclick="deleteLayer('${idVal}')">delete</i></a> ${layerInfoStr}
                     <div class="divider" style="margin-bottom: 5px;"></div>
                     <div class="row">
-                        <svg style="overflow: visible; margin-left: -20px;" height="20">
+                        <svg style="overflow: visible; margin-left: 10px;" height="20">
                             <g id="colorScale${layerInfo.timeStamp}"></g>
                         </svg>
                     </div>
@@ -68,6 +66,14 @@ function createLayerGUI(layerInfo) {
     div.insertBefore($("#layerOutput"));
 }
 
+function clearMiddleLayerGUI() {
+    $(".grid-item").each((i, elm) => {
+        if (elm.id !== "layerInput" && elm.id !== "layerOutput") {
+            removeLayerGUI(elm.id);
+        }
+    });
+}
+
 function displayLayerInfo(layerInfo) {
     let result = "";
     if (layerInfo.layerType === "lstm") {
@@ -78,12 +84,16 @@ function displayLayerInfo(layerInfo) {
     return result;
 }
 
-function deleteLayer(id, onSuccess) {
-    layersConfig = layersConfig.filter(l => l.id !== id);
+function removeLayerGUI(id) {
     let colNum = getCSSVariable("--colNum");
     colNum -= 1;
     setCSSVariable("--colNum", colNum);
     $(`#${id}`).remove();
+}
+
+function deleteLayer(id, onSuccess) {
+    layersConfig = layersConfig.filter(l => l.id !== id);
+    removeLayerGUI(id);
     if (onSuccess) {
         onSuccess();
     }

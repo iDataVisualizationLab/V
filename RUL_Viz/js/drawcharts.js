@@ -41,7 +41,6 @@ async function drawHeatmaps(data, container, selector) {
 
     }
 }
-
 async function drawLineCharts(data, normalizer, target, container, selector, lineChartSettings, noBorder) {
     let noOfItems = data.length;
     let noOfFeatures = data[0].length;
@@ -166,7 +165,6 @@ async function buildWeightPositionData(weightsT, leftNodeHeight, leftNodeMarginT
         resolve({lineData: lineData, strokeWidthScale: strokeWidthScale, opacityScaler: opacityScaler});
     });
 }
-
 async function buildWeightForFlattenLayer(weightsT, noOfLeftNodes) {
     return new Promise((resolve, reject) => {
         let cumulativeT = tf.tensor(weightsT.split(noOfLeftNodes).map(t => {

@@ -1,5 +1,6 @@
 function createButton(containerId, clickAction) {
     let container = document.getElementById(containerId);
+    container.innerHTML = '';
     let btn = document.createElement("button");
     btn.title = "Click to start/pause";
     btn.classList.add("playpauseBtn");

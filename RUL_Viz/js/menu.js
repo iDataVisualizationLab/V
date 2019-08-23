@@ -5,12 +5,19 @@ dispatch.on("change", () => {
     currentModel = null;
 });
 
+function loadModelClick(modelName) {
+    // dispatch.call("loadModel", null, modelName);
+    // toast("loading " + modelName);
+    loadModel(modelName).then();
+}
+
 function setTrainingConfigEditable(val) {
     //Enable the batch size, epochs form.
     $("#batchSize").prop("disabled", !val);
     $("#epochs").prop("disabled", !val);
     $("#saveSnapshot").prop("disabled", !val);
     $("#snapshotName").prop("disabled", !val);
+    $("#loadModelMenu").prop("disabled", !val);
 }
 
 function stopTraining() {
