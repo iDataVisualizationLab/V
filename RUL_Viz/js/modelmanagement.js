@@ -144,7 +144,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         noSvg: false,
         showAxes: true,
         paddingLeft: 60,
-        paddingRight: 0,
+        paddingRight: 10,
         paddingTop: 20,
         paddingBottom: 40,
         width: trainLossW,
