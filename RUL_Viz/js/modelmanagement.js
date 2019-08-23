@@ -25,6 +25,11 @@ function processLayers(layers) {
 
 async function createModel(layers, inputShape) {
     await processLayers(layers);
+    //Save model config.
+    let modelName = saveSnapshot();
+    if(modelName){
+        saveModelData(modelName, "layersConfig", layersConfig);
+    }
     //Now create model
     return new Promise((resolve, reject) => {
         try {
@@ -164,6 +169,14 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
     let weightsPathData = {};
     epochs = +$("#epochs").val();
     batchSize = +$("#batchSize").val();
+
+    //Save training data
+    let modelName = saveSnapshot();
+    if(modelName){
+        saveModelData(modelName, "epochs", epochs);
+        saveModelData(modelName, "batchSize", batchSize);
+    }
+
     model.fit(X_train_T, y_train_T, {
         batchSize: batchSize,
         epochs: epochs,
@@ -425,8 +438,15 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
         return containerId;
     }
 
-    function onEpochEnd(batch, logs) {
+    function onEpochEnd(epoch, logs) {
         hideLoader();
+        //Save snapshot if needed
+        let modelName=saveSnapshot();
+        if(modelName){
+            saveModelData(modelName, "trainLosses", trainLosses);
+            saveModelData(modelName, "testLosses", testLosses);
+            saveModel(modelName, epoch, model);
+        }
         if (isTraining) {//Only update if it is training (Since we may pause already but the event is still called because of asychronous)
             for (let i = 0; i < layersConfig.length; i++) {
                 let containerId = getWeightsContainerId(i);
@@ -506,5 +526,4 @@ async function trainModel(model, X_train, y_train, X_test, y_test) {
                 });
         }
     }
-
 }

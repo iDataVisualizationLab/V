@@ -91,15 +91,25 @@ d3.json("data/train_FD001_100x50.json").then(X_train => {
                 btnTrain = createButton("trainingButtonContainer", (action) => {
                     //Process
                     if (action === "start") {
-                        if ($("#saveSnapshot").is(":checked") && !$("#snapshotName").val()) {
-                            toast("Please insert snapshot name");
-                            btnTrain.classList.remove("paused");
-                            return;
-                        }
-                        //Toggle
+                        let modelName = saveSnapshot();
+                        if ($("#saveSnapshot").is(":checked")) {
+                            let valid = true;
+                            if(!modelName){
+                                toast("Please insert snapshot name");
+                                valid = false;
 
-                        $("#batchSize").prop("disabled", true);
-                        $("#epochs").prop("disabled", true);
+                            } else if(modelName.indexOf(":")>=0){
+                                toast("Model name cannot contain ':'");
+                                valid = false;
+                            }
+                            if(!valid){
+                                btnTrain.classList.remove("paused");
+                                return;
+                            }
+                        }
+
+                        //Toggle
+                        setTrainingConfigEditable(false);
 
                         isTraining = true;
                         showLoader();

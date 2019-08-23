@@ -89,7 +89,7 @@
                             </div>
                             <div class="input-field col s1">
                                 <label>
-                                    <input type="checkbox" class="filled-in" checked="checked" id="saveSnapshot"/>
+                                    <input type="checkbox" class="filled-in" id="saveSnapshot"/>
                                     <span></span>
                                 </label>
                             </div>
@@ -227,7 +227,9 @@
                 Change number of epochs/batch size if needed.
             </li>
             <li class="collection-item">
-                Click on <label><input type="checkbox" class="filled-in" checked="checked"/><span>snapshots</span></label> checkbox to enable/disable saving training snapshots, so user could review the training process later on.
+                Click on <label><input type="checkbox" class="filled-in"
+                                       checked="checked"/><span>snapshots</span></label> checkbox to enable/disable
+                saving training snapshots, so user could review the training process later on.
             </li>
             <li class="collection-item">
                 Click on <i class="material-icons grey-text">play_arrow</i> button to start training process.
@@ -256,6 +258,7 @@
     });
 </script>
 <!--Scripting-->
+<script src="js/datamanagement.js"></script>
 <script src="js/tooltip/tooltip.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/layerManagement.js"></script>

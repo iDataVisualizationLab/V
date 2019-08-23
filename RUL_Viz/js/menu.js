@@ -4,24 +4,13 @@ dispatch.on("change", () => {
     stopTraining();
     currentModel = null;
 });
-dispatch.on("save", () => {
-    if (currentModel === null) {
-        toast("Please train the model before saving.");
-    } else {
-        btnTrain.classList.remove("paused");
-        stopTraining();
-        toast("Saving...");
-        currentModel.save("localstorage://" + generateName(layersConfig)).then(result => {
-            toast("Saved the model");
-        });
-    }
 
-});
-
-function generateName(modelsConfig) {
-    return modelsConfig.map(layerInfo => {
-        return layerInfo.layerType + "," + layerInfo.units + "," + layerInfo.activation;
-    }).join(";")
+function setTrainingConfigEditable(val) {
+    //Enable the batch size, epochs form.
+    $("#batchSize").prop("disabled", !val);
+    $("#epochs").prop("disabled", !val);
+    $("#saveSnapshot").prop("disabled", !val);
+    $("#snapshotName").prop("disabled", !val);
 }
 
 function stopTraining() {
@@ -29,9 +18,7 @@ function stopTraining() {
     if (currentModel !== null) {
         currentModel.stopTraining = true;
     }
-    //Enable the batch size, epochs form.
-    $("#batchSize").prop("disabled", false);
-    $("#epochs").prop("disabled", false);
+    setTrainingConfigEditable(true);
 }
 
 /***
@@ -49,6 +36,10 @@ function displayAddLayerDialog() {
     dispatch.call("change", null, undefined);
 }
 
-function saveModel() {
-    dispatch.call("save", null, undefined);
+function saveSnapshot() {
+    if ($("#saveSnapshot").is(":checked")) {
+        return $("#snapshotName").val();
+    } else {
+        return false;
+    }
 }
