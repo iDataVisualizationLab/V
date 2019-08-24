@@ -45,8 +45,8 @@ export interface HeatMapSettings {
     title?: Title;
     xAxisLabel?: XAxisLabel,
     yAxisLabel?: YAxisLabel,
-    xTicks?: number,
-    yTicks?: number
+    xTickValues?: any,
+    yTickValues?: any
 }
 
 export class HeatMap {
@@ -154,25 +154,15 @@ export class HeatMap {
         if (this.settings.showAxes) {
             let xAxis = d3.axisBottom()
                 .scale(this.settings.xScale);
-            if (this.settings.xTicks) {
-                let step = Math.round(this.data.x.length / this.settings.xTicks);
-                let tickValues = [];
-                for (let i = 0; i < this.data.x.length; i += step) {
-                    tickValues.push(this.data.x[i]);
-                }
-                xAxis.tickValues(tickValues);
+            if (this.settings.xTickValues) {
+                xAxis.tickValues(this.settings.xTickValues);
             }
 
             let yAxis = d3.axisLeft()
                 .scale(this.settings.yScale);
 
-            if (this.settings.yTicks) {
-                let step = Math.round(this.data.y.length / this.settings.yTicks);
-                let tickValues = [];
-                for (let i = 0; i < this.data.y.length; i += step) {
-                    tickValues.push(this.data.y[i]);
-                }
-                yAxis.tickValues(tickValues);
+            if (this.settings.yTickValues) {
+                yAxis.tickValues(this.settings.yTickValues);
             }
 
             this.svg.append("g")
@@ -245,10 +235,10 @@ export class HeatMap {
         var legend = theGroup.append('defs')
             .append('linearGradient')
             .attr('id', 'gradient' + id)
-            .attr('x1', '0%') // left
-            .attr('y1', '0%')
-            .attr('x2', '0%') // to right
-            .attr('y2', '100%')
+            .attr('x1', '0%')
+            .attr('y1', '100%')
+            .attr('x2', '0%')
+            .attr('y2', '0%')
             .attr('spreadMethod', 'pad');
         cs.domain().forEach((dVal) => {
             legend.append("stop").attr("offset", Math.round((dVal - minVal) * 100 / domainSize) + "%").attr("stop-color", cs(dVal))
@@ -260,7 +250,7 @@ export class HeatMap {
             .style("fill", `url(#gradient${id})`);
 
         let colorAxis = d3.axisRight()
-            .scale(d3.scaleLinear().domain([domain[0], domain[domain.length - 1]]).range([0, height]));
+            .scale(d3.scaleLinear().domain([domain[0], domain[domain.length - 1]]).range([height, 0]));
 
         theGroup.append("g")
             .attr("class", "y axis")

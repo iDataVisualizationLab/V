@@ -15,15 +15,19 @@
     let z = [];
     for (let i = 0; i < 3; i++) {
         x.push(i);
+    }
+    for (let i = 0; i < 5; i++) {
         y.push(i);
     }
-    for (let i = 0; i < x.length; i++) {
+    for (let i = 0; i < y.length; i++) {
         let row = [];
-        for (let j = 0; j < y.length; j++) {
+        for (let j = 0; j < x.length; j++) {
             row.push(i + j);
         }
         z.push(row);
     }
+    x.reverse();
+    z.reverse();
     let hm = new HeatMap(document.getElementById('heatMapContainer'), {x: x, y: y, z: z}, {
         noSvg: false,
         showAxes: true,

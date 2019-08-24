@@ -57,6 +57,28 @@ async function processInputs() {
                             z.push(row);
                         }
                         drawSampleInputOutput({x: x, y: y, z: z}, "Sample input sensor", "sampleInput");
+
+
+                        let y_train_ordered = trainRULOrder.map(v => y_train[v][0]).reverse();
+                        let sampleY = y_train_ordered.map(rulVal => Math.round(rulVal + 30.0 * (Math.random()-0.5)));
+
+                        const lineChartData = [
+                            {
+                                x: sampleY,
+                                y: y,
+                                series: 'output',
+                                marker: 'o',
+                                type: 'scatter'
+                            },
+                            {
+                                x: y_train_ordered,
+                                y: y,
+                                series: 'target',
+                                marker: 'x',
+                                type: 'scatter'
+                            }
+                        ];
+                        drawSampleOutput(lineChartData, "Target vs. output RUL", "trainRUL");
                         resolve();
                     });
                 });

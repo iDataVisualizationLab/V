@@ -6,6 +6,8 @@ let sampleOutput = {
 drawSampleInputOutput(sampleOutput, "Sample intermediate output from layer 2", "sampleOutput");
 
 async function drawSampleInputOutput(data, title, container) {
+    data.y.reverse();
+    data.z = data.z.map(row => row.reverse());
     //Draw the feature.
     let hm = new HeatMap(document.getElementById(container), data, {
         noSvg: true,
@@ -25,10 +27,40 @@ async function drawSampleInputOutput(data, title, container) {
             text: 'Engine'
         },
         showColorBar: true,
-        xTicks: 10,
-        yTicks: 10
+        xTickValues: [0, 10, 20, 30, 40],
+        yTickValues: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90],
     });
     hm.plot();
+}
+
+async function drawSampleOutput(data, title, container) {
+    let sampleOutputSettings = {
+        noSvg: true,
+        showAxes: true,
+        paddingLeft: 50,
+        paddingRight: 50,
+        paddingTop: 50,
+        paddingBottom: 50,
+        borderWidth: 0,
+        title: {
+            text: title
+        },
+        xAxisLabel: {
+            text: 'RUL'
+        },
+        yAxisLabel: {
+            text: 'Engine'
+        },
+        showColorBar: true,
+        yTicks: 10,
+        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"],
+        legend: {
+            x: 60,
+            y: 60
+        }
+    };
+    let lc = new LineChart(document.getElementById(container), data, sampleOutputSettings);
+    lc.plot();
 }
 
 async function drawHeatmaps(data, container, selector) {
@@ -47,7 +79,7 @@ async function drawHeatmaps(data, container, selector) {
         let z = [];
         for (let stepIdx = 0; stepIdx < noOfSteps; stepIdx++) {
             let row = [];
-            for (let itemIdx = 0; itemIdx < noOfItems; itemIdx++) {
+            for (let itemIdx = noOfItems - 1; itemIdx >= 0; itemIdx--) {//Reverse order of items from big (top) to small (bottom).
                 row.push(data[itemIdx][stepIdx][featureIdx])
             }
             z.push(row);
@@ -69,7 +101,7 @@ async function drawHeatmaps(data, container, selector) {
             mapObjects[selector + featureIdx] = hm;
         } else {
             let hm = mapObjects[selector + featureIdx];
-            hm.update({x: x, y: y, z: z})
+            hm.update({x: x, y: y.reverse(), z: z})//reverse order of items (from big to small => top - to bottom to make it similar to the y-axis of the output)
         }
 
     }

@@ -201,7 +201,7 @@ export class LineChart {
         if (this.settings.legend) {
             let legendg = this.svg.append("g").attr("class", "legend").attr("transform", `translate(${this.settings.legend.x}, ${this.settings.legend.y})`);
             this.data.forEach((trace, i) => {
-                legendg.append("text").attr("fill", this.settings.colorScale(trace.series)).attr("dy", `${i}em`).node().innerHTML = `<tspan text-decoration='line-through'>&nbsp;${trace.marker ? trace.marker : " "}&nbsp;</tspan> ` + trace.series;
+                legendg.append("text").attr("fill", this.settings.colorScale(trace.series)).attr("dy", `${i}em`).node().innerHTML = `<tspan text-decoration=${trace.type==="scatter"?'none':'line-through'}>&nbsp;${trace.marker ? trace.marker : " "}&nbsp;</tspan> ` + trace.series;
             });
         }
     }
