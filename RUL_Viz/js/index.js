@@ -40,6 +40,8 @@ async function processInputs() {
                         drawHeatmaps(X_train_ordered, "inputContainer", "inputDiv").then(() => {
                             hideLoader();
                         });
+                        //Draw sample input for documentation.
+                        drawSampleInput(X_train_ordered, 0, "sampleInput");
                         resolve();
                     });
                 });
@@ -122,46 +124,50 @@ async function createTrainingGUI(layersConfig) {
 }
 
 function startTraining() {
-    const inputShape = [X_train[0].length, X_train[0][0].length];
-    let modelName = saveSnapshot();
-    if ($("#saveSnapshot").is(":checked")) {
-        let valid = true;
-        if (!modelName) {
-            toast("Please insert snapshot name");
-            valid = false;
-        } else if (modelName.indexOf(":") >= 0) {
-            toast("Model name cannot contain ':'");
-            valid = false;
-        }
-        if (!valid) {
-            btnTrain.classList.remove("paused");
-            return;
-        }
-        //Save the model name
-        saveModelName(modelName);
-    }
-    //Toggle
-    setTrainingConfigEditable(false);
-    isTraining = true;
-    showLoader();
     let epochs = +$("#epochs").val();
     let batchSize = +$("#batchSize").val();
-
-    if (currentModel === null) {
-        createModel(layersConfig, inputShape).then(model => {
-            //Clear all current outputs if there are
-            d3.selectAll(".weightLine").remove();
-            //Draw the color scales for the intermediate outputs
-            drawColorScales(layersConfig);
-            if (model !== null) {
-                currentModel = model;
-                //Reset train losses, test losses for the first creation.
-                trainLosses = [];
-                testLosses = [];
-                trainModel(currentModel, X_train, y_train, X_test, y_test, epochs, batchSize);
+    if (!reviewMode) {
+        const inputShape = [X_train[0].length, X_train[0][0].length];
+        let modelName = saveSnapshot();
+        if ($("#saveSnapshot").is(":checked")) {
+            let valid = true;
+            if (!modelName) {
+                toast("Please insert snapshot name");
+                valid = false;
+            } else if (modelName.indexOf(":") >= 0) {
+                toast("Model name cannot contain ':'");
+                valid = false;
             }
-        });
-    } else {
-        trainModel(currentModel, X_train, y_train, X_test, y_test, epochs, batchSize);
+            if (!valid) {
+                btnTrain.classList.remove("paused");
+                return;
+            }
+            //Save the model name
+            saveModelName(modelName);
+        }
+        //Toggle
+        setTrainingConfigEditable(false);
+        isTraining = true;
+        showLoader();
+
+        if (currentModel === null) {
+            createModel(layersConfig, inputShape).then(model => {
+                //Clear all current outputs if there are
+                d3.selectAll(".weightLine").remove();
+                //Draw the color scales for the intermediate outputs
+                drawColorScales(layersConfig);
+                if (model !== null) {
+                    currentModel = model;
+                    //Reset train losses, test losses for the first creation.
+                    trainLosses = [];
+                    testLosses = [];
+                    trainModel(currentModel, X_train, y_train, X_test, y_test, epochs, batchSize, false);
+                }
+            });
+        } else {
+            trainModel(currentModel, X_train, y_train, X_test, y_test, epochs, batchSize, false);
+        }
+    }else{
+        trainModel(null, X_train, y_train, X_test, y_test, epochs, batchSize, true);
     }
 }

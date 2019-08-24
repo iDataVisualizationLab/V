@@ -9,6 +9,17 @@ export type HeatMapData = {
     y: any[],
     z: number[][]
 }
+export type Title = {
+    text: string,
+    fontSize?: number,
+    fontFamily?: string
+}
+export type XAxisLabel = {
+    text: string
+}
+export type YAxisLabel = {
+    text: string
+}
 
 export interface HeatMapSettings {
     [key: string]: any;
@@ -19,7 +30,7 @@ export interface HeatMapSettings {
     height?: number;
     xScale?: any;
     yScale?: any;
-    colorScheme?:any;
+    colorScheme?: any;
     colorScale?: any;
     paddingLeft?: number;
     paddingRight?: number;
@@ -29,6 +40,13 @@ export interface HeatMapSettings {
     cellHeight?: number;
     borderColor?: string;
     borderWidth?: number;
+    showColorBar: boolean;
+
+    title?: Title;
+    xAxisLabel?: XAxisLabel,
+    yAxisLabel?: YAxisLabel,
+    xTicks?: number,
+    yTicks?: number
 }
 
 export class HeatMap {
@@ -40,7 +58,8 @@ export class HeatMap {
         paddingLeft: 0,
         paddingTop: 0,
         paddingBottom: 0,
-        paddingRight: 0
+        paddingRight: 0,
+        showColorBar: false
     };
     private colorScale;
     private canvas;
@@ -58,7 +77,7 @@ export class HeatMap {
                 this.settings[prop] = heatMapSettings[prop];
             }
         }
-        if(this.settings.showAxes){
+        if (this.settings.showAxes || this.settings.showColorBar) {
             this.settings.noSvg = false;
         }
         //Find width and height
@@ -100,7 +119,7 @@ export class HeatMap {
             let avgZ = (maxZ - minZ) / 2 + minZ;
             this.settings.colorScale = d3.scaleLinear<string, number>()
                 .domain([minZ, avgZ, maxZ])
-                .range(this.settings.colorScheme?this.settings.colorScheme:["#0877bd", "#e8eaeb", "#f59322"])
+                .range(this.settings.colorScheme ? this.settings.colorScheme : ["#0877bd", "#e8eaeb", "#f59322"])
                 .clamp(true);
         }
         let container = d3.select(htmlContainer).append("div")
@@ -135,10 +154,15 @@ export class HeatMap {
         if (this.settings.showAxes) {
             let xAxis = d3.axisBottom()
                 .scale(this.settings.xScale);
+            if (this.settings.xTicks) {
+                xAxis.ticks(this.settings.xTicks);
+            }
 
             let yAxis = d3.axisLeft()
                 .scale(this.settings.yScale);
-
+            if (this.settings.yTicks) {
+                yAxis.ticks(this.settings.yTicks);
+            }
             this.svg.append("g")
                 .attr("class", "x axis")
                 .attr("transform", `translate(${this.settings.paddingLeft},${this.settings.height - this.settings.paddingBottom})`)
@@ -148,6 +172,39 @@ export class HeatMap {
                 .attr("class", "y axis")
                 .attr("transform", `translate(${this.settings.paddingLeft},${this.settings.paddingTop})`)
                 .call(yAxis);
+        }
+        //Show title
+        if (this.settings.title) {
+            let title = this.svg.append("g").append("text").attr("class", "graphTitle").attr("x", this.settings.paddingLeft + contentWidth / 2).attr("y", this.settings.paddingTop / 2)
+                .text(this.settings.title.text).attr("alignment-baseline", "middle").attr("text-anchor", "middle");
+            if (this.settings.title.fontFamily) {
+                title.attr("font-family", this.settings.title.fontFamily);
+            }
+            if (this.settings.title.fontSize) {
+                title.attr("font-size", this.settings.title.fontSize);
+            }
+        }
+        //Show axis labels
+        if (this.settings.xAxisLabel) {
+            this.svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("transform", "translate(" + (this.settings.width / 2) + "," + (this.settings.height) + ")")// centre below axis at the bottom
+                .attr("dy", "-0.5em")
+                .text(this.settings.xAxisLabel.text);
+        }
+        if (this.settings.yAxisLabel) {
+            this.svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("alignment-baseline", "hanging")
+                .attr("transform", "translate(0," + (this.settings.height / 2) + ")rotate(-90)")
+                .text(this.settings.yAxisLabel.text).attr("dx", "1em");//Also move right one text size.
+        }
+        if (this.settings.showColorBar) {
+            let colorBarG = this.svg.append("g")
+                .attr("class", "colorBar")
+                .attr("transform", `translate(${this.settings.paddingLeft + contentWidth + 5}, ${this.settings.paddingTop})`);
+            this.plotColorBar(colorBarG, new Date().getTime(), 10, contentHeight, "vertical");
+
         }
     }
 
@@ -161,42 +218,52 @@ export class HeatMap {
             });
         });
     }
-    public async update(newData){
+
+    public async update(newData) {
         this.data = newData;
         //TODO: we may need to recalculate the scale.
         this.plot();
     }
-    public async plotColorBar(theGroup, id, width, height, orientation){
+
+    public async plotColorBar(theGroup, id, width, height, orientation) {
         const cs = this.settings.colorScale;
         const domain = cs.domain();
         const minVal = domain[0];
-        const domainSize = domain[domain.length-1] - domain[0];
+        const domainSize = domain[domain.length - 1] - domain[0];
         var legend = theGroup.append('defs')
             .append('linearGradient')
-            .attr('id', 'gradient'+id)
+            .attr('id', 'gradient' + id)
             .attr('x1', '0%') // left
-            .attr('y1', '100%')
-            .attr('x2', '100%') // to right
+            .attr('y1', '0%')
+            .attr('x2', '0%') // to right
             .attr('y2', '100%')
             .attr('spreadMethod', 'pad');
-        cs.domain().forEach((dVal)=>{
-            legend.append("stop").attr("offset", Math.round((dVal-minVal)/domainSize)+"%").attr("stop-color", cs(dVal))
+        cs.domain().forEach((dVal) => {
+            legend.append("stop").attr("offset", Math.round((dVal - minVal) * 100 / domainSize) + "%").attr("stop-color", cs(dVal))
                 .attr("stop-opacity", 1);
         });
         theGroup.append("rect")
             .attr("width", width)
-            .attr("height", height - 30)
-            .style("fill", `url(#gradient)${id}`)
-            .attr("transform", "translate(0,10)");
+            .attr("height", height)
+            .style("fill", `url(#gradient${id})`);
+
+        let colorAxis = d3.axisRight()
+            .scale(d3.scaleLinear().domain([domain[0], domain[domain.length - 1]]).range([0, height]));
+
+        theGroup.append("g")
+            .attr("class", "y axis")
+            .attr("transform", `translate(${width},0)`)
+            .call(colorAxis);
 
     }
+
     private async drawRect(x: number, y: number, width: number, height: number, lineWidth: number, strokeStyle: string, fillColor: string) {
         let ctx = this.canvas.node().getContext("2d");
         ctx.beginPath();
         ctx.fillStyle = fillColor;
         ctx.rect(x, y, width, height);
         ctx.fill();
-        if(this.settings.borderWidth!=0){
+        if (this.settings.borderWidth != 0) {
             ctx.lineWidth = lineWidth;
             ctx.strokeStyle = strokeStyle;
             ctx.stroke();

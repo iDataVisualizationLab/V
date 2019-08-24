@@ -1,3 +1,6 @@
+let weightsPathData = {};
+let weightValueColorScheme = ["red", "blue"];
+
 function processLayers(layers) {
     //Process layer.
     //Add one layer for the output, if it doesn't contain one yet.
@@ -69,7 +72,7 @@ async function createModel(layers, inputShape) {
     });
 }
 
-async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, batchSize = 8, isPreviewing = false) {
+async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, batchSize = 8, reviewMode) {
 
     let X_train_T = tf.tensor(X_train);
     let y_train_T = tf.tensor(y_train);
@@ -146,13 +149,14 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         paddingBottom: 40,
         width: trainLossW,
         height: trainLossH,
-        title: {
-            text: 'Training loss vs. testing loss.'
-        },
         legend: {
             x: trainLossW - 50,
             y: 35
         },
+        title: {
+            text: 'Training loss vs. testing loss.'
+        },
+
         xAxisLabel: {
             text: 'Batch'
         },
@@ -162,8 +166,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     };
     let xScaleTest = d3.scaleLinear().domain([0, batches]).range([0, trainLossBatchSettings.width - trainLossBatchSettings.paddingLeft - trainLossBatchSettings.paddingRight]);
     trainLossBatchSettings.xScale = xScaleTest;
-    let weightValueColorScheme = ["red", "blue"];
-    let weightsPathData = {};
+
 
     //Save training data
     let modelName = saveSnapshot();
@@ -172,12 +175,23 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         saveModelData(modelName, "batchSize", batchSize);
     }
 
-    model.fit(X_train_T, y_train_T, {
-        batchSize: batchSize,
-        epochs: epochs,
-        // shuffle: true,
-        callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd, onTrainEnd: onTrainEnd}
-    });
+    if (!reviewMode) {
+        model.fit(X_train_T, y_train_T, {
+            batchSize: batchSize,
+            epochs: epochs,
+            // shuffle: true,
+            callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd, onTrainEnd: onTrainEnd}
+        });
+    } else {
+        //Loop through.
+        plotTrainLossData(trainLosses, testLosses);
+        //If it's done for an epoch, draw the model output data.
+        let bachesPerEpoch = Math.ceil(X_train.length / batchSize);
+        //Update epoch.
+        loadModel("snp1", Math.floor(trainLosses.length / bachesPerEpoch)).then(model => {
+            displayEpochData(model, trainLosses[testLosses.length - 1], testLosses[testLosses.length - 1]);
+        });
+    }
 
     //Draw the legends for weights
     //Draw weights type on the last layer (to avoid conflict with other types), and also this one sure always there is one.
@@ -208,7 +222,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     //<editor-fold desc="For LSTM weight types" and its toggling menu">
     async function drawLSTMWeightTypes(container) {
         return new Promise((resolve, reject) => {
-            let lstmTypes = container.append("g")
+            let lstmTypes = container.selectAll("lstmTypeContainer").data([1]).join("g").attr("class", "lstmTypeContainer")
                 .attr("transform", "translate(3, 0)")//3 is for the margin.
                 .selectAll(".lstmWeightType")
                 .data(lstmWeightTypes);
@@ -335,33 +349,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         btnTrain.classList.remove("paused");
     }
 
-    async function displayLayerWeights(model, i, containerId) {
 
-        let layer = model.layers[i];
-        let weights = layer.getWeights()[0];
-
-        if (layer.name.indexOf("lstm") >= 0) {
-            buildWeightPositionData(weights, 100, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
-                weightsPathData[containerId] = result;//Store to use on click
-                drawLSTMWeights(containerId);
-            });
-        } else if (layer.name.indexOf("dense") >= 0 && i - 1 >= 0 && model.layers[i - 1].name.indexOf("flatten") >= 0) {//Is dense, but its previous one is flatten
-            let flattenSplits = model.layers[i - 2].units;//Number of splits (divide weights in these number of splits then combine them in each split)
-            buildWeightForFlattenLayer(weights, flattenSplits).then(cumulativeT => {
-                buildWeightPositionData(cumulativeT, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.05, 0.7).then((result) => {
-                    weightsPathData[containerId] = result;
-                    drawDenseWeights(containerId);
-                });
-            });
-        } else if (model.layers[i].name.indexOf("dense") >= 0) {//Remember this must be else if to avoid conflict with prev case.
-            buildWeightPositionData(weights, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.3, 0.7).then((result) => {
-                weightsPathData[containerId] = result;
-                drawDenseWeights(containerId);
-            });
-        }
-        //Don't have to draw weights of flatten, will only use it next layer (model.layersConfig[i].name.indexOf("flatten"))
-
-    }
 
     async function displayLayersOutputs(model, i, input) {
         if (i >= model.layers.length - 1) {
@@ -389,16 +377,10 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         });
     }
 
-    function onBatchEnd(batch, logs) {
-        let trainLoss = logs.loss;
-        let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
-        trainLosses.push(trainLoss);
-        testLosses.push(testLoss);
-
+    async function plotTrainLossData(trainLosses, testLosses) {
         if (!trainLossBatchSettings.yScale) {
-            trainLossBatchSettings.yScale = d3.scaleLinear().domain([0, trainLoss > testLoss ? trainLoss : testLoss]).range([trainLossBatchSettings.height - trainLossBatchSettings.paddingTop - trainLossBatchSettings.paddingBottom, 0]);
+            trainLossBatchSettings.yScale = d3.scaleLinear().domain([0, trainLosses[0] > testLosses[0] ? trainLosses[0] : testLosses[0]]).range([trainLossBatchSettings.height - trainLossBatchSettings.paddingTop - trainLossBatchSettings.paddingBottom, 0]);
         }
-
         const lineChartData = [
             {
                 x: trainBatches,
@@ -420,18 +402,43 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
             let lc = mapObjects['trainTestLoss'];
             lc.update(lineChartData);
         }
-
     }
 
-    //The container id is a bit involving because of the weights is displayed in prev layer, and also we prev 2 layer if the prev layer is flatten layer.
-    function getWeightsContainerId(i) {
-        let containerId = "layer0Weights";
-        if (i !== 0 && layersConfig[i - 1].layerType.indexOf("flatten") >= 0) {
-            containerId = "weightsContainer" + layersConfig[i - 2].timeStamp;//Prev 2 layers if it is lstm
-        } else if (i !== 0) {
-            containerId = "weightsContainer" + layersConfig[i - 1].timeStamp;//Otherwise prev layer.
+    function onBatchEnd(batch, logs) {
+        let trainLoss = logs.loss;
+        let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
+        trainLosses.push(trainLoss);
+        testLosses.push(testLoss);
+        plotTrainLossData(trainLosses, testLosses);
+    }
+
+    function displayEpochData(model, trainLoss, testLoss) {
+        for (let i = 0; i < layersConfig.length; i++) {
+            let containerId = getWeightsContainerId(i);
+            displayLayerWeights(model, i, containerId);
         }
-        return containerId;
+        //it will display recursively.
+        displayLayersOutputs(model, 0, X_train_T_ordered);
+
+        //Draw output
+        let ts = model.predict(X_train_T_ordered);
+        ts.array().then(data => {
+            //We don't normalize the final result.
+            drawLineCharts(data, null, y_train_flat_ordered, "outputContainer", "output", outputSettings, true).then(() => {
+                //Update the training loss
+                updateGraphTitle("outputContainer", "Training, MSE: " + trainLoss.toFixed(2));
+            });
+        });
+        //Draw the testing data.
+        let test = model.predict(X_test_T_ordered);
+        test.array().then(data => {
+            //We don't normalize the final result.
+            drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", trainTestSettings, true).then(() => {
+                //Update test loss
+                testLoss = reviewMode ? testLoss : model.evaluate(X_test_T_ordered, y_test_T_ordered).dataSync()[0];
+                updateGraphTitle("testContainer", "Testing, MSE: " + testLoss.toFixed(2));
+            });
+        });
     }
 
     function onEpochEnd(epoch, logs) {
@@ -443,83 +450,93 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
             saveModelData(modelName, "testLosses", testLosses);
             saveModel(modelName, epoch, model);
         }
-        if (isTraining) {//Only update if it is training (Since we may pause already but the event is still called because of asychronous)
-            for (let i = 0; i < layersConfig.length; i++) {
-                let containerId = getWeightsContainerId(i);
-                displayLayerWeights(model, i, containerId);
-            }
-            //it will display recursively.
-            displayLayersOutputs(model, 0, X_train_T_ordered);
+        displayEpochData(model, logs.loss);
+    }
+}
 
-            //Draw output
-            let ts = model.predict(X_train_T_ordered);
-            ts.array().then(data => {
-                //We don't normalize the final result.
-                drawLineCharts(data, null, y_train_flat_ordered, "outputContainer", "output", outputSettings, true).then(() => {
-                    //Update the training loss
-                    updateGraphTitle("outputContainer", "Training, MSE: " + logs.loss.toFixed(2));
-                });
+async function displayLayerWeights(model, i, containerId) {
+
+    let layer = model.layers[i];
+    let weights = layer.getWeights()[0];
+
+    if (layer.name.indexOf("lstm") >= 0) {
+        buildWeightPositionData(weights, 100, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
+            weightsPathData[containerId] = result;//Store to use on click
+            drawLSTMWeights(containerId);
+        });
+    } else if (layer.name.indexOf("dense") >= 0 && i - 1 >= 0 && model.layers[i - 1].name.indexOf("flatten") >= 0) {//Is dense, but its previous one is flatten
+        let flattenSplits = model.layers[i - 2].units;//Number of splits (divide weights in these number of splits then combine them in each split)
+        buildWeightForFlattenLayer(weights, flattenSplits).then(cumulativeT => {
+            buildWeightPositionData(cumulativeT, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.05, 0.7).then((result) => {
+                weightsPathData[containerId] = result;
+                drawDenseWeights(containerId);
             });
-            //Draw the testing data.
-            let test = model.predict(X_test_T_ordered);
-            test.array().then(data => {
-                //We don't normalize the final result.
-                drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", trainTestSettings, true).then(() => {
-                    //Update test loss
-                    let testLoss = model.evaluate(X_test_T_ordered, y_test_T_ordered).dataSync()[0];
-                    updateGraphTitle("testContainer", "Testing, MSE: " + testLoss.toFixed(2));
-                });
+        });
+    } else if (model.layers[i].name.indexOf("dense") >= 0) {//Remember this must be else if to avoid conflict with prev case.
+        buildWeightPositionData(weights, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.3, 0.7).then((result) => {
+            weightsPathData[containerId] = result;
+            drawDenseWeights(containerId);
+        });
+    }
+    //Don't have to draw weights of flatten, will only use it next layer (model.layersConfig[i].name.indexOf("flatten"))
+
+}
+
+function toggleWeightsMenu() {
+    //Toggle menu opacity.
+    d3.selectAll(".lstmWeightType").attr("opacity", (d, i) => i === 0 ? 1 : 0.5 + 0.5 * lstmWeightTypeDisplay[i - 1]);//The first one is for click to toggle and will be visible by default
+    d3.selectAll(".weightColor").attr("opacity", (d, i) => i === 0 ? 1 : 0.5 + 0.5 * weightTypeDisplay[i - 1]);//The first one is for click to toggle and will be visible by default
+}
+
+function drawDenseWeights(containerId) {
+    let result = weightsPathData[containerId];
+    if (result) {
+        d3.select("#" + containerId).selectAll(".weightLine")
+            .data(result.lineData.filter(d => weightTypeDisplay[d.weight > 0 ? 1 : 0] === 1), d => d.idx, d => d.idx).join('path')
+            .attr("class", "weightLine")
+            .classed("weightLineTraining", isTraining)
+            .attr("d", d => link(d))
+            .attr("fill", "none")
+            .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
+            .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
+            .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight))
+            .on("mouseover", (d) => {
+                showTip(`Current weight: ${d.weight.toFixed(2)}`);
+            })
+            .on("mouseout", () => {
+                hideTip();
             });
-        }
-
-
     }
+}
 
-    function toggleWeightsMenu() {
-        //Toggle menu opacity.
-        d3.selectAll(".lstmWeightType").attr("opacity", (d, i) => i === 0 ? 1 : 0.5 + 0.5 * lstmWeightTypeDisplay[i - 1]);//The first one is for click to toggle and will be visible by default
-        d3.selectAll(".weightColor").attr("opacity", (d, i) => i === 0 ? 1 : 0.5 + 0.5 * weightTypeDisplay[i - 1]);//The first one is for click to toggle and will be visible by default
+function drawLSTMWeights(containerId) {
+    let result = weightsPathData[containerId];
+    if (result) {
+        d3.select("#" + containerId).selectAll(".weightLine")
+            .data(result.lineData.filter(d => lstmWeightTypeDisplay[d.type] === 1 && weightTypeDisplay[d.weight > 0 ? 1 : 0] === 1), d => d.idx).join('path')
+            .attr("class", "weightLine")
+            .classed("weightLineTraining", isTraining)
+            .attr("d", d => link(d))
+            .attr("fill", "none")
+            .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
+            .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
+            .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight))
+            .on("mouseover", (d) => {
+                showTip(`Current weight: ${d.weight.toFixed(2)}`);
+            })
+            .on("mouseout", () => {
+                hideTip();
+            });
     }
+}
 
-    function drawDenseWeights(containerId) {
-        let result = weightsPathData[containerId];
-        if (result) {
-            d3.select("#" + containerId).selectAll(".weightLine")
-                .data(result.lineData.filter(d => weightTypeDisplay[d.weight > 0 ? 1 : 0] === 1), d => d.idx, d => d.idx).join('path')
-                .attr("class", "weightLine")
-                .classed("weightLineTraining", isTraining)
-                .attr("d", d => link(d))
-                .attr("fill", "none")
-                .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
-                .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
-                .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight))
-                .on("mouseover", (d) => {
-                    showTip(`Current weight: ${d.weight.toFixed(2)}`);
-                })
-                .on("mouseout", () => {
-                    hideTip();
-                });
-        }
+//The container id is a bit involving because of the weights is displayed in prev layer, and also we prev 2 layer if the prev layer is flatten layer.
+function getWeightsContainerId(i) {
+    let containerId = "layer0Weights";
+    if (i !== 0 && layersConfig[i - 1].layerType.indexOf("flatten") >= 0) {
+        containerId = "weightsContainer" + layersConfig[i - 2].timeStamp;//Prev 2 layers if it is lstm
+    } else if (i !== 0) {
+        containerId = "weightsContainer" + layersConfig[i - 1].timeStamp;//Otherwise prev layer.
     }
-
-    function drawLSTMWeights(containerId) {
-        let result = weightsPathData[containerId];
-        if (result) {
-            d3.select("#" + containerId).selectAll(".weightLine")
-                .data(result.lineData.filter(d => lstmWeightTypeDisplay[d.type] === 1 && weightTypeDisplay[d.weight > 0 ? 1 : 0] === 1), d => d.idx).join('path')
-                .attr("class", "weightLine")
-                .classed("weightLineTraining", isTraining)
-                .attr("d", d => link(d))
-                .attr("fill", "none")
-                .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
-                .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
-                .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight))
-                .on("mouseover", (d) => {
-                    showTip(`Current weight: ${d.weight.toFixed(2)}`);
-                })
-                .on("mouseout", () => {
-                    hideTip();
-                });
-        }
-    }
+    return containerId;
 }

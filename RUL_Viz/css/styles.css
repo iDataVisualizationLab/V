@@ -30,9 +30,9 @@
 }
 
 .weightLineTraining {
-    stroke-dashoffset: 1;
-    animation: 0.5s linear 0s infinite flowing;
-    -webkit-animation: 0.5s linear 0s infinite flowing;
+    /*stroke-dashoffset: 1;*/
+    /*animation: 0.5s linear 0s infinite flowing;*/
+    /*-webkit-animation: 0.5s linear 0s infinite flowing;*/
 }
 
 @keyframes flowing {

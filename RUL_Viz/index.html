@@ -233,7 +233,7 @@
             </li>
             <li class="collection-item">
                 Click on <label><input type="checkbox" class="filled-in"
-                                       checked="checked"/><span>snapshots</span></label> checkbox to enable/disable
+                                       checked="checked" disabled="true"/><span>snapshots</span></label> checkbox to enable/disable
                 saving training snapshots, so user could review the training process later on.
             </li>
             <li class="collection-item">
@@ -251,6 +251,8 @@
         This ML Solution works on the <a
             href="https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/#turbofan"
             target="_blank">Turbofan Engine Degradation Simulation Data Set</a>.
+        <h5>Graph description</h5>
+        <div id="sampleInput" style="width: 800px; height: 800px; overflow: visible"></div>
     </div>
 </footer>
 <!--UI initialization-->
@@ -284,7 +286,6 @@
 <script src="js/tooltip/tooltip.js"></script>
 <script src="js/menu.js"></script>
 <script src="js/layerManagement.js"></script>
-<script src="js/tensorutils.js"></script>
 <script src="js/drawcharts.js"></script>
 <script src="js/modelmanagement.js"></script>
 <script src="js/index.js"></script>

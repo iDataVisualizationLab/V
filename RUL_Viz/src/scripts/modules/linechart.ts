@@ -11,14 +11,14 @@ export type LineChartTrace = {
     marker?: string,
     type?: string
 }
+export type Legend = {
+    x: number,
+    y: number
+}
 export type Title = {
     text: string,
     fontSize?: number,
     fontFamily?: string
-}
-export type Legend = {
-    x: number,
-    y: number
 }
 export type XAxisLabel = {
     text: string
@@ -41,8 +41,8 @@ export interface LineChartSettings {
     paddingTop?: number;
     paddingBottom?: number;
     lineWidth?: number;
-    title?: Title;
     legend?: any;
+    title?: Title;
     xAxisLabel?: XAxisLabel,
     yAxisLabel?: YAxisLabel
 }
@@ -152,17 +152,7 @@ export class LineChart {
             this.svg.append("g").attr("class", "train");
             this.svg.append("g").attr("class", "test");
         }
-        //Show title
-        if (this.settings.title) {
-            let title = this.svg.append("g").append("text").attr("class", "graphTitle").attr("x", this.settings.paddingLeft + contentWidth / 2).attr("y", this.settings.paddingTop / 2)
-                .text(this.settings.title.text).attr("alignment-baseline", "middle").attr("text-anchor", "middle");
-            if (this.settings.title.fontFamily) {
-                title.attr("font-family", this.settings.title.fontFamily);
-            }
-            if (this.settings.title.fontSize) {
-                title.attr("font-size", this.settings.title.fontSize);
-            }
-        }
+
         //Show axes
         if (this.settings.showAxes) {
             let xAxis = d3.axisBottom()
@@ -180,6 +170,18 @@ export class LineChart {
                 .attr("class", "y axis")
                 .attr("transform", `translate(${this.settings.paddingLeft},${this.settings.paddingTop})`)
                 .call(yAxis);
+        }
+
+        //Show title
+        if (this.settings.title) {
+            let title = this.svg.append("g").append("text").attr("class", "graphTitle").attr("x", this.settings.paddingLeft + contentWidth / 2).attr("y", this.settings.paddingTop / 2)
+                .text(this.settings.title.text).attr("alignment-baseline", "middle").attr("text-anchor", "middle");
+            if (this.settings.title.fontFamily) {
+                title.attr("font-family", this.settings.title.fontFamily);
+            }
+            if (this.settings.title.fontSize) {
+                title.attr("font-size", this.settings.title.fontSize);
+            }
         }
         //Show axis labels
         if(this.settings.xAxisLabel){

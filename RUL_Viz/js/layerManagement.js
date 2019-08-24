@@ -70,6 +70,10 @@ function clearMiddleLayerGUI() {
     $(".grid-item").each((i, elm) => {
         if (elm.id !== "layerInput" && elm.id !== "layerOutput") {
             removeLayerGUI(elm.id);
+        } else if (elm.id === "layerInput") {
+            let layer0WeightContainer = d3.select("#"+getWeightsContainerId(0));
+            layer0WeightContainer.selectAll("g").remove();
+            layer0WeightContainer.selectAll("weightLine").remove();
         }
     });
 }

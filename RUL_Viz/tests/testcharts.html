@@ -8,7 +8,7 @@
 <body>
 <div id="heatMapContainer" style="width: 800px; height: 400px;border:1px solid red;">
 </div>
-<div id="lineChartContainer" style="width: 800px; height: 300px;border:1px solid red;"></div>
+<!--<div id="lineChartContainer" style="width: 800px; height: 300px;border:1px solid red;"></div>-->
 <script>
     let x = [];
     let y = [];
@@ -28,34 +28,34 @@
         noSvg: false,
         showAxes: true,
         paddingLeft: 40,
-        paddingRight: 30,
+        paddingRight: 50,
         paddingTop: 50,
         paddingBottom: 25,
+        showColorBar: true,
     });
     hm.plot();
-
-    let lc = new LineChart(document.getElementById('lineChartContainer'), [
-        {
-            x: [1, 2, 3, 4, 5],
-            y: [1, 4, 5, 2, 3],
-            series: 'line1',
-            marker: 'o'
-        },
-        {
-            x: [1, 2, 3, 4, 5],
-            y: [3, 5, 2, 1, 4],
-            series: 'line2',
-            marker: 'x'
-        }
-    ], {
-        noSvg: false,
-        showAxes: true,
-        paddingLeft: 40,
-        paddingRight: 30,
-        paddingTop: 50,
-        paddingBottom: 25,
-    });
-    lc.plot();
+    // let lc = new LineChart(document.getElementById('lineChartContainer'), [
+    //     {
+    //         x: [1, 2, 3, 4, 5],
+    //         y: [1, 4, 5, 2, 3],
+    //         series: 'line1',
+    //         marker: 'o'
+    //     },
+    //     {
+    //         x: [1, 2, 3, 4, 5],
+    //         y: [3, 5, 2, 1, 4],
+    //         series: 'line2',
+    //         marker: 'x'
+    //     }
+    // ], {
+    //     noSvg: false,
+    //     showAxes: true,
+    //     paddingLeft: 40,
+    //     paddingRight: 30,
+    //     paddingTop: 50,
+    //     paddingBottom: 25,
+    // });
+    // lc.plot();
 </script>
 </body>
 </html>

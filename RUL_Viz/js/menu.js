@@ -6,9 +6,7 @@ dispatch.on("change", () => {
 });
 
 function loadModelClick(modelName) {
-    // dispatch.call("loadModel", null, modelName);
-    // toast("loading " + modelName);
-    loadModel(modelName).then();
+    loadModelConfig(modelName);
 }
 
 function setTrainingConfigEditable(val) {
