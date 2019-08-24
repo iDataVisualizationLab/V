@@ -233,7 +233,8 @@
             </li>
             <li class="collection-item">
                 Click on <label><input type="checkbox" class="filled-in"
-                                       checked="checked" disabled="true"/><span>snapshots</span></label> checkbox to enable/disable
+                                       checked="checked" disabled="true"/><span>snapshots</span></label> checkbox to
+                enable/disable
                 saving training snapshots, so user could review the training process later on.
             </li>
             <li class="collection-item">
@@ -252,7 +253,13 @@
             href="https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/#turbofan"
             target="_blank">Turbofan Engine Degradation Simulation Data Set</a>.
         <h5>Graph description</h5>
-        <div id="sampleInput" style="width: 800px; height: 800px; overflow: visible"></div>
+        <div class="row container">
+            <div class="col s6 container center" id="sampleInput"
+                 style="width: 400px; height: 400px; overflow: visible; margin-left: 20px;"></div>
+            <div class="col s6 container center" id="sampleOutput"
+                 style="width: 400px; height: 400px; overflow: visible; margin-left: 20px;"></div>
+        </div>
+
     </div>
 </footer>
 <!--UI initialization-->

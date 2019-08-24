@@ -41,7 +41,22 @@ async function processInputs() {
                             hideLoader();
                         });
                         //Draw sample input for documentation.
-                        drawSampleInput(X_train_ordered, 0, "sampleInput");
+                        //Generate one sample output
+                        let noOfItems = X_train_ordered.length;
+                        let noOfSteps = X_train_ordered[0].length;
+                        //Generate steps
+                        let x = Array.from(Array(noOfSteps), (x, i) => i);
+                        //Generate items
+                        let y = Array.from(Array(noOfItems), (x, i) => i);
+                        let z = [];
+                        for (let stepIdx = 0; stepIdx < noOfSteps; stepIdx++) {
+                            let row = [];
+                            for (let itemIdx = 0; itemIdx < noOfItems; itemIdx++) {
+                                row.push(X_train_ordered[itemIdx][stepIdx][0])
+                            }
+                            z.push(row);
+                        }
+                        drawSampleInputOutput({x: x, y: y, z: z}, "Sample input sensor", "sampleInput");
                         resolve();
                     });
                 });
@@ -167,7 +182,7 @@ function startTraining() {
         } else {
             trainModel(currentModel, X_train, y_train, X_test, y_test, epochs, batchSize, false);
         }
-    }else{
+    } else {
         trainModel(null, X_train, y_train, X_test, y_test, epochs, batchSize, true);
     }
 }

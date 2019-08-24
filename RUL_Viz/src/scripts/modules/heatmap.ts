@@ -155,14 +155,26 @@ export class HeatMap {
             let xAxis = d3.axisBottom()
                 .scale(this.settings.xScale);
             if (this.settings.xTicks) {
-                xAxis.ticks(this.settings.xTicks);
+                let step = Math.round(this.data.x.length / this.settings.xTicks);
+                let tickValues = [];
+                for (let i = 0; i < this.data.x.length; i += step) {
+                    tickValues.push(this.data.x[i]);
+                }
+                xAxis.tickValues(tickValues);
             }
 
             let yAxis = d3.axisLeft()
                 .scale(this.settings.yScale);
+
             if (this.settings.yTicks) {
-                yAxis.ticks(this.settings.yTicks);
+                let step = Math.round(this.data.y.length / this.settings.yTicks);
+                let tickValues = [];
+                for (let i = 0; i < this.data.y.length; i += step) {
+                    tickValues.push(this.data.y[i]);
+                }
+                yAxis.tickValues(tickValues);
             }
+
             this.svg.append("g")
                 .attr("class", "x axis")
                 .attr("transform", `translate(${this.settings.paddingLeft},${this.settings.height - this.settings.paddingBottom})`)
@@ -176,7 +188,7 @@ export class HeatMap {
         //Show title
         if (this.settings.title) {
             let title = this.svg.append("g").append("text").attr("class", "graphTitle").attr("x", this.settings.paddingLeft + contentWidth / 2).attr("y", this.settings.paddingTop / 2)
-                .text(this.settings.title.text).attr("alignment-baseline", "middle").attr("text-anchor", "middle");
+                .text(this.settings.title.text).attr("alignment-baseline", "middle").attr("text-anchor", "middle").attr("font-weight", "bold");
             if (this.settings.title.fontFamily) {
                 title.attr("font-family", this.settings.title.fontFamily);
             }
