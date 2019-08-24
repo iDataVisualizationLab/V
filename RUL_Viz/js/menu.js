@@ -6,7 +6,10 @@ dispatch.on("change", () => {
 });
 
 function loadModelClick(modelName) {
-    loadModelConfig(modelName);
+    loadModelConfig(modelName).then(() => {
+        //Then start training.
+        startTraining();
+    });
 }
 
 function setTrainingConfigEditable(val) {

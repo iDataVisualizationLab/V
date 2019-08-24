@@ -99,7 +99,7 @@
                             </div>
                             <div class="input-field col s5" title="Click to toggle saving training snapshot.">
                                 <label for="snapshotName">snapshots</label>
-                                <input type="text" id="snapshotName">
+                                <input type="text" id="snapshotName" value="snapshot1">
                             </div>
                         </div>
                     </div>
@@ -261,7 +261,30 @@
             <div class="col s4 container center" id="trainRUL"
                  style="width: 380px; height: 380px; overflow: visible; margin-left: 20px;"></div>
         </div>
-
+        <p>
+            After loading, the system displays the input in the form of the heat-maps, one heat-map
+            per sensor data column. The system does not display the axes for graphs at the input layer. Instead, it
+            gives their descriptions on top of each layer for the simplicity of the visual display. The x-axis of the
+            heat-map is the engine units (e.g., 0-99 for dataset 1). Its y-axis is the sensor data sequence (the number
+            of cycles). The heat-map color at a specific point represents the sensor's value of a corresponding engine
+            at a
+            time step accordingly. The input units are also sorted by their RUL to see if they appear to have any sensor
+            input pattern. The first panel of the picture above shows the details view of a sample input for one sensor.
+        </p>
+        <p>
+            Similar to the input layer, the outputs from LSTM layers are also sequences with the corresponding number of
+            engines and steps. Therefore, the system also represents them as heat-map (second panel) with a similar
+            specification. The second panel of the picture above shows the details view of a sample LSTM layer output.
+        </p>
+        <p>
+            Outputs of the Dense layers, and the final training and testing outputs are alike and are visualized as
+            scatter plots. Y-axis also represents the number of engines, and x-axis describes the output
+            values. The green circles at the scatter plot represent the predicted outputs of the corresponding engine
+            units as
+            inputs. The gray x symbols are the actual target RULs. The two are scaled linearly to the domain of target
+            RULs for better visualization. The second panel of the picture above shows the details view of a sample
+            Dense layer output.
+        </p>
     </div>
 </footer>
 <!--UI initialization-->

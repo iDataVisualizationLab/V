@@ -188,7 +188,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         //If it's done for an epoch, draw the model output data.
         let bachesPerEpoch = Math.ceil(X_train.length / batchSize);
         //Update epoch.
-        loadModel("snp1", Math.floor(trainLosses.length / bachesPerEpoch)).then(model => {
+        loadModel($("#snapshotName").val(), Math.floor(trainLosses.length / bachesPerEpoch)).then(model => {
             displayEpochData(model, trainLosses[testLosses.length - 1], testLosses[testLosses.length - 1]);
         });
     }
@@ -348,7 +348,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         //Toggle button.
         btnTrain.classList.remove("paused");
     }
-
 
 
     async function displayLayersOutputs(model, i, input) {

@@ -28,6 +28,7 @@ async function loadModelConfig(modelName) {
     let testLosses_ = await loadModelData(modelName, "testLosses");
     $("#epochs").val(epochs_);
     $("#batchSize").val(batchSize_);
+    $("#snapshotName").val(modelName);
     trainLosses = trainLosses_;
     testLosses = testLosses_;
     //Clear prev gui
