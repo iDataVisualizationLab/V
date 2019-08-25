@@ -81,28 +81,28 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="container">
-                        <div class="col s12">
-                            <div class="input-field col s3">
-                                <input id="epochs" type="number" value="50">
-                                <label for="epochs">epochs</label>
-                            </div>
-                            <div class="input-field col s3">
-                                <input id="batchSize" type="number" value="8">
-                                <label for="batchSize">batch</label>
-                            </div>
-                            <div class="input-field col s1">
-                                <label>
-                                    <input type="checkbox" class="filled-in" id="saveSnapshot"/>
-                                    <span></span>
-                                </label>
-                            </div>
-                            <div class="input-field col s5" title="Click to toggle saving training snapshot.">
-                                <label for="snapshotName">snapshots</label>
-                                <input type="text" id="snapshotName" value="snapshot1">
-                            </div>
+
+                    <div class="col s12">
+                        <div class="input-field col s3">
+                            <input id="epochs" type="number" value="50">
+                            <label for="epochs">epochs</label>
+                        </div>
+                        <div class="input-field col s3">
+                            <input id="batchSize" type="number" value="8">
+                            <label for="batchSize">batch</label>
+                        </div>
+                        <div class="input-field col s1">
+                            <label>
+                                <input type="checkbox" class="filled-in" id="saveSnapshot"/>
+                                <span></span>
+                            </label>
+                        </div>
+                        <div class="input-field col s5" title="Click to toggle saving training snapshot.">
+                            <label for="snapshotName">snapshots</label>
+                            <input type="text" id="snapshotName" value="snapshot1">
                         </div>
                     </div>
+
                 </div>
             </div>
             <div class="col s8">
@@ -208,7 +208,7 @@
 </div>
 <div class="divider"></div>
 <footer style="margin-bottom: 10px;">
-    <div class="container page">
+    <div class="container">
         <h3><a name="article">The article</a></h3>
         <h5>Quick start:</h5>
         <p>
@@ -259,12 +259,12 @@
             target="_blank">Turbofan Engine Degradation Simulation Data Set</a>.
         <h5>Graph description</h5>
         <div class="row">
-            <div class="col s4 container center" id="sampleInput"
-                 style="width: 380px; height: 380px; overflow: visible; margin-left: 20px;"></div>
-            <div class="col s4 container center" id="sampleOutput"
-                 style="width: 380px; height: 380px; overflow: visible; margin-left: 20px;"></div>
-            <div class="col s4 container center" id="trainRUL"
-                 style="width: 380px; height: 380px; overflow: visible; margin-left: 20px;"></div>
+            <div class="col s4 center" id="sampleInput"
+                 style="width: 350px; height: 350px; overflow: visible; margin-left: 20px;"></div>
+            <div class="col s4 center" id="sampleOutput"
+                 style="width: 350px; height: 350px; overflow: visible; margin-left: 20px;"></div>
+            <div class="col s4 center" id="trainRUL"
+                 style="width: 350px; height: 350px; overflow: visible; margin-left: 20px;"></div>
         </div>
         <p>
             After loading, the system displays the input in the form of the heat-maps, one heat-map
