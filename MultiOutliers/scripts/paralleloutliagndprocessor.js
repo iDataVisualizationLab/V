@@ -1,6 +1,5 @@
 class OutliagNDProcessor {
     constructor(dataS) {
-    debugger
         this.dataS = dataS;
         this.allYearsBins = [];
         this.allYearUpperBounds = [];

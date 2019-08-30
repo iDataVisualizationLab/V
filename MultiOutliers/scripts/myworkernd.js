@@ -3,7 +3,6 @@ onmessage = function(e){
     let outliag = null;
     if(getUniqueSize(e.data.data)>3){
         const ops = e.data.options;
-        debugger
         outliag = outliagnosticsnd(e.data.data, ops);
     }
     const result = {};

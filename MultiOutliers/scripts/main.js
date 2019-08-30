@@ -159,7 +159,7 @@ var dataS;
 
 function loadData() {
     d3.json("data/" + fileName + ".json", function (data_) {
-        debugger
+
         spinner.spin(target);
         //<editor-fold desc="This section filters out some data => for the purpose of the explanation of the process of building this software">
         //Filter out years before 1990 if it is HIV
