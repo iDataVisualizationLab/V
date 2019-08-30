@@ -1,6 +1,0 @@
-:root{
-    --page-width: 2400px;
-}
-.page{
-    width: var(--page-width);
-}

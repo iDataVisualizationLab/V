@@ -16,7 +16,7 @@ const legendSettings = {
     linkStrokeWidth: 2,
     titleHeight: 10,
     titleFontSize: 16,
-}
+};
 let nodeColorLegendObj = {
     'inside': 'black',
     'unknown': 'gray',

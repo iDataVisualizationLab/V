@@ -41,7 +41,7 @@ if (fileName === 'data/104.12.0.0.csv') {
             'Permitted': 'green',
             'none': 'steelblue',
             '': '#ff7f0e'
-        }
+        };
 
         let linkTypeColor = getLinkTypeColor(deviceActionColors);
 
@@ -57,7 +57,7 @@ if (fileName === 'data/104.12.0.0.csv') {
             return function (type) {
                 return linkTypeColorObj[type];
             }
-        };
+        }
         let nodeColor = function nodeColor(value) {
             if (value.startsWith('104.12')) {
                 return 'black';
@@ -68,7 +68,7 @@ if (fileName === 'data/104.12.0.0.csv') {
             } else {
                 return 'red';//outsider
             }
-        }
+        };
         //</editor-fold>
 
         const COL_TIME = 'End Time',
@@ -139,7 +139,7 @@ if (fileName === 'data/104.12.0.0.csv') {
                 data: threatEvents,
                 dataCount: threatEvents.length,
 
-            }
+            };
             if (link.target === 'combined') {
                 if (!link.targetIds) link.targetIds = [];
                 link.targetIds.push(link.targetId);
@@ -194,7 +194,7 @@ else {
             '1': 'green',
             '-1': 'steelblue',
             '-2': 'red'
-        }
+        };
 
         let linkTypeColor = getLinkTypeColor(typeColorObj);
         let linkLegendData = [
@@ -209,11 +209,10 @@ else {
             return function (type) {
                 return linkTypeColorObj[type];
             }
-        };
-
+        }
         let nodeTypeColor = function nodeTypeColor(value) {
             return 'black';
-        }
+        };
         //</editor-fold>
 
 

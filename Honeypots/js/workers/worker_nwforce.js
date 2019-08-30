@@ -68,4 +68,4 @@ onmessage = function (e) {
             }
         }
     }
-}
+};

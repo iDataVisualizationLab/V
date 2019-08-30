@@ -149,7 +149,7 @@ function getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmT
     });
     //From node value to its combined name (combined + index)
     let nodeToCombinedNode = {};
-    let combinedNodeToNodes = {}
+    let combinedNodeToNodes = {};
     d3.entries(combinedNodes).forEach((row, i) => {
         let newKey = 'combined' +i;
         row.value.forEach(node => {

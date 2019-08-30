@@ -55,7 +55,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
 
     function updateNodesAndLinks(nodes, links) {
         nodes.forEach(n => {
-            if (!nodePosObj[n.id]) nodePosObj[n.id] = {}
+            if (!nodePosObj[n.id]) nodePosObj[n.id] = {};
             nodePosObj[n.id].x = n.x;
             nodePosObj[n.id].y = n.y;
             nodePosObj[n.id].fx = n.fx;
@@ -87,7 +87,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         });
 
         //Update the nodes
-        nodeElements = nodeElements.data(nodes, d => d.id)
+        nodeElements = nodeElements.data(nodes, d => d.id);
         //Exit
         nodeElements.exit().remove();
         //enter any new nodes
@@ -98,7 +98,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             .attr("r", d => {
                 return d.radius;
             })
-            .style('fill', d => nodeTypeColor(d.id))
+            .style('fill', d => nodeTypeColor(d.id));
             // .call(d3.drag()
             //     .subject(dragsubject)
             //     .on("start", dragstarted)
@@ -162,10 +162,8 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             if ((linkSourceId == source.id && linkTargetId == target.id) || (linkSourceId == target.id && linkTargetId == source.id))
                 count++;
         }
-        ;
         return count;
-    };
-
+    }
     function getSiblingLinks(source, target) {
         let siblings = [];
         for (let i = 0; i < links.length; ++i) {
@@ -175,8 +173,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
                 siblings.push(links[i]['type']);
         }
         return siblings;
-    };
-
+    }
     function tick() {
         linkElements.attr("d", d => arcPath(true, d));
         nodeElements.attr("cx", d => d.x).attr("cy", d => d.y);
@@ -334,6 +331,6 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             height: height,
             sendTick: true
         }, 0);
-    }
+    };
     return this;
 }

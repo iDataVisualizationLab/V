@@ -50,7 +50,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
         });
 
         //Update the nodes
-        nodeElements = nodeElements.data(nodes, d => d.id)
+        nodeElements = nodeElements.data(nodes, d => d.id);
         //Exit
         nodeElements.exit().remove();
         //enter any new nodes
@@ -137,10 +137,8 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
             if ((linkSourceId == source.id && linkTargetId == target.id) || (linkSourceId == target.id && linkTargetId == source.id))
                 count++;
         }
-        ;
         return count;
-    };
-
+    }
     function getSiblingLinks(source, target) {
         let siblings = [];
         for (let i = 0; i < links.length; ++i) {
@@ -150,8 +148,7 @@ function drawNetworkGraph(theGroup, nodes, links, networkSettings) {
                 siblings.push(links[i]['type']);
         }
         return siblings;
-    };
-
+    }
     function tick() {
         linkElements.attr("d", d => arcPath(true, d));
         nodeElements.attr("cx", d => d.x).attr("cy", d => d.y);

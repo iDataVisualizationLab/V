@@ -59,12 +59,12 @@ function changeEngine(engineSelection) {
     drawInputs(engineData);
     //Create tensor for the engineData
     const tsEngineX = tf.tensor3d([engineData], [1, sequenceLength, numberOfSensors]);
-    //Get output layers for all models.
+    //Get output layersConfig for all models.
     modelLayerOutputs = visModels.map(viz_model => {
         const layerOutputs = viz_model.predict(tsEngineX);
         return layerOutputs;
     });
-    //Draw the output for all layers.
+    //Draw the output for all layersConfig.
     models.forEach((model, modelIdx) => {
         //Take the displaying layer of the model
         let layerIdx = layerIdxs[modelIdx];

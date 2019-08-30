@@ -149,7 +149,7 @@ function getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmT
     });
     //From node value to its combined name (combined + index)
     let nodeToCombinedNode = {};
-    let combinedNodeToNodes = {}
+    let combinedNodeToNodes = {};
     d3.entries(combinedNodes).forEach((row, i) => {
         let newKey = 'combined' +i;
         row.value.forEach(node => {
@@ -200,7 +200,7 @@ function getLinksGroupedByFanInOut(data, clmSource, clmTarget, typeColumns, clmT
         r.value.dataCount = r.value.data.length;
         return r.value;
     });
-    debugger
+    debugger;
     let nodes = getAllNodesFromLinksWithCombination(links, combinedNodeToNodes);
     //Copy the nodes to avoid changing its x, y for the network.
     let timedNodes = nodes.map(n => {

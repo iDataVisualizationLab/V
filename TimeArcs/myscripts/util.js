@@ -209,8 +209,7 @@ function childCount1(level, n) {
        n.childCount1 = 0;
     }
     return count;
-};
-
+}
 function childCount2(level, n) {
     var arr = [];
     if(n.children && n.children.length > 0) {
@@ -230,8 +229,7 @@ function childCount2(level, n) {
         d.idDFS = nodeDFSCount++;   // this set DFS id for nodes
     });
 
-};
-
+}
 d3.select(self.frameElement).style("height", diameter + "px");
 
 

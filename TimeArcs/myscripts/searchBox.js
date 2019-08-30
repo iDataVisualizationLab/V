@@ -11,7 +11,7 @@ function addSearchBox() {
       searchTree(rootSearch);
       rootSearch.children.forEach(collapseAllNotFound);
       updateSearch(rootSearch);
-  })
+  });
 
    treeSearch = d3.layout.tree()
       .size([height, width]);

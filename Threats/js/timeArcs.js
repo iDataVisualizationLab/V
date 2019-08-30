@@ -322,7 +322,7 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
                     siblings.push(links[i][COL_DEVICE_ACTION]);
             }
             return siblings;
-        };
+        }
     }
 
     function tick(duration) {

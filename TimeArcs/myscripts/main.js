@@ -161,7 +161,7 @@ var tip = d3.tip()
     })
     .html(function (d) {
         return "<strong>Frequency:</strong> <span style='color:red'>" + d + "</span>";
-    })
+    });
 svg.call(tip);
 
 var optArray = [];   // FOR search box
@@ -180,7 +180,7 @@ d3.tsv("data/pcCombined3.tsv", function (error, data_) {
     if (error) throw error;
     data = data_;
 
-    terms = new Object();
+    terms = {};
     termMaxMax = 1;
     var cccc = 0;
     data.forEach(function (d) {
@@ -199,7 +199,7 @@ d3.tsv("data/pcCombined3.tsv", function (error, data_) {
             d[term] = 1;
 
             if (!terms[term]) {
-                terms[term] = new Object();
+                terms[term] = {};
                 terms[term].count = 1;
                 terms[term].max = 0;
                 terms[term].maxYear = -100;   // initialized negative
@@ -244,10 +244,10 @@ d3.tsv("data/pcCombined3.tsv", function (error, data_) {
             }
         }
     });
-    console.log("DONE reading the input file = " + data.length)
+    console.log("DONE reading the input file = " + data.length);
 
 
-    console.log("DONE computing yearly sources")
+    console.log("DONE computing yearly sources");
 
 
     //readTermsAndRelationships("p__saddam hussein");
@@ -270,7 +270,7 @@ d3.tsv("data/pcCombined3.tsv", function (error, data_) {
     force.linkDistance(function (l) {
         if (searchTerm != "") {
             if (l.source.name == searchTerm || l.target.name == searchTerm) {
-                var order = isContainedInteger(listMonth, l.m)
+                var order = isContainedInteger(listMonth, l.m);
                 return (12 * order);
             } else
                 return 0;
@@ -481,7 +481,7 @@ function recompute() {
     function alertFunc() {
         readTermsAndRelationships();
         computeNodes();
-        computeLinks()
+        computeLinks();
         force.nodes(nodes)
             .links(links)
             .start();
@@ -498,7 +498,7 @@ function readTermsAndRelationships() {
     });
 
     console.log("data2=" + data2.length);
-    var selected = {}
+    var selected = {};
     if (searchTerm && searchTerm != "") {
         data2.forEach(function (d) {
             for (var term1 in d) {
@@ -547,7 +547,7 @@ function readTermsAndRelationships() {
                 }
             }
         }*/
-        var maxmaxmax = 0
+        var maxmaxmax = 0;
         for (var i = 0; i < numYear; i++) {
             if (terms[att][i])
                 maxmaxmax += terms[att][i]
@@ -590,9 +590,9 @@ function readTermsAndRelationships() {
             for (var j = 0; j < list.length; j++) {
                 var term2 = list[j];
                 if (!relationship[term1 + "__" + term2]) {
-                    relationship[term1 + "__" + term2] = new Object();
+                    relationship[term1 + "__" + term2] = {};
                     //   rrr[term1+"__"+term2] = new Object();
-                    ttt[term1 + "__" + term2] = new Object();
+                    ttt[term1 + "__" + term2] = {};
                     relationship[term1 + "__" + term2].max = 1;
                     relationship[term1 + "__" + term2].maxYear = year;
                 }
@@ -691,7 +691,7 @@ function computeNodes() {
     computeConnectivity(termArray, numNode);
     nodes = [];
     for (var i = 0; i < numNode; i++) {
-        var nod = new Object();
+        var nod = {};
         nod.id = i;
         nod.group = termArray[i].category;
         nod.name = termArray[i].term;
@@ -729,10 +729,10 @@ function computeNodes() {
         nodes[i].SciVis = new Array(numYear);
 
         for (var y = 0; y < numYear; y++) {
-            nodes[i].yearly[y] = new Object();
-            nodes[i].InfoVis[y] = new Object();
-            nodes[i].VAST[y] = new Object();
-            nodes[i].SciVis[y] = new Object();
+            nodes[i].yearly[y] = {};
+            nodes[i].InfoVis[y] = {};
+            nodes[i].VAST[y] = {};
+            nodes[i].SciVis[y] = {};
             if (terms[nodes[i].name][y]) {
                 nodes[i].yearly[y].value = terms[nodes[i].name][y];
                 if (nodes[i].yearly[y].value > termMaxMax2)
@@ -799,17 +799,17 @@ function computeLinks() {
                         var targetNodeId = j;
 
                         if (!nodes[i].connect)
-                            nodes[i].connect = new Array();
-                        nodes[i].connect.push(j)
+                            nodes[i].connect = [];
+                        nodes[i].connect.push(j);
                         if (!nodes[j].connect)
-                            nodes[j].connect = new Array();
-                        nodes[j].connect.push(i)
+                            nodes[j].connect = [];
+                        nodes[j].connect.push(i);
 
                         if (m != nodes[i].maxYear) {
                             if (isContainedChild(nodes[i].childNodes, m) >= 0) {  // already have the child node for that month
                                 sourceNodeId = nodes[i].childNodes[isContainedChild(nodes[i].childNodes, m)];
                             } else {
-                                var nod = new Object();
+                                var nod = {};
                                 nod.id = nodes.length;
                                 nod.group = nodes[i].group;
                                 nod.name = nodes[i].name;
@@ -819,7 +819,7 @@ function computeLinks() {
 
                                 nod.parentNode = i;   // this is the new property to define the parent node
                                 if (!nodes[i].childNodes)
-                                    nodes[i].childNodes = new Array();
+                                    nodes[i].childNodes = [];
                                 nodes[i].childNodes.push(nod.id);
 
                                 sourceNodeId = nod.id;
@@ -830,7 +830,7 @@ function computeLinks() {
                             if (isContainedChild(nodes[j].childNodes, m) >= 0) {
                                 targetNodeId = nodes[j].childNodes[isContainedChild(nodes[j].childNodes, m)];
                             } else {
-                                var nod = new Object();
+                                var nod = {};
                                 nod.id = nodes.length;
                                 nod.group = nodes[j].group;
                                 nod.name = nodes[j].name;
@@ -840,7 +840,7 @@ function computeLinks() {
 
                                 nod.parentNode = j;   // this is the new property to define the parent node
                                 if (!nodes[j].childNodes)
-                                    nodes[j].childNodes = new Array();
+                                    nodes[j].childNodes = [];
                                 nodes[j].childNodes.push(nod.id);
 
                                 targetNodeId = nod.id;
@@ -848,7 +848,7 @@ function computeLinks() {
                             }
                         }
 
-                        var l = new Object();
+                        var l = {};
                         l.source = sourceNodeId;
                         l.target = targetNodeId;
                         l.m = m;
@@ -897,7 +897,6 @@ function computeLinks() {
         .style("stroke", function (d) {
             if (d.count == 1) {
                 return getColor(d.type[0], 0);
-                ;
             } else {
                 return "#000";
             }
@@ -914,7 +913,7 @@ function computeLinks() {
     svg.selectAll(".nodeG").remove();
     nodeG = svg.selectAll(".nodeG")
         .data(pNodes).enter().append("g")
-        .attr("class", "nodeG")
+        .attr("class", "nodeG");
 
     nodeG.append("text")
         .attr("class", "nodeText")
@@ -1062,7 +1061,7 @@ function mouseoveredLink(l) {
         var yGap = 12;
         var totalSize = yGap * listTilte.length;
 
-        var tipData = new Object();
+        var tipData = {};
         tipData.x = x3;
         tipData.y = (y1 + y2) / 2;
         tipData.a = listTilte;
@@ -1136,7 +1135,7 @@ function mouseoutedLink(l) {
         nodeG.style("fill-opacity", 1);
         nodeG.transition().duration(500).attr("transform", function (n) {
             return "translate(" + n.xConnected + "," + n.y + ")"
-        })
+        });
         svg.selectAll(".linePNodes")
             .style("stroke-opacity", 1);
     }
@@ -1145,14 +1144,14 @@ function mouseoutedLink(l) {
 
 function mouseovered(d) {
     if (force.alpha > 0) return;
-    var list = new Object();
-    list[d.name] = new Object();
+    var list = {};
+    list[d.name] = {};
 
     svg.selectAll(".linkArc")
         .style("stroke-opacity", function (l) {
             if (l.source.name == d.name) {
                 if (!list[l.target.name]) {
-                    list[l.target.name] = new Object();
+                    list[l.target.name] = {};
                     list[l.target.name].count = 1;
                     list[l.target.name].year = l.m;
                     list[l.target.name].linkcount = l.count;
@@ -1166,7 +1165,7 @@ function mouseovered(d) {
                 return 1;
             } else if (l.target.name == d.name) {
                 if (!list[l.source.name]) {
-                    list[l.source.name] = new Object();
+                    list[l.source.name] = {};
                     list[l.source.name].count = 1;
                     list[l.source.name].year = l.m;
                     list[l.source.name].linkcount = l.count;
@@ -1400,7 +1399,7 @@ function update() {
         .domain([0, termMaxMax2]);
     nodeG.attr("transform", function (d) {
         return "translate(" + (xStep + d.x) + "," + d.y + ")"
-    })
+    });
     linkArcs.style("stroke-width", function (d) {
         return d.value;
     });
@@ -1433,17 +1432,17 @@ function updateTransition(durationTime, timeY) {  // timeY is the position of ti
     });
 
 
-    var list = new Object();
+    var list = {};
     links.forEach(function (l) {
-        var m = l.m
+        var m = l.m;
         if (!list[l.target.name])
-            list[l.target.name] = new Object();
+            list[l.target.name] = {};
         if (!list[l.target.name][m])
             list[l.target.name][m] = 0;
         list[l.target.name][m]++;
 
         if (!list[l.source.name])
-            list[l.source.name] = new Object();
+            list[l.source.name] = {};
         if (!list[l.source.name][m])
             list[l.source.name][m] = 0;
         list[l.source.name][m]++;
@@ -1480,7 +1479,7 @@ function updateTransition(durationTime, timeY) {  // timeY is the position of ti
         d.maxY = maxY;
         d.xConnected = xStep + xScale(minY);
         return "translate(" + d.xConnected + "," + d.y + ")"
-    })
+    });
 
     svg.selectAll(".linePNodes").transition().duration(durationTime)
         .attr("x1", function (d) {
@@ -1497,7 +1496,7 @@ function updateTransition(durationTime, timeY) {  // timeY is the position of ti
         });
 
     svg.selectAll(".timeLegend").transition().duration(durationTime)
-        .attr("y", timeY)
+        .attr("y", timeY);
 
     if (document.getElementById("checkbox1").checked) {
         svg.selectAll(".nodeText").transition().duration(durationTime)

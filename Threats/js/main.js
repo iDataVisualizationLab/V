@@ -61,7 +61,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
         return d;
     });
     //After combining nodes => some links are combined again (same time and same source as 'unknown').
-    debugger
+    debugger;
     let nestedBySTDT = {};
     tgoLinks.forEach(l => {
         let key = l.source + "," + l.target + "," + l[COL_DEVICE_ACTION] + ',' + l[COL_END_TIME];
@@ -80,7 +80,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
             target: value[0].target,
             threatEvents: threatEvents,
             threatCount: threatEvents.length
-        }
+        };
         link[COL_DEVICE_ACTION] = value[0][COL_DEVICE_ACTION];
         link[COL_END_TIME] = value[0][COL_END_TIME];
         if (link.target === 'combined') {
@@ -112,7 +112,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
             unknown: 3,
             targetsOfUnknownOnly: 4,
             others: 5
-        }
+        };
         let targetsOfOutsideIPs = links.filter(l => l.source.id.startsWith('104.12')).map(d => d.target.id);
 
         nodes.forEach(n => {
@@ -179,14 +179,13 @@ let deviceActionColors = {
     'Permitted': 'green',
     'none': 'steelblue',
     '': '#ff7f0e'
-}
+};
 
 function getDeviceActionColor(deviceActions) {
     return function (deviceAction) {
         return deviceActionColors[deviceAction];
     }
-};
-
+}
 function nodeColor(node) {
     if (node.id.startsWith('104.12')) {
         return 'black';

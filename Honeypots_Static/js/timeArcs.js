@@ -244,7 +244,7 @@ function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
                     siblings.push(links[i]['type']);
             }
             return siblings;
-        };
+        }
     }
 
     function tick(duration) {
