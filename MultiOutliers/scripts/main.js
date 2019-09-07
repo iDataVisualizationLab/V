@@ -85,7 +85,8 @@ var fileList = [
     // "HPCCTempVsFan",
     // "HPCC_04Oct",
     "HPCC_04Oct_5v",
-    "HPCC_26Sep_4v"
+    "HPCC_26Sep_4v",
+    "HPCC_26June_5v"
 ];
 var fileAbbreviations = [
     // 'WUER',
@@ -99,7 +100,8 @@ var fileAbbreviations = [
     // 'Donotuse',
     // 'HPCC',
     "HPCC04105V",
-    "HPCC26094V"
+    "HPCC26094V",
+    "HPCC26065V"
 ];
 
 var processedData = {
@@ -115,6 +117,7 @@ var processedData = {
     // "HPCC_04Oct": null,
     "HPCC_04Oct_5v": null,
     "HPCC_26Sep_4v": null,
+    "HPCC_26June_5v": null,
 };
 
 var timeSteps = {
@@ -135,9 +138,10 @@ var timeSteps = {
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
     "HPCC_04Oct_5v": {minTime: 0, maxTime: 32, type: "quarter"},
     "HPCC_26Sep_4v": {minTime: 0, maxTime: 18, type: "quarter"},
+    "HPCC_26June_5v": {minTime: 0, maxTime: 32, type: "quarter"},
 };
 // var fileName = fileList[fileList.length-1];
-var fileName = fileList[1];
+var fileName = fileList[2];
 
 // START: loader spinner settings ****************************
 var opts = {
