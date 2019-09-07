@@ -16,19 +16,49 @@ function updateSubLayout(m) {
     // var size = 60;//TODO: This is for the teaser only (switch back the previous one for normal page)
     let padding = 0;
     let margin = forceSize / 2 - size / 2;
-    let bins = dataS.allYearsBins[m];
-    let dataPoints = bins.map(bin => {
+
+    let yearData = dataS.YearsData[m];
+    let dataPoints = dataS.Countries.map((country, c_i) => {
+        let item = [];
+        for (let v_i = 0; v_i < dataS.Variables.length; v_i++) {
+            let varName = 's' + v_i;
+            item.push(yearData[varName][c_i]);
+        }
+        item.data = {country: country};
+        let yearOutlyingScore = yearData.Scagnostics0[0];
+        let leaveOutScore = dataS.CountriesData[country][m].Outlying;
+        item.data.outlyingDif = leaveOutScore - yearOutlyingScore;
+        return item;
+    });
+    let outlyingPoints = dataPoints.filter(d => Math.abs(d.data.outlyingDif) >= outlyingCut);
+    let normalPoints = dataPoints.filter(d => Math.abs(d.data.outlyingDif) < outlyingCut);
+    //Rebin
+    let binOptions = {
+        startBinGridSize: 10,
+        minBins: 5,
+        maxBins: 20,
+        incrementA: 1,
+        incrementB: 5,
+        decrementA: 0.9,
+        decrementB: 0
+    };
+    let bins = outlyingPoints.map(d => [d]);//Each outlying item is one bin
+    if (normalPoints.length > 0) {//Rebin the normal points.
+        let binner = ndleaderbin(normalPoints, binOptions);
+        bins = bins.concat(binner.bins);
+    }
+    dataPoints = bins.map(bin => {
         let item = [];
         //initialize.
         if (bin.length === 1) {
             for (let i = 0; i < dataS.Variables.length; i++) {
                 item.push([bin[0][i], bin[0][i]]);//Min for the first and max for the second (both are the same).
             }
-            item.data = {strokeWidth: 0.3};
+            item.data = {strokeWidth: 0.3, outlyingDif: bin[0].data.outlyingDif};
         } else {
             for (let i = 0; i < dataS.Variables.length; i++) {
                 item.push([Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]);//Min for the first and max for the second.
-                item.data = {strokeWidth: 0};
+                item.data = {strokeWidth: 0, outlyingDif: 0};
             }
             //For each point in bin.
             bin.forEach(point => {
@@ -61,8 +91,8 @@ function updateSubLayout(m) {
         showAxisLabels: false,
         roundStrokes: true,
         strokeWidth: (d) => d.data.strokeWidth,
-        fillColor: () => 'black',
-        strokeColor: () => 'black',
+        fillColor: (d) => d.data.outlyingDif == 0 ? 'black' : d.data.outlyingDif < 0 ? 'red' : 'green',
+        strokeColor: (d) => d.data.outlyingDif == 0 ? 'black' : d.data.outlyingDif < 0 ? 'red' : 'green',
         showMarkers: false,
         showToolTip: false,
         fillBlobs: true,
