@@ -26,6 +26,7 @@ export type XAxisLabel = {
 export type YAxisLabel = {
     text: string
 }
+
 export interface LineChartSettings {
     [key: string]: any;
     showAxes?: boolean;
@@ -115,7 +116,7 @@ export class LineChart {
             let seriesLength = series.length;
             let colorScale = d3.scaleLinear<number, string>()
                 .domain([0, 0.5, 1])
-                .range(this.settings.colorScheme?this.settings.colorScheme:["#f59322", "#a0a0a0", "#0877bd"])
+                .range(this.settings.colorScheme ? this.settings.colorScheme : ["#f59322", "#a0a0a0", "#0877bd"])
                 .clamp(true);
             this.settings.colorScale = d3.scaleOrdinal()
                 .domain(series)
@@ -184,24 +185,24 @@ export class LineChart {
             }
         }
         //Show axis labels
-        if(this.settings.xAxisLabel){
+        if (this.settings.xAxisLabel) {
             this.svg.append("text")
                 .attr("text-anchor", "middle")
-                .attr("transform", "translate("+ (this.settings.width/2) +","+(this.settings.height)+")")  // centre below axis at the bottom
+                .attr("transform", "translate(" + (this.settings.width / 2) + "," + (this.settings.height) + ")")  // centre below axis at the bottom
                 .text(this.settings.xAxisLabel.text);
         }
-        if(this.settings.yAxisLabel){
+        if (this.settings.yAxisLabel) {
             this.svg.append("text")
                 .attr("text-anchor", "middle")
                 .attr("alignment-baseline", "hanging")
-                .attr("transform", "translate(0,"+(this.settings.height/2)+")rotate(-90)")
+                .attr("transform", "translate(0," + (this.settings.height / 2) + ")rotate(-90)")
                 .text(this.settings.yAxisLabel.text).attr("dx", "1em");//Also move right one text size.
         }
         //Show legend
         if (this.settings.legend) {
             let legendg = this.svg.append("g").attr("class", "legend").attr("transform", `translate(${this.settings.legend.x}, ${this.settings.legend.y})`);
             this.data.forEach((trace, i) => {
-                legendg.append("text").attr("fill", this.settings.colorScale(trace.series)).attr("dy", `${i}em`).node().innerHTML = `<tspan text-decoration=${trace.type==="scatter"?'none':'line-through'}>&nbsp;${trace.marker ? trace.marker : " "}&nbsp;</tspan> ` + trace.series;
+                legendg.append("text").attr("fill", this.settings.colorScale(trace.series)).attr("dy", `${i}em`).node().innerHTML = `<tspan text-decoration=${trace.type === "scatter" ? 'none' : 'line-through'}>&nbsp;${trace.marker ? trace.marker : " "}&nbsp;</tspan> ` + trace.series;
             });
         }
     }
