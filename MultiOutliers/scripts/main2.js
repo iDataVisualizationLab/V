@@ -10,8 +10,9 @@ var graphByMonths = [];
 var numCut = 5;
 var cutOffvalue = [];
 
-
-var snapshotScale = 0.265; // Snapshiot Size******************************************************
+let forceSize = 90; // Max size of force layouts at the bottom
+let snapshotSize = 50;
+var snapshotScale = snapshotSize/(forceSize-10); // Snapshiot Size******************************************************
 var maxRel = 15;   // for scaling, if count > 6 the link will looks similar to 6
 
 // Colors
@@ -531,7 +532,9 @@ function updateTextClouds() {
         });
 }
 
-
+/**
+ * This is used to update plots for time series, when lensing is applied.
+ */
 function updateTimeSeries() {
     var brushingYear = lMonth + 1;
     var orderby = d3.select('#nodeDropdown').property('value');
@@ -558,7 +561,6 @@ function updateTimeSeries() {
                     maxOutlyingDif_A = Math.max(maxOutlyingDif_A, Math.abs(a[i].OutlyingDif));
                     maxOutlyingDif_B = Math.max(maxOutlyingDif_B, Math.abs(b[i].OutlyingDif));
                 }
-
             }
         }
         if (maxOutlyingDif_A < maxOutlyingDif_B)

@@ -230,7 +230,8 @@ function loadData() {
             function onCompleted() {
                 dataS = op.dataS;
                 processedData[fileName] = dataS;
-                drawData(dataS)
+                dataS.allYearsBins = op.allYearsBins;
+                drawData(dataS);
             }
         } else {
             dataS = processedData[fileName];
@@ -317,9 +318,7 @@ function loadData() {
                             .style("fill-opacity", function (d, i) {
                                 return getOpacity(d, i);
                             });
-
                     }
-
                 }, 50);
             }, 3000);
         }
