@@ -71,6 +71,7 @@ function updateSubLayout(m) {
         showLevelLabels: false,
         showAxisLabels: false,
         roundStrokes: true,
+        strokeWidth: 0.1,
         showMarkers: false,
         showToolTip: false,
         fillBlobs: true,
