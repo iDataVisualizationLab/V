@@ -84,7 +84,8 @@ var fileList = [
     // "USEmpRGoodVsService",
     // "HPCCTempVsFan",
     // "HPCC_04Oct",
-    "HPCC_04Oct_5v"
+    "HPCC_04Oct_5v",
+    "HPCC_26Sep_4v"
 ];
 var fileAbbreviations = [
     // 'WUER',
@@ -97,7 +98,8 @@ var fileAbbreviations = [
     // 'USENC',
     // 'Donotuse',
     // 'HPCC',
-    "HPCC5V"
+    "HPCC04105V",
+    "HPCC26094V"
 ];
 
 var processedData = {
@@ -112,6 +114,7 @@ var processedData = {
     // "HPCCTempVsFan": null,
     // "HPCC_04Oct": null,
     "HPCC_04Oct_5v": null,
+    "HPCC_26Sep_4v": null,
 };
 
 var timeSteps = {
@@ -131,6 +134,7 @@ var timeSteps = {
     // "HPCCTempVsFan": {minTime: 1, maxTime: 18, type: "quarter"},
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
     "HPCC_04Oct_5v": {minTime: 0, maxTime: 32, type: "quarter"},
+    "HPCC_26Sep_4v": {minTime: 0, maxTime: 18, type: "quarter"},
 };
 // var fileName = fileList[fileList.length-1];
 var fileName = fileList[0];
