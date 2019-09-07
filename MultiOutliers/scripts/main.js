@@ -137,7 +137,7 @@ var timeSteps = {
     "HPCC_26Sep_4v": {minTime: 0, maxTime: 18, type: "quarter"},
 };
 // var fileName = fileList[fileList.length-1];
-var fileName = fileList[0];
+var fileName = fileList[1];
 
 // START: loader spinner settings ****************************
 var opts = {
