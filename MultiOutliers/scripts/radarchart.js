@@ -35,8 +35,8 @@ function updateSubLayout(m) {
     //Rebin
     let binOptions = {
         startBinGridSize: 10,
-        minBins: 5,
-        maxBins: 20,
+        minBins: 3,
+        maxBins: 10,
         incrementA: 1,
         incrementB: 5,
         decrementA: 0.9,
