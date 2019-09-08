@@ -85,7 +85,6 @@ var fileList = [
     // "HPCCTempVsFan",
     // "HPCC_04Oct",
     "HPCC_04Oct_5v",
-    "HPCC_26Sep_4v",
     "HPCC_26June_5v",
     "HPCC_04Oct",
 ];
@@ -101,7 +100,6 @@ var fileAbbreviations = [
     // 'Donotuse',
     // 'HPCC',
     "HPCC04105V",
-    "HPCC26094V",
     "HPCC26065V",
     "HPCC0410"
 ];
@@ -118,7 +116,6 @@ var processedData = {
     // "HPCCTempVsFan": null,
     // "HPCC_04Oct": null,
     "HPCC_04Oct_5v": null,
-    "HPCC_26Sep_4v": null,
     "HPCC_26June_5v": null,
     "HPCC0410": null
 };
@@ -140,7 +137,6 @@ var timeSteps = {
     // "HPCCTempVsFan": {minTime: 1, maxTime: 18, type: "quarter"},
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
     "HPCC_04Oct_5v": {minTime: 0, maxTime: 32, type: "quarter"},
-    "HPCC_26Sep_4v": {minTime: 0, maxTime: 18, type: "quarter"},
     "HPCC_26June_5v": {minTime: 0, maxTime: 32, type: "quarter"},
     "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
 };
