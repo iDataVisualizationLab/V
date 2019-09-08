@@ -115,14 +115,19 @@ class OutliagNDProcessor {
                             bins1.splice(i, 1);
                             //calcualte outliag.
                             const theLeaveOut = {};
-                            theLeaveOut.data = bins1.map(b => [b.x, b.y]);
+                            theLeaveOut.data = bins1.map(b => b.site);
                             theLeaveOut.options = Object.assign({}, myself.scagOptions);
-                            theLeaveOut.outlyingUpperBound = outlyingUpperBound;
+
+                            theLeaveOut.options.outlyingUpperBound = outlyingUpperBound;
+                            theLeaveOut.options.isNormalized = true;
+
+
                             theLeaveOut.year = year;
                             //theBin[0].data => is the country => we can make sure that the this is a single country for a bin
                             //since we only recalculating for the bin with single data point (so country is the data of the first and only point in that bin).
                             theLeaveOut.country = theBin[0].data;
                             leaveOutData.push(theLeaveOut);
+
                         }
                     }
                 }
