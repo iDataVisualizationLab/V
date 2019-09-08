@@ -120,6 +120,7 @@ class OutliagNDProcessor {
 
                             theLeaveOut.options.outlyingUpperBound = outlyingUpperBound;
                             theLeaveOut.options.isNormalized = true;
+                            theLeaveOut.options.isBinned = true;
 
 
                             theLeaveOut.year = year;

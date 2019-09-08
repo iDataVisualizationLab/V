@@ -145,7 +145,7 @@ var timeSteps = {
     "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
 };
 // var fileName = fileList[fileList.length-1];
-var fileName = fileList[0];
+var fileName = fileList[2];
 
 // START: loader spinner settings ****************************
 var opts = {
@@ -171,7 +171,6 @@ var dataS;
 
 function loadData() {
     d3.json("data/" + fileName + ".json", function (data_) {
-
         spinner.spin(target);
         //<editor-fold desc="This section filters out some data => for the purpose of the explanation of the process of building this software">
         //Filter out years before 1990 if it is HIV

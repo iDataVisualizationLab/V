@@ -54,7 +54,7 @@ function updateSubLayout(m) {
             for (let i = 0; i < dataS.Variables.length; i++) {
                 item.push([bin[0][i], bin[0][i]]);//Min for the first and max for the second (both are the same).
             }
-            item.data = {strokeWidth: 0.3, outlyingDif: bin[0].data.outlyingDif};
+            item.data = {strokeWidth: 1, outlyingDif: bin[0].data.outlyingDif};
         } else {
             for (let i = 0; i < dataS.Variables.length; i++) {
                 item.push([Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]);//Min for the first and max for the second.
