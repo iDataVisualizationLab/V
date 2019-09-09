@@ -42,11 +42,12 @@ function updateSubLayout(m) {
         decrementA: 0.9,
         decrementB: 0
     };
-    let bins = outlyingPoints.map(d => [d]);//Each outlying item is one bin
+    let bins = [];
     if (normalPoints.length > 0) {//Rebin the normal points.
         let binner = ndleaderbin(normalPoints, binOptions);
         bins = bins.concat(binner.bins);
     }
+    bins = bins.concat(outlyingPoints.map(d => [d]));//Each outlying item is one bin
     dataPoints = bins.map(bin => {
         let item = [];
         //initialize.
@@ -85,7 +86,7 @@ function updateSubLayout(m) {
         paddingTop: margin,
         paddingRight: margin,
         paddingBottom: margin,
-        levelStrokeColorScheme: ['green', 'orange', 'red'],
+        showAxes: false,
         legend: false,
         showLevelLabels: false,
         showAxisLabels: false,
