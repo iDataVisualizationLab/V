@@ -8,7 +8,7 @@ class OutliagNDProcessor {
             startBinGridSize: 20,
             minBins: 30,
             maxBins: 50,
-            outlyingCoefficient: 3.0,
+            outlyingCoefficient: 4.0,
             incrementA: 1,
             incrementB: 5,
             decrementA: 0.9,
