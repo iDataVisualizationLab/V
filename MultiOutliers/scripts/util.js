@@ -53,40 +53,40 @@ function drawColorLegend() {
     var yScagLegend = 56;
     var wScagLegend = 160;
     //Draw the rectangle and fill with gradient
-    svg.append("rect")
-        .attr("x", 11)
-        .attr("y", yScagLegend + 5)
-        .attr("width", wScagLegend)
-        .attr("height", 20)
-        .style("fill", "url(#linear-gradient)");
+    // svg.append("rect")
+    //     .attr("x", 11)
+    //     .attr("y", yScagLegend + 5)
+    //     .attr("width", wScagLegend)
+    //     .attr("height", 20)
+    //     .style("fill", "url(#linear-gradient)");
 
-    svg.append("text")
-        .attr("x", wScagLegend / 2 + 8)
-        .attr("y", yScagLegend)
-        .attr("font-family", "sans-serif")
-        .attr("font-size", "12px")
-        .style("text-anchor", "middle")
-        .style("font-weight", "bold")
-        .style("fill", "#000")
-        .text("Outlying measure");
-    svg.append("text")
-        .attr("x", 2)
-        .attr("y", yScagLegend + 19)
-        .attr("font-family", "sans-serif")
-        .attr("font-size", "12px")
-        .style("text-anchor", "left")
-        .style("font-weight", "bold")
-        .style("fill", "#000")
-        .text("0");
-    svg.append("text")
-        .attr("x", wScagLegend + 12)
-        .attr("y", yScagLegend + 19)
-        .attr("font-family", "sans-serif")
-        .attr("font-size", "12px")
-        .style("text-anchor", "left")
-        .style("font-weight", "bold")
-        .style("fill", "#000")
-        .text("1");
+    // svg.append("text")
+    //     .attr("x", wScagLegend / 2 + 8)
+    //     .attr("y", yScagLegend)
+    //     .attr("font-family", "sans-serif")
+    //     .attr("font-size", "12px")
+    //     .style("text-anchor", "middle")
+    //     .style("font-weight", "bold")
+    //     .style("fill", "#000")
+    //     .text("Outlying measure");
+    // svg.append("text")
+    //     .attr("x", 2)
+    //     .attr("y", yScagLegend + 19)
+    //     .attr("font-family", "sans-serif")
+    //     .attr("font-size", "12px")
+    //     .style("text-anchor", "left")
+    //     .style("font-weight", "bold")
+    //     .style("fill", "#000")
+    //     .text("0");
+    // svg.append("text")
+    //     .attr("x", wScagLegend + 12)
+    //     .attr("y", yScagLegend + 19)
+    //     .attr("font-family", "sans-serif")
+    //     .attr("font-size", "12px")
+    //     .style("text-anchor", "left")
+    //     .style("font-weight", "bold")
+    //     .style("fill", "#000")
+    //     .text("1");
 
     // Draw color legend **************************************************
     var yScagLegend2 = 132;
