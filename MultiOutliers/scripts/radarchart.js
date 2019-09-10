@@ -30,6 +30,7 @@ function updateSubLayout(m) {
         item.data.outlyingDif = leaveOutScore - yearOutlyingScore;
         return item;
     });
+    debugger
     let outlyingPoints = dataPoints.filter(d => Math.abs(d.data.outlyingDif) >= outlyingCut);
     let normalPoints = dataPoints.filter(d => Math.abs(d.data.outlyingDif) < outlyingCut);
     //Rebin

@@ -12,7 +12,7 @@ var cutOffvalue = [];
 
 let forceSize = 180; // Max size of force layouts at the bottom
 let snapshotSize = 50;
-var snapshotScale = snapshotSize/(forceSize-10); // Snapshiot Size******************************************************
+var snapshotScale = snapshotSize / (forceSize - 10); // Snapshiot Size******************************************************
 var maxRel = 15;   // for scaling, if count > 6 the link will looks similar to 6
 
 // Colors
@@ -50,7 +50,6 @@ function computeMonthlyGraphs() {
 var yScaleS = d3.scale.linear()
     .range([0, 80])
     .domain([0, 1]);
-
 
 var areaAbove = d3.svg.area()
     .interpolate(interpolation)
