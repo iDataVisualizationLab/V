@@ -137,7 +137,7 @@ var timeSteps = {
     // "HPCCTempVsFan": {minTime: 1, maxTime: 18, type: "quarter"},
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
     "HPCC_04Oct_5v": {minTime: 0, maxTime: 32, type: "quarter"},
-    "HPCC_26June_5v": {minTime: 0, maxTime: 32, type: "quarter"},
+    "HPCC_26June_5v": {minTime: 0, maxTime: 20, type: "quarter"},
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
 };
 // var fileName = fileList[fileList.length-1];
