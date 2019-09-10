@@ -89,7 +89,7 @@ function drawColorLegend() {
     //     .text("1");
 
     // Draw color legend **************************************************
-    var yScagLegend2 = 132;
+    var yScagLegend2 = 50;
     svg.selectAll(".legendCircle").remove();
     svg.selectAll(".legendCircle")
         .data(categories).enter()

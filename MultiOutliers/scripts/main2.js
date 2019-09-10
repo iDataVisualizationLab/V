@@ -10,7 +10,7 @@ var graphByMonths = [];
 var numCut = 5;
 var cutOffvalue = [];
 
-let forceSize = 90; // Max size of force layouts at the bottom
+let forceSize = 180; // Max size of force layouts at the bottom
 let snapshotSize = 50;
 var snapshotScale = snapshotSize/(forceSize-10); // Snapshiot Size******************************************************
 var maxRel = 15;   // for scaling, if count > 6 the link will looks similar to 6
@@ -212,7 +212,7 @@ function drawgraph2() {
 
     //** TEXT CLOUD **********************************************************
     yTextClouds = height + boxHeight; // 75 is the height of the text cloud section.
-    drawTextClouds(yTextClouds);    // in main3.js
+    // drawTextClouds(yTextClouds);    // in main3.js
     //** BOX PLOT **********************************************************
     drawBoxplot();   // in main3.js
     //** COUNTRY PROFILE **********************************************************
