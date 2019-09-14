@@ -95,7 +95,7 @@ async function drawHeatmaps(data, container, selector) {
                 paddingBottom: 0,
                 borderWidth: 0,
                 width: 100,
-                height: 100
+                height: heatmapH
             });
             hm.plot();
             mapObjects[selector + featureIdx] = hm;

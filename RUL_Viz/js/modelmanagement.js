@@ -459,14 +459,14 @@ async function displayLayerWeights(model, i, containerId) {
     let weights = layer.getWeights()[0];
 
     if (layer.name.indexOf("lstm") >= 0) {
-        buildWeightPositionData(weights, 100, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
+        buildWeightPositionData(weights, heatmapH, 17.5, 100, 17.5, 100, 4, 10, 0, 3, 0.0, 0.7).then((result) => {
             weightsPathData[containerId] = result;//Store to use on click
             drawLSTMWeights(containerId);
         });
     } else if (layer.name.indexOf("dense") >= 0 && i - 1 >= 0 && model.layers[i - 1].name.indexOf("flatten") >= 0) {//Is dense, but its previous one is flatten
         let flattenSplits = model.layers[i - 2].units;//Number of splits (divide weights in these number of splits then combine them in each split)
         buildWeightForFlattenLayer(weights, flattenSplits).then(cumulativeT => {
-            buildWeightPositionData(cumulativeT, 100, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.05, 0.7).then((result) => {
+            buildWeightPositionData(cumulativeT, heatmapH, 17.5, 100, 17.5, 100, 1, 0, 0.5, 3, 0.05, 0.7).then((result) => {
                 weightsPathData[containerId] = result;
                 drawDenseWeights(containerId);
             });

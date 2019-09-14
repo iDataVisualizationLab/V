@@ -12,3 +12,4 @@ let reviewMode = false;
 //Draw color scales
 const colorBarW = 100;
 const colorBarH = 10;
+const heatmapH = 466;
