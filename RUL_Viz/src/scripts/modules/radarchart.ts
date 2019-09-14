@@ -7,8 +7,10 @@ export interface RadarChartSettings {
     width?: number,				        //Width of the circle
     height?: number,			        //Height of the circle
     margin?: any,                       //The margins of the SVG
+    showAxes?: boolean,
     levels?: number,			        //How many levels or inner circles should there be drawn
     levelStrokeColorScheme?: any,       //Use to color the circles of the levels
+    showRings?: boolean,                 //
     maxValue?: number, 			        //What is the value that the biggest circle will represent
     labelFactor?: number, 	            //How much farther than the radius of the outer circle should the labels be placed
     wrapWidth?: number, 		        //The number of pixels after which a label needs to be given a new line
@@ -52,6 +54,8 @@ export class RadarChart {
         paddingTop: 0,
         paddingRight: 0,
         paddingBottom: 0,
+        showAxes: true,
+        showRings: true,
         levels: 3,
         maxValue: 0,
         labelFactor: 1.25,
@@ -206,72 +210,76 @@ export class RadarChart {
         //</editor-fold>
 
 
-        /////////////////////////////////////////////////////////
-        /////////////// Draw the Circular grid //////////////////
-        /////////////////////////////////////////////////////////
-        //<editor-fold desc="Draw the Circular grid">
-        //Wrapper for the grid & axes
-        let axisGrid = g.append("g").attr("class", "axisWrapper");
+        if (this.settings.showAxes) {
+            /////////////////////////////////////////////////////////
+            /////////////// Draw the Circular grid //////////////////
+            /////////////////////////////////////////////////////////
+            //<editor-fold desc="Draw the Circular grid">
+            //Wrapper for the grid & axes
+            let axisGrid = g.append("g").attr("class", "axisWrapper");
 
-        //Draw the background circles
-        axisGrid.selectAll(".levels")
-            .data(d3.range(1, (this.settings.levels + 1)).reverse())
-            .enter()
-            .append("circle")
-            .attr("class", "gridCircle")
-            .attr("r", d => radius / this.settings.levels * d)
-            .style("fill", "#CDCDCD")
-            .style("stroke", (d, i) => this.settings.levelStrokeColorScheme ? this.settings.levelStrokeColorScheme[this.settings.levels - 1 - i] : "#CDCDCD")//Need to -1 - i since the levels circles are reversed (display from outside in)
-            .style("fill-opacity", this.settings.opacityCircles)
-            .style("filter", "url(#glow)");
-
-        //Text indicating at what % each level is
-        if (this.settings.showLevelLabels) {
-            axisGrid.selectAll(".axisLabel")
+            //Draw the background circles
+            axisGrid.selectAll(".levels")
                 .data(d3.range(1, (this.settings.levels + 1)).reverse())
-                .enter().append("text")
-                .attr("class", "axisLabel")
-                .attr("x", 4)
-                .attr("y", d => -d * radius / this.settings.levels)
-                .attr("dy", "0.4em")
-                .style("font-size", "10px")
-                .attr("fill", "#737373")
-                .text(d => Format(maxValue * d / this.settings.levels) + this.settings.unit);
-        }
-        //</editor-fold>
+                .enter()
+                .append("circle")
+                .attr("class", "gridCircle")
+                .attr("r", d => radius / this.settings.levels * d)
+                .style("fill", "#CDCDCD")
+                .style("stroke-width", (this.settings.showRings) ? 1 : 0)
+                .style("stroke", (d, i) => this.settings.levelStrokeColorScheme ? this.settings.levelStrokeColorScheme[this.settings.levels - 1 - i] : "#CDCDCD")//Need to -1 - i since the levels circles are reversed (display from outside in)
+                .style("fill-opacity", this.settings.opacityCircles)
+                .style("filter", "url(#glow)");
 
-        /////////////////////////////////////////////////////////
-        //////////////////// Draw the axes //////////////////////
-        /////////////////////////////////////////////////////////
-        //<editor-fold desc="Draw the axes">
-        //Create the straight lines radiating outward from the center
-        var axis = axisGrid.selectAll(".axis")
-            .data(allAxis)
-            .enter()
-            .append("g")
-            .attr("class", "axis");
-        //Append the lines
-        axis.append("line")
-            .attr("x1", 0)
-            .attr("y1", 0)
-            .attr("x2", (d, i) => rScale(maxValue * 1.1) * cos(angleSlice * i - HALF_PI))
-            .attr("y2", (d, i) => rScale(maxValue * 1.1) * sin(angleSlice * i - HALF_PI))
-            .attr("class", "line")
-            .style("stroke", "white")
-            .style("stroke-width", "2px");
-        if (this.settings.showAxisLabels) {
-            //Append the labels at each axis
-            axis.append("text")
-                .attr("class", "legend")
-                .style("font-size", "11px")
-                .attr("text-anchor", "middle")
-                .attr("dy", "0.35em")
-                .attr("x", (d, i) => rScale(maxValue * this.settings.labelFactor) * cos(angleSlice * i - HALF_PI))
-                .attr("y", (d, i) => rScale(maxValue * this.settings.labelFactor) * sin(angleSlice * i - HALF_PI))
-                .text(d => d)
-                .call(this.wrap, this.settings.wrapWidth);
+            //Text indicating at what % each level is
+            if (this.settings.showLevelLabels) {
+                axisGrid.selectAll(".axisLabel")
+                    .data(d3.range(1, (this.settings.levels + 1)).reverse())
+                    .enter().append("text")
+                    .attr("class", "axisLabel")
+                    .attr("x", 4)
+                    .attr("y", d => -d * radius / this.settings.levels)
+                    .attr("dy", "0.4em")
+                    .style("font-size", "10px")
+                    .attr("fill", "#737373")
+                    .text(d => Format(maxValue * d / this.settings.levels) + this.settings.unit);
+            }
+            //</editor-fold>
+
+            /////////////////////////////////////////////////////////
+            //////////////////// Draw the axes //////////////////////
+            /////////////////////////////////////////////////////////
+            //<editor-fold desc="Draw the axes">
+            //Create the straight lines radiating outward from the center
+            var axis = axisGrid.selectAll(".axis")
+                .data(allAxis)
+                .enter()
+                .append("g")
+                .attr("class", "axis");
+            //Append the lines
+            axis.append("line")
+                .attr("x1", 0)
+                .attr("y1", 0)
+                .attr("x2", (d, i) => rScale(maxValue * 1.1) * cos(angleSlice * i - HALF_PI))
+                .attr("y2", (d, i) => rScale(maxValue * 1.1) * sin(angleSlice * i - HALF_PI))
+                .attr("class", "line")
+                .style("stroke", "white")
+                .style("stroke-width", "2px");
+            if (this.settings.showAxisLabels) {
+                //Append the labels at each axis
+                axis.append("text")
+                    .attr("class", "legend")
+                    .style("font-size", "11px")
+                    .attr("text-anchor", "middle")
+                    .attr("dy", "0.35em")
+                    .attr("x", (d, i) => rScale(maxValue * this.settings.labelFactor) * cos(angleSlice * i - HALF_PI))
+                    .attr("y", (d, i) => rScale(maxValue * this.settings.labelFactor) * sin(angleSlice * i - HALF_PI))
+                    .text(d => d)
+                    .call(this.wrap, this.settings.wrapWidth);
+            }
+            //</editor-fold>
+
         }
-        //</editor-fold>
 
         //Create a wrapper for the blobs
         const blobWrapper = g.selectAll(".radarWrapper")
@@ -451,7 +459,7 @@ export class RadarChart {
                 .attr("d", function (d) {
                     return radarLine1(d.axes) + radarLine0(d.axes.map(d => Object.assign({}, d)).reverse());
                 })
-                .style("stroke-width", this.settings.strokeWidth + "px")
+                .style("stroke-width", d => this.settings.strokeWidth(d) + "px")
                 .style("stroke", (d) => this.settings.strokeColor(d))
                 .style("fill", "none")
                 .style("filter", "url(#glow)");

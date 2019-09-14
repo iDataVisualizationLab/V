@@ -15,10 +15,14 @@ processInputs().then(() => {
 
 async function processInputs() {
     return new Promise(resolve => {
-        d3.json("data/train_FD001_100x50.json").then(X_trainR => {
-            d3.json("data/train_RUL_FD001_100x50.json").then(y_trainR => {
-                d3.json("data/test_FD001_100x50.json").then(X_testR => {
-                    d3.json("data/test_RUL_FD001_100x50.json").then(y_testR => {
+        // d3.json("data/train_FD001_100x50.json").then(X_trainR => {
+        //     d3.json("data/train_RUL_FD001_100x50.json").then(y_trainR => {
+        //         d3.json("data/test_FD001_100x50.json").then(X_testR => {
+        //             d3.json("data/test_RUL_FD001_100x50.json").then(y_testR => {
+        d3.json("data/X_train_HPCC_1_20.json").then(X_trainR => {
+            d3.json("data/y_train_HPCC_1_20.json").then(y_trainR => {
+                d3.json("data/X_test_HPCC_1_20.json").then(X_testR => {
+                    d3.json("data/y_test_HPCC_1_20.json").then(y_testR => {
                         X_train = X_trainR;
                         y_train = y_trainR;
                         X_test = X_testR;
@@ -60,7 +64,7 @@ async function processInputs() {
 
 
                         let y_train_ordered = trainRULOrder.map(v => y_train[v][0]).reverse();
-                        let sampleY = y_train_ordered.map(rulVal => Math.round(rulVal + 30.0 * (Math.random()-0.5)));
+                        let sampleY = y_train_ordered.map(rulVal => Math.round(rulVal + 30.0 * (Math.random() - 0.5)));
 
                         const lineChartData = [
                             {
