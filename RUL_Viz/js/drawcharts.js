@@ -72,8 +72,13 @@ async function drawHeatmaps(data, container, selector) {
     //Generate items
     let y = Array.from(Array(noOfItems), (x, i) => i);
     //Generate div for the inputs
-    d3.select(`#${container}`).selectAll(`.${selector}`).data(Array.from(Array(noOfFeatures), (x, i) => i), d => d)
-        .enter().append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px").style("margin-bottom", "0px").style("border", "1px solid black").style("display", "inline-block");
+    let enters = d3.select(`#${container}`).selectAll(`.${selector}`).data(Array.from(Array(noOfFeatures), (x, i) => i), d => d).enter().append("div").style("width", "100px");
+    if (container === "inputContainer") {
+        enters.append("div").text((d, i) => features.filter((f, fi) => selectedFeatures[fi])[i]).style("font-size", "8px").style("height", "10px").style("width", "100px").style("text-align", "center");
+        enters.append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "0px").style("margin-bottom", "0px").style("border", "1px solid black").style("display", "inline-block");
+    } else {
+        enters.append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px").style("margin-bottom", "0px").style("border", "1px solid black").style("display", "inline-block");
+    }
     //Generate data.
     for (let featureIdx = 0; featureIdx < noOfFeatures; featureIdx++) {
         let z = [];
@@ -86,7 +91,7 @@ async function drawHeatmaps(data, container, selector) {
         }
         if (!mapObjects[selector + featureIdx]) {
             //Draw the feature.
-            let hm = new HeatMap(document.getElementById(selector + featureIdx), {x: x, y: y, z: z}, {
+            let hmSettings = {
                 noSvg: true,
                 showAxes: false,
                 paddingLeft: 0,
@@ -96,7 +101,13 @@ async function drawHeatmaps(data, container, selector) {
                 borderWidth: 0,
                 width: 100,
                 height: heatmapH
-            });
+            };
+            // if (selector == "inputDiv") {
+            //     hmSettings.title = {text: features[featureIdx], fontSize: 6};
+            // } else {
+            //     hmSettings.title = {text: 'neuron' + featureIdx, fontSize: 6};
+            // }
+            let hm = new HeatMap(document.getElementById(selector + featureIdx), {x: x, y: y, z: z}, hmSettings);
             hm.plot();
             mapObjects[selector + featureIdx] = hm;
         } else {

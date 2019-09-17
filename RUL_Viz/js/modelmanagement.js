@@ -222,19 +222,19 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     //<editor-fold desc="For LSTM weight types" and its toggling menu">
     async function drawLSTMWeightTypes(container) {
         return new Promise((resolve, reject) => {
-            let lstmTypes = container.selectAll("lstmTypeContainer").data([1]).join("g").attr("class", "lstmTypeContainer")
+            let lstmTypes = container.selectAll(".lstmTypeContainer").data([1]).join("g").attr("class", "lstmTypeContainer")
                 .attr("transform", "translate(3, 0)")//3 is for the margin.
                 .selectAll(".lstmWeightType")
                 .data(lstmWeightTypes);
             //Create the rect for clicking
-            lstmTypes.join("rect")
-                .attr("x", 5).attr("y", (d, i) => (i - 1) * 10)
-                .attr("fill", "white")
-                .attr("width", 60).attr("height", 9)
-                .style("cursor", "pointer")
-                .on("click", function (d, i) {
-                    onLSTMWeightTypeClick(i);
-                });
+            // lstmTypes.join("rect")
+            //     .attr("x", 5).attr("y", (d, i) => (i - 1) * 10)
+            //     .attr("fill", "white")
+            //     .attr("width", 60).attr("height", 9)
+            //     .style("cursor", "pointer")
+            //     .on("click", function (d, i) {
+            //         onLSTMWeightTypeClick(i);
+            //     });
             lstmTypes.join("text").text(d => d)
                 .attr("class", "lstmWeightType")
                 .attr("font-size", 10)
@@ -282,7 +282,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     //<editor-fold desc="For positive/negative weight types">
     async function drawWeightTypes(container) {
         return new Promise((resolve, reject) => {
-            container.append("g").selectAll(".weightColor").data(["(click to toggle)", "-- negative", "-- positive"]).join("text").text(d => d)
+            container.selectAll(".weightTypeGroup").data([1]).join("g").attr("class", "weightTypeGroup").selectAll(".weightColor").data(["(click to toggle)", "-- negative", "-- positive"]).join("text").text(d => d)
                 .attr("font-size", 10)
                 .attr("class", "weightColor")
                 .attr("x", 5).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`)
@@ -327,7 +327,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     //<editor-fold desc="For flatten layer notification">
     async function drawFlattenNotification(container) {
         return new Promise((resolve, reject) => {
-            container.selectAll(".legend").data(["Flatten layer", "(cumulative weights)"]).join("text").text(d => d)
+            container.selectAll(".flattenLegend").data(["Flatten layer", "(cumulative weights)"]).join("text").text(d => d)
+                .attr("class", "flattenLegend")
                 .attr("font-size", 10)
                 .attr("x", 3).attr("y", 0).attr("dy", (d, i) => `${i + 1}em`);
             //Draw the guide.
@@ -405,7 +406,9 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
 
     function onBatchEnd(batch, logs) {
         let trainLoss = logs.loss;
+        // let trainLoss = model.evaluate(X_train_T, y_train_T).dataSync()[0];
         let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
+
         trainLosses.push(trainLoss);
         testLosses.push(testLoss);
         plotTrainLossData(trainLosses, testLosses);

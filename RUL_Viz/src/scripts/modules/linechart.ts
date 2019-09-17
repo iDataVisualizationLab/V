@@ -118,12 +118,12 @@ export class LineChart {
                 .domain([0, 0.5, 1])
                 .range(this.settings.colorScheme ? this.settings.colorScheme : ["#f59322", "#a0a0a0", "#0877bd"])
                 .clamp(true);
+
             this.settings.colorScale = d3.scaleOrdinal()
                 .domain(series)
                 .range(series.map((sr, i) => {
                     return colorScale(i / seriesLength);
                 }));
-
         }
         let container = d3.select(htmlContainer).append("div")
             .style("width", `${this.settings.width}px`)
@@ -131,16 +131,6 @@ export class LineChart {
             .style("position", "relative")
             .style("top", `0px`)
             .style("left", `0px`);
-
-        this.canvas = container.append("canvas")
-            .attr("width", contentWidth)
-            .attr("height", contentHeight)
-            .style("width", (contentWidth) + "px")
-            .style("height", (contentHeight) + "px")
-            .style("position", "absolute")
-            .style("top", `${this.settings.paddingTop}px`)
-            .style("left", `${this.settings.paddingLeft}px`);
-
         if (!this.settings.noSvg) {
             this.svg = container.append("svg").attr("width", this.settings.width)
                 .attr("height", this.settings.height)
@@ -149,11 +139,19 @@ export class LineChart {
                 .style("top", "0px")
                 .append("g")
                 .attr("transform", "translate(0, 0)");
-
-            this.svg.append("g").attr("class", "train");
-            this.svg.append("g").attr("class", "test");
         }
+        this.canvas = container.append("canvas")
+            .attr("width", contentWidth)
+            .attr("height", contentHeight)
+            .style("width", (contentWidth) + "px")
+            .style("height", (contentHeight) + "px")
+            .style("position", "absolute")
+            .style("top", `${this.settings.paddingTop}px`)
+            .style("left", `${this.settings.paddingLeft}px`)
+            .on("mousemove", function(){
+                let point = d3.mouse(this);
 
+            });
         //Show axes
         if (this.settings.showAxes) {
             let xAxis = d3.axisBottom()
@@ -261,5 +259,6 @@ export class LineChart {
                 ctx.fillText(marker, (xScale(point.x) - mkW / 2), (yScale(point.y) + mkH / 4));
             });
         }
+
     }
 }

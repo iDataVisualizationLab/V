@@ -77,7 +77,7 @@ export class HeatMap {
                 this.settings[prop] = heatMapSettings[prop];
             }
         }
-        if (this.settings.showAxes || this.settings.showColorBar) {
+        if (this.settings.showAxes || this.settings.showColorBar || this.settings.title) {
             this.settings.noSvg = false;
         }
         //Find width and height

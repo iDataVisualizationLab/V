@@ -1,6 +1,6 @@
-const dispatch = d3.dispatch("start", "pause", "change", "save");
+const dispatch = d3.dispatch("start", "pause", "change", "save", "changeInput");
 let btnTrain = null;
-const mapObjects = {};
+let mapObjects = {};
 let currentModel = null;
 const lstmWeightTypes = ["(click to toggle)", "input gate", "forget gate", "cell state", "output gate"];
 const lstmWeightTypeDisplay = [1, 0, 0, 0];
@@ -12,4 +12,4 @@ let reviewMode = false;
 //Draw color scales
 const colorBarW = 100;
 const colorBarH = 10;
-const heatmapH = 466;
+const heatmapH = 100;

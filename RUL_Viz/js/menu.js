@@ -4,6 +4,31 @@ dispatch.on("change", () => {
     stopTraining();
     currentModel = null;
 });
+dispatch.on("changeInput", () => {
+    return new Promise(() => {
+        //Remove the map object
+        mapObjects = {};
+        //Remove input
+        d3.select("#inputContainer").selectAll("*").remove();
+        //Remove weights out from input layer.
+        d3.select("#layer0Weights").selectAll("*").each(sel => {
+        debugger
+        });
+        //Reappend the defs for the arrows.
+
+        //Remove traintest loss
+        d3.select("#trainTestLoss").selectAll("*").remove();
+        //Remove output layer
+        d3.select("#outputContainer").selectAll("*").remove();
+        //Remove test container
+        d3.select("#testContainer").selectAll("*").remove();
+        //Remove all other layers.
+        d3.selectAll(".layerContainer").selectAll("*").remove();
+        d3.selectAll(".weightLine").remove();
+        //Start from beginning
+        processInputs();
+    });
+});
 
 function loadModelClick(modelName) {
     loadModelConfig(modelName).then(() => {

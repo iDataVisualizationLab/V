@@ -1,6 +1,7 @@
 let trainRULOrder;
 let testRULOrder;
 let X_train, y_train, X_test, y_test;
+let X_trainOrg, y_trainOrg, X_testOrig, y_testOrig;
 let link = d3.linkHorizontal()
     .x(function (d) {
         return d.x;
@@ -12,6 +13,52 @@ processInputs().then(() => {
     //Create default layersConfig.
     createTrainingGUI(layersConfig);
 });
+let features = ['arrTemperature0',
+    'arrTemperature1',
+    'arrTemperature2',
+    'arrCPU_load0',
+    'arrMemory_usage0',
+    'arrFans_health0',
+    'arrFans_health1',
+    'arrFans_health2',
+    'arrFans_health3',
+    'arrPower_usage0'];
+let selectedFeatures = features.map(_ => true);
+
+function populateFeatureSelection(features) {
+    let cbxFeatures = $('#features');
+    features.forEach((f, i) => {
+        cbxFeatures.append($(` <div class="input-field col s4"><label><input type="checkbox" class="filled-in" id="feature${i}" checked/><span>${f}</span></label></div>`));
+    });
+}
+
+function configInput() {
+    dispatch.call("change", null, undefined);//Pause training first.
+}
+
+function selectFeatures() {
+    //TODO: Check there is change or not.
+    for (let i = 0; i < features.length; i++) {
+        selectedFeatures[i] = $("#feature" + i).is(":checked");
+    }
+    dispatch.call("changeInput", null, undefined);
+}
+
+function copyFeatures(X, selectedFeatures) {
+    return X.map(itemSequence => {
+        return itemSequence.map(step => {
+            let fs = [];
+            selectedFeatures.forEach((sf, i) => {
+                if (sf) {
+                    fs.push(step[i]);
+                }
+            });
+            return fs;
+        });
+    });
+}
+
+populateFeatureSelection(features);
 
 async function processInputs() {
     return new Promise(resolve => {
@@ -23,9 +70,10 @@ async function processInputs() {
             d3.json("data/y_train_HPCC_1_20.json").then(y_trainR => {
                 d3.json("data/X_test_HPCC_1_20.json").then(X_testR => {
                     d3.json("data/y_test_HPCC_1_20.json").then(y_testR => {
-                        X_train = X_trainR;
+
+                        X_train = copyFeatures(X_trainR, selectedFeatures);
                         y_train = y_trainR;
-                        X_test = X_testR;
+                        X_test = copyFeatures(X_testR, selectedFeatures);
                         y_test = y_testR;
                         //We build the sorting order.
                         trainRULOrder = Array.from(y_train, (val, i) => i);
@@ -60,9 +108,7 @@ async function processInputs() {
                             }
                             z.push(row);
                         }
-                        drawSampleInputOutput({x: x, y: y, z: z}, "Sample input sensor", "sampleInput");
-
-
+                        // drawSampleInputOutput({x: x, y: y, z: z}, "Sample input sensor", "sampleInput");
                         let y_train_ordered = trainRULOrder.map(v => y_train[v][0]).reverse();
                         let sampleY = y_train_ordered.map(rulVal => Math.round(rulVal + 30.0 * (Math.random() - 0.5)));
 
@@ -82,7 +128,7 @@ async function processInputs() {
                                 type: 'scatter'
                             }
                         ];
-                        drawSampleOutput(lineChartData, "Target vs. output RUL", "trainRUL");
+                        // drawSampleOutput(lineChartData, "Target vs. output RUL", "trainRUL");
                         resolve();
                     });
                 });
