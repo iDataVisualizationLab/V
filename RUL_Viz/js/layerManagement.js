@@ -2,8 +2,8 @@ let layersConfig = [];
 
 function createDefaultLayers() {
     createLayer("lstm", 8, "default", 0);
-    createLayer("lstm", 8, "default", 1);
-    createLayer("dense", 8, "relu", 2);
+    // createLayer("lstm", 8, "default", 1);
+    // createLayer("dense", 8, "relu", 2);
     createLayer("dense", 4, "relu", 3);
 }
 

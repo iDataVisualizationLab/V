@@ -74,8 +74,8 @@ async function drawHeatmaps(data, container, selector) {
     //Generate div for the inputs
     let enters = d3.select(`#${container}`).selectAll(`.${selector}`).data(Array.from(Array(noOfFeatures), (x, i) => i), d => d).enter().append("div").style("width", "100px");
     if (container === "inputContainer") {
-        enters.append("div").text((d, i) => features.filter((f, fi) => selectedFeatures[fi])[i]).style("font-size", "8px").style("height", "10px").style("width", "100px").style("text-align", "center");
-        enters.append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "0px").style("margin-bottom", "0px").style("border", "1px solid black").style("display", "inline-block");
+        enters.append("div").text((d, i) => features.filter((f, fi) => selectedFeatures[fi])[i]).style("font-size", "10px").style("height", "10px").style("width", "100px").style("text-align", "center");
+        enters.append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "2px").style("margin-bottom", "0px").style("border", "1px solid black").style("display", "inline-block");
     } else {
         enters.append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px").style("margin-bottom", "0px").style("border", "1px solid black").style("display", "inline-block");
     }

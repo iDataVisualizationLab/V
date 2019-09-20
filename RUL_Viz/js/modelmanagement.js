@@ -28,11 +28,8 @@ function processLayers(layers) {
 
 async function createModel(layers, inputShape) {
     await processLayers(layers);
-    //Save model config.
-    let modelName = saveSnapshot();
-    if (modelName) {
-        saveModelData(modelName, "layersConfig", layersConfig);
-    }
+
+
     //Now create model
     return new Promise((resolve, reject) => {
         try {
@@ -168,30 +165,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     trainLossBatchSettings.xScale = xScaleTest;
 
 
-    //Save training data
-    let modelName = saveSnapshot();
-    if (modelName) {
-        saveModelData(modelName, "epochs", epochs);
-        saveModelData(modelName, "batchSize", batchSize);
-    }
-
-    if (!reviewMode) {
-        model.fit(X_train_T, y_train_T, {
-            batchSize: batchSize,
-            epochs: epochs,
-            // shuffle: true,
-            callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd, onTrainEnd: onTrainEnd}
-        });
-    } else {
-        //Loop through.
-        plotTrainLossData(trainLosses, testLosses);
-        //If it's done for an epoch, draw the model output data.
-        let bachesPerEpoch = Math.ceil(X_train.length / batchSize);
-        //Update epoch.
-        loadModel($("#snapshotName").val(), Math.floor(trainLosses.length / bachesPerEpoch)).then(model => {
-            displayEpochData(model, trainLosses[testLosses.length - 1], testLosses[testLosses.length - 1]);
-        });
-    }
 
     //Draw the legends for weights
     //Draw weights type on the last layer (to avoid conflict with other types), and also this one sure always there is one.
@@ -218,6 +191,18 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
 
     //Also toggle the weight displaying menu according to the default display.
     toggleWeightsMenu();
+
+    if (!reviewMode) {
+        model.fit(X_train_T, y_train_T, {
+            batchSize: batchSize,
+            epochs: epochs,
+            // shuffle: true,
+            callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd, onTrainEnd: onTrainEnd}
+        });
+    }else{
+        plotTrainLossData(trainLosses,  testLosses);
+        displayEpochData(model, trainLosses[testLosses.length - 1], testLosses[testLosses.length - 1]);
+    }
 
     //<editor-fold desc="For LSTM weight types" and its toggling menu">
     async function drawLSTMWeightTypes(container) {
@@ -348,8 +333,10 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         d3.selectAll(".weightLineTraining").classed("weightLineTraining", isTraining);//Done training, stop animating
         //Toggle button.
         btnTrain.classList.remove("paused");
+        //Enable the save/load buttons
+        d3.select("#saveModelMenu").attr("disabled", null);
+        d3.select("#loadModelMenu").attr("disabled", null);
     }
-
 
     async function displayLayersOutputs(model, i, input) {
         if (i >= model.layers.length - 1) {
@@ -445,13 +432,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
 
     function onEpochEnd(epoch, logs) {
         hideLoader();
-        //Save snapshot if needed
-        let modelName = saveSnapshot();
-        if (modelName) {
-            saveModelData(modelName, "trainLosses", trainLosses);
-            saveModelData(modelName, "testLosses", testLosses);
-            saveModel(modelName, epoch, model);
-        }
         displayEpochData(model, logs.loss);
     }
 }

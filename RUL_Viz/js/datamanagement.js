@@ -11,31 +11,34 @@ async function loadModelData(modelName, variableName) {
     });
 }
 
-function saveModel(modelName, epoch, model) {
-    model.save(`localstorage://${modelName}:${epoch}`);
-}
+function saveModel() {
+    let modelName = $("#modelName").val(),
+        epochs = $("#epochs").val(),
+        batchSize = $("#batchSize").val(),
+        model = currentModel;
 
-async function loadModel(modelName, epoch) {
-    const model = await tf.loadLayersModel(`localstorage://${modelName}:${epoch}`);
-    return model;
-}
-
-async function loadModelConfig(modelName) {
-    let layersConfig_ = await loadModelData(modelName, "layersConfig");
-    let epochs_ = await loadModelData(modelName, "epochs");
-    let batchSize_ = await loadModelData(modelName, "batchSize");
-    let trainLosses_ = await loadModelData(modelName, "trainLosses");
-    let testLosses_ = await loadModelData(modelName, "testLosses");
-    $("#epochs").val(epochs_);
-    $("#batchSize").val(batchSize_);
-    $("#snapshotName").val(modelName);
-    trainLosses = trainLosses_;
-    testLosses = testLosses_;
-    //Clear prev gui
-    clearMiddleLayerGUI();
-    reviewMode = true;
-    layersConfig = layersConfig_;
-    createTrainingGUI(layersConfig);
+    let valid = true;
+    if (!modelName) {
+        toast("Please insert snapshot name");
+        valid = false;
+    }
+    if (valid) {
+        //Save the model name
+        saveModelName(modelName);
+        //Save model config.
+        saveModelData(modelName, "layersConfig", layersConfig);
+        saveModelData(modelName, "epochs", epochs);
+        saveModelData(modelName, "batchSize", batchSize);
+        model.save(`localstorage://${modelName}`);
+        //Save train loss data.
+        saveModelData(modelName, "trainLosses", trainLosses);
+        saveModelData(modelName, "testLosses", testLosses);
+        saveModelData(modelName, "X_train", X_train);
+        saveModelData(modelName, "y_train", y_train);
+        saveModelData(modelName, "X_test", X_test);
+        saveModelData(modelName, "y_test", y_test);
+        toast("Saved model successfully!");
+    }
 }
 
 function loadSavedModelNames() {

@@ -31,9 +31,33 @@ dispatch.on("changeInput", () => {
 });
 
 function loadModelClick(modelName) {
-    loadModelConfig(modelName).then(() => {
-        //Then start training.
-        startTraining();
+    loadModel(modelName);
+}
+
+async function loadModel(modelName) {
+    let layersConfig_ = await loadModelData(modelName, "layersConfig");
+    let epochs_ = await loadModelData(modelName, "epochs");
+    let batchSize_ = await loadModelData(modelName, "batchSize");
+    let trainLosses_ = await loadModelData(modelName, "trainLosses");
+    let testLosses_ = await loadModelData(modelName, "testLosses");
+    let X_train_ = await loadModelData(modelName, "X_train");
+    let y_train_ = await loadModelData(modelName, "y_train");
+    let X_test_ = await loadModelData(modelName, "X_test");
+    let y_test_ = await loadModelData(modelName, "y_test");
+    $("#epochs").val(epochs_);
+    $("#batchSize").val(batchSize_);
+    $("#snapshotName").val(modelName);
+    trainLosses = trainLosses_;
+    testLosses = testLosses_;
+    processData(X_train_, y_train_, X_test_, y_test_, () => {
+        //Clear prev gui
+        clearMiddleLayerGUI();
+        reviewMode = true;
+        layersConfig = layersConfig_;
+        createTrainingGUI(layersConfig);
+        tf.loadLayersModel(`localstorage://${modelName}`).then(model=>{
+            trainModel(model, X_train, y_train, X_test, y_test, epochs_, batchSize_, true);
+        });
     });
 }
 
@@ -41,9 +65,6 @@ function setTrainingConfigEditable(val) {
     //Enable the batch size, epochs form.
     $("#batchSize").prop("disabled", !val);
     $("#epochs").prop("disabled", !val);
-    $("#saveSnapshot").prop("disabled", !val);
-    $("#snapshotName").prop("disabled", !val);
-    $("#loadModelMenu").prop("disabled", !val);
 }
 
 function stopTraining() {
@@ -67,12 +88,4 @@ function addLayer() {
 
 function displayAddLayerDialog() {
     dispatch.call("change", null, undefined);
-}
-
-function saveSnapshot() {
-    if ($("#saveSnapshot").is(":checked")) {
-        return $("#snapshotName").val();
-    } else {
-        return false;
-    }
 }
