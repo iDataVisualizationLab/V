@@ -165,7 +165,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     trainLossBatchSettings.xScale = xScaleTest;
 
 
-
     //Draw the legends for weights
     //Draw weights type on the last layer (to avoid conflict with other types), and also this one sure always there is one.
     drawWeightTypes(d3.select("#" + getWeightsContainerId(layersConfig.length - 1)));
@@ -199,8 +198,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
             // shuffle: true,
             callbacks: {onEpochEnd: onEpochEnd, onBatchEnd: onBatchEnd, onTrainEnd: onTrainEnd}
         });
-    }else{
-        plotTrainLossData(trainLosses,  testLosses);
+    } else {
+        plotTrainLossData(trainLosses, testLosses);
         displayEpochData(model, trainLosses[testLosses.length - 1], testLosses[testLosses.length - 1]);
     }
 
@@ -481,7 +480,11 @@ function drawDenseWeights(containerId) {
             .attr("fill", "none")
             .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
             .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
-            .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight))
+            .attr("opacity",
+                d => {
+                    let val = result.opacityScaler(d.weight > 0 ? d.weight : -d.weight);
+                    return val < $("#weightFilter").val() ? 0 : val;
+                })
             .on("mouseover", (d) => {
                 showTip(`Current weight: ${d.weight.toFixed(2)}`);
             })
@@ -502,7 +505,10 @@ function drawLSTMWeights(containerId) {
             .attr("fill", "none")
             .attr("stroke", d => weightValueColorScheme[d.weight > 0 ? 1 : 0])
             .attr("stroke-width", d => result.strokeWidthScale(d.weight > 0 ? d.weight : -d.weight))
-            .attr("opacity", d => result.opacityScaler(d.weight > 0 ? d.weight : -d.weight))
+            .attr("opacity", d => {
+                let val = result.opacityScaler(d.weight > 0 ? d.weight : -d.weight);
+                return val < $("#weightFilter").val() ? 0 : val;
+            })
             .on("mouseover", (d) => {
                 showTip(`Current weight: ${d.weight.toFixed(2)}`);
             })

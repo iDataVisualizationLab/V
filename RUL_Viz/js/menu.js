@@ -31,6 +31,7 @@ dispatch.on("changeInput", () => {
 });
 
 function loadModelClick(modelName) {
+    showLoader();
     loadModel(modelName);
 }
 

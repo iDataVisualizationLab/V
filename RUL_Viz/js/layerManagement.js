@@ -2,8 +2,8 @@ let layersConfig = [];
 
 function createDefaultLayers() {
     createLayer("lstm", 8, "default", 0);
-    // createLayer("lstm", 8, "default", 1);
-    // createLayer("dense", 8, "relu", 2);
+    createLayer("lstm", 8, "default", 1);
+    createLayer("dense", 8, "relu", 2);
     createLayer("dense", 4, "relu", 3);
 }
 
@@ -71,7 +71,7 @@ function clearMiddleLayerGUI() {
         if (elm.id !== "layerInput" && elm.id !== "layerOutput") {
             removeLayerGUI(elm.id);
         } else if (elm.id === "layerInput") {
-            let layer0WeightContainer = d3.select("#"+getWeightsContainerId(0));
+            let layer0WeightContainer = d3.select("#" + getWeightsContainerId(0));
             layer0WeightContainer.selectAll("g").remove();
             layer0WeightContainer.selectAll("weightLine").remove();
         }

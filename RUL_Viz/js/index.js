@@ -13,20 +13,12 @@ processInputs().then(() => {
     //Create default layersConfig.
     createTrainingGUI(layersConfig);
 });
-let features = ['arrTemperature0',
-    'arrTemperature1',
-    'arrTemperature2',
-    'arrCPU_load0',
-    'arrMemory_usage0',
-    'arrFans_health0',
-    'arrFans_health1',
-    'arrFans_health2',
-    'arrFans_health3',
-    'arrPower_usage0'];
-let selectedFeatures = features.map(_ => true);
+let features;
+let selectedFeatures;
 
 function populateFeatureSelection(features) {
     let cbxFeatures = $('#features');
+    d3.select("#features").selectAll("*").remove();
     features.forEach((f, i) => {
         cbxFeatures.append($(` <div class="input-field col s4"><label><input type="checkbox" class="filled-in" id="feature${i}" checked/><span>${f}</span></label></div>`));
     });
@@ -58,7 +50,6 @@ function copyFeatures(X, selectedFeatures) {
     });
 }
 
-populateFeatureSelection(features);
 
 function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
     X_train = X_trainR;
@@ -128,10 +119,14 @@ async function processInputs() {
         //     d3.json("data/train_RUL_FD001_100x50.json").then(y_trainR => {
         //         d3.json("data/test_FD001_100x50.json").then(X_testR => {
         //             d3.json("data/test_RUL_FD001_100x50.json").then(y_testR => {
+        //                 features = Array.from(new Array(X_trainR[0][0].length), (a, i) => "ss" + i);
         d3.json("data/X_train_HPCC_1_20.json").then(X_trainR => {
             d3.json("data/y_train_HPCC_1_20.json").then(y_trainR => {
                 d3.json("data/X_test_HPCC_1_20.json").then(X_testR => {
                     d3.json("data/y_test_HPCC_1_20.json").then(y_testR => {
+                        features = ['arrTemperature0', 'arrTemperature1', 'arrTemperature2', 'arrCPU_load0', 'arrMemory_usage0', 'arrFans_health0', 'arrFans_health1', 'arrFans_health2', 'arrFans_health3', 'arrPower_usage0'];
+                        populateFeatureSelection(features);
+                        selectedFeatures = features.map(_ => true);
                         X_train = copyFeatures(X_trainR, selectedFeatures);
                         X_test = copyFeatures(X_testR, selectedFeatures);
                         processData(X_train, y_trainR, X_test, y_testR, resolve);
@@ -244,4 +239,18 @@ function startTraining() {
         trainModel(currentModel, X_train, y_train, X_test, y_test, epochs, batchSize, false);
     }
 
+}
+
+function onWeightFilterChanged() {
+    let weightFilter = $("#weightFilter").val();
+    for (let i = 0; i < layersConfig.length; i++) {
+        let containerId = getWeightsContainerId(i);
+
+        if (layersConfig[i].layerType === "lstm") {
+            drawLSTMWeights(containerId);
+        }
+        if (layersConfig[i].layerType === "dense") {
+            drawDenseWeights(containerId);
+        }
+    }
 }
