@@ -23,7 +23,7 @@ https://idatavisualizationlab.github.io/V/RUL_Viz/
 
 https://idatavisualizationlab.github.io/V/XNN/
 
- https://idatavisualizationlab.github.io/ContiMap/
+https://idatavisualizationlab.github.io/ContiMap/
 
 # Outliers
 
