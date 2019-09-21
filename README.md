@@ -9,7 +9,7 @@ https://idatavisualizationlab.github.io/IoT/
 
 https://idatavisualizationlab.github.io/WatViz/demo.html
 
-https://github.com/iDataVisualizationLab/ScagnosticsJS
+https://idatavisualizationlab.github.io/ScagnosticsJS
 
 https://idatavisualizationlab.github.io/V/Threats/index.html
 
