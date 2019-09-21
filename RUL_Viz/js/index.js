@@ -89,7 +89,7 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
         }
         z.push(row);
     }
-    // drawSampleInputOutput({x: x, y: y, z: z}, "Sample input sensor", "sampleInput");
+    drawSampleInputOutput({x: x, y: y, z: z}, "Sample input sensor", "sampleInput");
     let y_train_ordered = trainRULOrder.map(v => y_train[v][0]).reverse();
     let sampleY = y_train_ordered.map(rulVal => Math.round(rulVal + 30.0 * (Math.random() - 0.5)));
 
@@ -109,22 +109,22 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
             type: 'scatter'
         }
     ];
-    // drawSampleOutput(lineChartData, "Target vs. output RUL", "trainRUL");
+    drawSampleOutput(lineChartData, "Target vs. output RUL", "trainRUL");
     resolve();
 }
 
 async function processInputs() {
     return new Promise(resolve => {
-        // d3.json("data/train_FD001_100x50.json").then(X_trainR => {
-        //     d3.json("data/train_RUL_FD001_100x50.json").then(y_trainR => {
-        //         d3.json("data/test_FD001_100x50.json").then(X_testR => {
-        //             d3.json("data/test_RUL_FD001_100x50.json").then(y_testR => {
-        //                 features = Array.from(new Array(X_trainR[0][0].length), (a, i) => "ss" + i);
-        d3.json("data/X_train_HPCC_1_20.json").then(X_trainR => {
-            d3.json("data/y_train_HPCC_1_20.json").then(y_trainR => {
-                d3.json("data/X_test_HPCC_1_20.json").then(X_testR => {
-                    d3.json("data/y_test_HPCC_1_20.json").then(y_testR => {
-                        features = ['arrTemperature0', 'arrTemperature1', 'arrTemperature2', 'arrCPU_load0', 'arrMemory_usage0', 'arrFans_health0', 'arrFans_health1', 'arrFans_health2', 'arrFans_health3', 'arrPower_usage0'];
+        d3.json("data/train_FD001_100x50.json").then(X_trainR => {
+            d3.json("data/train_RUL_FD001_100x50.json").then(y_trainR => {
+                d3.json("data/test_FD001_100x50.json").then(X_testR => {
+                    d3.json("data/test_RUL_FD001_100x50.json").then(y_testR => {
+                        features = [2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 20, 21].map(ss => "sensor" + ss);
+                        // d3.json("data/X_train_HPCC_1_20.json").then(X_trainR => {
+                        //     d3.json("data/y_train_HPCC_1_20.json").then(y_trainR => {
+                        //         d3.json("data/X_test_HPCC_1_20.json").then(X_testR => {
+                        //             d3.json("data/y_test_HPCC_1_20.json").then(y_testR => {
+                        //                 features = ['arrTemperature0', 'arrTemperature1', 'arrTemperature2', 'arrCPU_load0', 'arrMemory_usage0', 'arrFans_health0', 'arrFans_health1', 'arrFans_health2', 'arrFans_health3', 'arrPower_usage0'];
                         populateFeatureSelection(features);
                         selectedFeatures = features.map(_ => true);
                         X_train = copyFeatures(X_trainR, selectedFeatures);
@@ -242,7 +242,7 @@ function startTraining() {
 }
 
 function onWeightFilterChanged() {
-    let weightFilter = $("#weightFilter").val();
+    let weightFilter = +$("#weightFilter").val();
     for (let i = 0; i < layersConfig.length; i++) {
         let containerId = getWeightsContainerId(i);
         if (layersConfig[i].layerType === "lstm") {
@@ -252,57 +252,43 @@ function onWeightFilterChanged() {
             drawDenseWeights(containerId);
         }
     }
-    //Going from right to left.
-    for (let layerIdx = layersConfig.length - 1; layerIdx >= 0; --layerIdx) {
-        if (layersConfig[layerIdx].layerType === "lstm" || layersConfig[layerIdx].layerType === "dense") {
-            if (layerIdx >= 1) {
-                let containerId = getWeightsContainerId(layerIdx);
-                //Select all weights
-                let layerWeights = d3.select(`#${containerId}`).selectAll(".weightLine");
-                let theLayer = d3.select(`#layerContainer${layersConfig[layerIdx - 1].timeStamp}`);
-                //For each weight line we check the opacity.
-                //filter for all weights >= weight filter
-                let visibleSourceIndexes = [];
-                layerWeights.each(function () {
-                    let w = d3.select(this);
-                    let l = w.datum();
-                    if (l.scaledWeight >= weightFilter && visibleSourceIndexes.indexOf(l.sourceIdx) < 0) {
-                        visibleSourceIndexes.push(l.sourceIdx);
-                    }
-                });
+    for (let i = 0; i < layersConfig.length - 1; i++) {
+        let layerInfo = layersConfig[i];
+        if (layerInfo.layerType != 'flatten') {
+            let weightContainerId = getWeightsContainerId(i);
+            let outputWeightContainerId = getWeightsContainerId(i + 1);
+            let weightsContainer = d3.select(`#${weightContainerId}`);
+            let outputWeightsContainer = d3.select(`#${outputWeightContainerId}`);
+            let weights = weightsContainer.selectAll(".weightLine");
+            let outputWeights = outputWeightsContainer.selectAll(".weightLine");
+            let layerId = layerInfo.id;//This is the same as 'layer' + layerInfo.timeStamp.
+            let theLayer = d3.select(`#${layerId}`);
 
-                let invisibleSourceIndexes = [];
-                layerWeights.each(l => {
-                    if (visibleSourceIndexes.indexOf(l.sourceIdx) < 0) {
-                        invisibleSourceIndexes.push(l.sourceIdx);
+            let visibleIndexes = [];
+            //If it is involved in any weight then it is visible.
+            weights.each(w => {
+                if (w.scaledWeight >= weightFilter) {
+                    if (visibleIndexes.indexOf(w.targetIdx) < 0) {
+                        visibleIndexes.push(w.targetIdx);
                     }
-                });
-
-                invisibleSourceIndexes.forEach(idx => {
-                    //Disable first, then enable.
-                    let theSource = theLayer.select(`#${layersConfig[layerIdx - 1].id}${idx}`);
-                    theSource.style("opacity", 0.0);
-                });
-
-                visibleSourceIndexes.forEach(idx => {
-                    //Disable first, then enable.
-                    let theSource = theLayer.select(`#${layersConfig[layerIdx - 1].id}${idx}`);
-                    theSource.style("opacity", 1.0);
-                });
-
-                //Select the prev weight container and disable it.
-                d3.select(`#${getWeightsContainerId(layerIdx - 1)}`).selectAll('.weightLine').each(function () {
-                    let w = d3.select(this);
-                    let l = w.datum();
-                    if (invisibleSourceIndexes.indexOf(l.targetIdx) >= 0) {//target of this link belong to a source which is invisible.
-                        w.style("opacity", 0.0);
+                }
+            });
+            outputWeights.each(w => {
+                if (w.scaledWeight >= weightFilter) {
+                    if (visibleIndexes.indexOf(w.sourceIdx) < 0) {
+                        visibleIndexes.push(w.sourceIdx);
                     }
-                    if (visibleSourceIndexes.indexOf(l.targetIdx) >= 0) {//target of this link belong to a source which is visible.
-                        //make it visible if its weight is >= weight filter
-                        w.style("opacity", l.scaledWeight >= weightFilter ? 1.0 : 0.0);
-                    }
-                });
-            }
+                }
+            });
+
+            //All the rest are belonging invisible.
+            theLayer.selectAll(".layer" + layerInfo.timeStamp).style("opacity", (d, i) => {
+                if (visibleIndexes.indexOf(i) >= 0) {
+                    return 1.0;
+                } else {
+                    return 0;
+                }
+            });
         }
     }
 }
