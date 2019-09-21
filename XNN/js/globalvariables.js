@@ -1,4 +1,4 @@
-const dispatch = d3.dispatch("start", "pause", "change", "save", "changeInput");
+const dispatch = d3.dispatch("start", "pause", "change", "save", "changeInput", "changeWeightFilter");
 let btnTrain = null;
 let mapObjects = {};
 let currentModel = null;

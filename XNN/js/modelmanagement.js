@@ -259,6 +259,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         });
         //Todo: Fix this.
         toggleWeightsMenu();
+        dispatch.call("filterWeightChange");
     }
 
     //</editor-fold>
@@ -304,6 +305,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
             }
         }
         toggleWeightsMenu();
+        dispatch.call("changeWeightFilter", null, undefined);
     }
 
     //</editor-fold>

@@ -240,9 +240,10 @@ function startTraining() {
     }
 
 }
-
-function onWeightFilterChanged() {
-    let weightFilter = +$("#weightFilter").val();
+function onWeightFilterInput(){
+    dispatch.call("changeWeightFilter", null, undefined);
+}
+function onWeightFilterChanged(weightFilter) {
     for (let i = 0; i < layersConfig.length; i++) {
         let containerId = getWeightsContainerId(i);
         if (layersConfig[i].layerType === "lstm") {
