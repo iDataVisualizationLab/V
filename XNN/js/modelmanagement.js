@@ -259,7 +259,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         });
         //Todo: Fix this.
         toggleWeightsMenu();
-        dispatch.call("filterWeightChange");
+        dispatch.call("changeWeightFilter");
     }
 
     //</editor-fold>
@@ -434,12 +434,15 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     function onEpochEnd(epoch, logs) {
         hideLoader();
         displayEpochData(model, logs.loss);
-        onWeightFilterChanged();//Also filter data if needed.
+        if(epoch>1){
+            //We don't update for the first epoch
+            dispatch.call("changeWeightFilter");
+        }
     }
 }
 
-async function displayLayerWeights(model, i, containerId) {
 
+async function displayLayerWeights(model, i, containerId) {
     let layer = model.layers[i];
     let weights = layer.getWeights()[0];
 
