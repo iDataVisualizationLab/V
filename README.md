@@ -10,6 +10,8 @@ https://idatavisualizationlab.github.io/V/RUL/
 
 https://idatavisualizationlab.github.io/V/RUL_Viz/
 
+https://idatavisualizationlab.github.io/V/XNN/
+
 
 # Outliers
 
