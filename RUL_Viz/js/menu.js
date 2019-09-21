@@ -29,6 +29,10 @@ dispatch.on("changeInput", () => {
         processInputs();
     });
 });
+dispatch.on("changeWeightFilter", () => {
+    let weightFilter = +$("#weightFilter").val();
+    onWeightFilterChanged(weightFilter);
+});
 
 function loadModelClick(modelName) {
     showLoader();
@@ -56,7 +60,7 @@ async function loadModel(modelName) {
         reviewMode = true;
         layersConfig = layersConfig_;
         createTrainingGUI(layersConfig);
-        tf.loadLayersModel(`localstorage://${modelName}`).then(model=>{
+        tf.loadLayersModel(`localstorage://${modelName}`).then(model => {
             trainModel(model, X_train, y_train, X_test, y_test, epochs_, batchSize_, true);
         });
     });

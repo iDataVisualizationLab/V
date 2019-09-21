@@ -241,8 +241,11 @@ function startTraining() {
 
 }
 
-function onWeightFilterChanged() {
-    let weightFilter = +$("#weightFilter").val();
+function onWeightFilterInput() {
+    dispatch.call("changeWeightFilter", null, undefined);
+}
+
+function onWeightFilterChanged(weightFilter) {
     for (let i = 0; i < layersConfig.length; i++) {
         let containerId = getWeightsContainerId(i);
         if (layersConfig[i].layerType === "lstm") {
@@ -254,6 +257,7 @@ function onWeightFilterChanged() {
     }
     for (let i = 0; i < layersConfig.length - 1; i++) {
         let layerInfo = layersConfig[i];
+        //Network layer
         if (layerInfo.layerType != 'flatten') {
             let weightContainerId = getWeightsContainerId(i);
             let outputWeightContainerId = getWeightsContainerId(i + 1);
@@ -280,7 +284,6 @@ function onWeightFilterChanged() {
                     }
                 }
             });
-
             //All the rest are belonging invisible.
             theLayer.selectAll(".layer" + layerInfo.timeStamp).style("opacity", (d, i) => {
                 if (visibleIndexes.indexOf(i) >= 0) {
@@ -290,7 +293,7 @@ function onWeightFilterChanged() {
                 }
             });
         }
-        //Process for the input layer.
+        //Input layer
         let theLayer = d3.select(`#inputContainer`);
         let outputWeightContainerId = getWeightsContainerId(0);
         let outputWeightsContainer = d3.select(`#${outputWeightContainerId}`);
