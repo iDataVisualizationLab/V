@@ -511,7 +511,7 @@ function drawControlPanel() {
     });
 
     //  edge Weight Dropdown *********************
-    var edgeData = [{"id": 1, "value": "Brushing year"}, {"id": 2, "value": "All lensing years"}];
+    var edgeData = [{"id": 1, "value": "Brushing step"}, {"id": 2, "value": "All lensing steps"}];
     var select = d3.select('#edgeWeightDropdown').on('change', updategraph2);
     var options = select.selectAll('option').data(edgeData).enter().append('option').attr('value', function (d) {
         return d.id;
