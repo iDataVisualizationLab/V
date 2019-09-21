@@ -13,3 +13,5 @@ let reviewMode = false;
 const colorBarW = 100;
 const colorBarH = 10;
 const heatmapH = 100;
+const maxLineWeightOpacity = 1.0;
+const minLineWeightOpacity = 0.0;

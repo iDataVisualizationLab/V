@@ -245,12 +245,64 @@ function onWeightFilterChanged() {
     let weightFilter = $("#weightFilter").val();
     for (let i = 0; i < layersConfig.length; i++) {
         let containerId = getWeightsContainerId(i);
-
         if (layersConfig[i].layerType === "lstm") {
             drawLSTMWeights(containerId);
         }
         if (layersConfig[i].layerType === "dense") {
             drawDenseWeights(containerId);
+        }
+    }
+    //Going from right to left.
+    for (let layerIdx = layersConfig.length - 1; layerIdx >= 0; --layerIdx) {
+        if (layersConfig[layerIdx].layerType === "lstm" || layersConfig[layerIdx].layerType === "dense") {
+            if (layerIdx >= 1) {
+                let containerId = getWeightsContainerId(layerIdx);
+                //Select all weights
+                let layerWeights = d3.select(`#${containerId}`).selectAll(".weightLine");
+                let theLayer = d3.select(`#layerContainer${layersConfig[layerIdx - 1].timeStamp}`);
+                //For each weight line we check the opacity.
+                //filter for all weights >= weight filter
+                let visibleSourceIndexes = [];
+                layerWeights.each(function () {
+                    let w = d3.select(this);
+                    let l = w.datum();
+                    if (l.scaledWeight >= weightFilter && visibleSourceIndexes.indexOf(l.sourceIdx) < 0) {
+                        visibleSourceIndexes.push(l.sourceIdx);
+                    }
+                });
+
+                let invisibleSourceIndexes = [];
+                layerWeights.each(l => {
+                    if (visibleSourceIndexes.indexOf(l.sourceIdx) < 0) {
+                        invisibleSourceIndexes.push(l.sourceIdx);
+                    }
+                });
+
+                invisibleSourceIndexes.forEach(idx => {
+                    //Disable first, then enable.
+                    let theSource = theLayer.select(`#${layersConfig[layerIdx - 1].id}${idx}`);
+                    theSource.style("opacity", 0.0);
+                });
+
+                visibleSourceIndexes.forEach(idx => {
+                    //Disable first, then enable.
+                    let theSource = theLayer.select(`#${layersConfig[layerIdx - 1].id}${idx}`);
+                    theSource.style("opacity", 1.0);
+                });
+
+                //Select the prev weight container and disable it.
+                d3.select(`#${getWeightsContainerId(layerIdx - 1)}`).selectAll('.weightLine').each(function () {
+                    let w = d3.select(this);
+                    let l = w.datum();
+                    if (invisibleSourceIndexes.indexOf(l.targetIdx) >= 0) {//target of this link belong to a source which is invisible.
+                        w.style("opacity", 0.0);
+                    }
+                    if (visibleSourceIndexes.indexOf(l.targetIdx) >= 0) {//target of this link belong to a source which is visible.
+                        //make it visible if its weight is >= weight filter
+                        w.style("opacity", l.scaledWeight >= weightFilter ? 1.0 : 0.0);
+                    }
+                });
+            }
         }
     }
 }

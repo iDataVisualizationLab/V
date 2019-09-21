@@ -206,6 +206,7 @@ async function buildWeightPositionData(weightsT, leftNodeHeight, leftNodeMarginT
         let weightData = weightsT.dataSync();
         let strokeWidthScale = d3.scaleLinear().domain([0, d3.max(weightData.map(d => d >= 0 ? d : -d))]).range([minStrokeWidth, maxStrokeWidth]);
         let opacityScaler = d3.scaleLinear().domain(strokeWidthScale.domain()).range([minOpacity, maxOpacity]);
+        let zeroOneScaler = d3.scaleLinear().domain([0, d3.max(weightData.map(d => d >= 0 ? d : -d))]).range([0, 1]).clamp(true);
         let lineData = [];
         let wShape = weightsT.shape;
         let noOfLeftNodes = wShape[0];
@@ -231,9 +232,12 @@ async function buildWeightPositionData(weightsT, leftNodeHeight, leftNodeMarginT
                             x: weightWidth,
                             y: rightNodeY
                         },
+                        sourceIdx: leftIdx,
+                        targetIdx: rightIdx,
                         idx: idx,
                         type: typeIdx,
-                        weight: weightData[idx]
+                        weight: weightData[idx],
+                        scaledWeight: zeroOneScaler(weightData[idx]>0?weightData[idx]:-weightData[idx])
                     };
                     lineData.push(item);
                     // //TODO: may not break, but for now break for better performance
