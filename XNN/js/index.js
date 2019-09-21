@@ -254,6 +254,7 @@ function onWeightFilterChanged() {
     }
     for (let i = 0; i < layersConfig.length - 1; i++) {
         let layerInfo = layersConfig[i];
+        //Network layer
         if (layerInfo.layerType != 'flatten') {
             let weightContainerId = getWeightsContainerId(i);
             let outputWeightContainerId = getWeightsContainerId(i + 1);
@@ -280,7 +281,6 @@ function onWeightFilterChanged() {
                     }
                 }
             });
-
             //All the rest are belonging invisible.
             theLayer.selectAll(".layer" + layerInfo.timeStamp).style("opacity", (d, i) => {
                 if (visibleIndexes.indexOf(i) >= 0) {
@@ -290,5 +290,26 @@ function onWeightFilterChanged() {
                 }
             });
         }
+        //Input layer
+        let theLayer = d3.select(`#inputContainer`);
+        let outputWeightContainerId = getWeightsContainerId(0);
+        let outputWeightsContainer = d3.select(`#${outputWeightContainerId}`);
+        let outputWeights = outputWeightsContainer.selectAll(".weightLine");
+        let visibleIndexes = [];
+        outputWeights.each(w => {
+            if (w.scaledWeight >= weightFilter) {
+                if (visibleIndexes.indexOf(w.sourceIdx) < 0) {
+                    visibleIndexes.push(w.sourceIdx);
+                }
+            }
+        });
+        //All the rest are belonging invisible.
+        theLayer.selectAll(".inputDiv").style("opacity", (d, i) => {
+            if (visibleIndexes.indexOf(i) >= 0) {
+                return 1.0;
+            } else {
+                return 0;
+            }
+        });
     }
 }
