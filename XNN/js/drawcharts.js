@@ -80,7 +80,7 @@ function drawHeatmapDetails(selector, d, data) {
             text: "Sequence"
         },
         yAxisLabel: {
-            text: 'Data items'
+            text: dataItemName
         },
         showColorBar: true,
         width: 350,
@@ -175,7 +175,7 @@ function drawLinechartDetails(selector, d, data) {
             text: (data.layerName === "Training output" || data.layerName === "Testing output") ? predictedVariable : `${predictedVariable} (scaled)`
         },
         yAxisLabel: {
-            text: 'Data items'
+            text: dataItemName
         },
         showColorBar: true,
         yTicks: 10,

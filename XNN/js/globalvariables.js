@@ -16,3 +16,4 @@ const heatmapH = 100;
 const maxLineWeightOpacity = 1.0;
 const minLineWeightOpacity = 0.0;
 let predictedVariable;
+let dataItemName = "Data items";
