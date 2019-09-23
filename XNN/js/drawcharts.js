@@ -76,13 +76,16 @@ function drawHeatmapDetails(selector, d, data) {
         title: {
             text: `Layer: ${data.layerName}, feature: ${data.layerName === "Input" ? features[d] : d}`
         },
-        xAxisLabel: {},
+        xAxisLabel: {
+            text: "Sequence"
+        },
         yAxisLabel: {
             text: 'Data items'
         },
         showColorBar: true,
         width: 350,
         height: 350,
+        //TODO: Should make these change automatically depending on the dataset.
         xTickValues: Array.from(new Array(hmData.x.length), (x, i) => i).filter((x, i) => i % 5 === 0),
         yTickValues: Array.from(new Array(hmData.y.length), (x, i) => i).filter((x, i) => i % 20 === 0)
     };
@@ -166,10 +169,10 @@ function drawLinechartDetails(selector, d, data) {
         paddingBottom: 50,
         borderWidth: 0,
         title: {
-            text: `Layer: ${data.layerName}, feature: ${data.layerName === "Input" ? features[d] : d}`
+            text: (data.layerName === "Training output" || data.layerName === "Testing output") ? data.layerName : `Layer: ${data.layerName}, feature: ${d}`
         },
         xAxisLabel: {
-            text: 'Predicted value'
+            text: (data.layerName === "Training output" || data.layerName === "Testing output") ? predictedVariable : `${predictedVariable} (scaled)`
         },
         yAxisLabel: {
             text: 'Data items'
@@ -191,6 +194,7 @@ function drawLinechartDetails(selector, d, data) {
     let mapDetails = M.Modal.getInstance(document.getElementById("mapDetails"));
     mapDetails.open();
 }
+
 async function drawLineCharts(data, normalizer, target, container, selector, lineChartSettings, noBorder) {
     let noOfItems = data.length;
     let noOfFeatures = data[0].length;
@@ -231,7 +235,7 @@ async function drawLineCharts(data, normalizer, target, container, selector, lin
         ];
         if (!mapObjects[selector + featureIdx]) {
             if (document.getElementById(selector + featureIdx) === null) {//In case the layer is deleted, delete the data and move on.
-                delete(mapObjects[selector + featureIdx]);
+                delete (mapObjects[selector + featureIdx]);
                 console.log("continued");
                 continue;
             }

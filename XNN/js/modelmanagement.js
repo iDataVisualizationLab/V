@@ -416,6 +416,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         let ts = model.predict(X_train_T_ordered);
         ts.array().then(data => {
             //We don't normalize the final result.
+            data.layerName = "Training output";
             drawLineCharts(data, null, y_train_flat_ordered, "outputContainer", "output", outputSettings, true).then(() => {
                 //Update the training loss
                 updateGraphTitle("outputContainer", "Training, MSE: " + trainLoss.toFixed(2));
@@ -425,6 +426,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         let test = model.predict(X_test_T_ordered);
         test.array().then(data => {
             //We don't normalize the final result.
+            data.layerName = "Testing output";
             drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", trainTestSettings, true).then(() => {
                 //Update test loss
                 testLoss = reviewMode ? testLoss : model.evaluate(X_test_T_ordered, y_test_T_ordered).dataSync()[0];
