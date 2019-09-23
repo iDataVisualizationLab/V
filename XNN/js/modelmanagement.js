@@ -349,12 +349,14 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
             let timeStamp = layersConfig[i].timeStamp;
             if (layer.name.indexOf("lstm") >= 0) {
                 ts.array().then(data => {
+                    data.layerName = "LSTM " + i;
                     drawHeatmaps(data, "layerContainer" + timeStamp, "layer" + timeStamp);
                 });
             } else if (layer.name.indexOf("flatten") >= 0) {
                 //For flatten we don't have to do anything.
             } else if (layer.name.indexOf("dense") >= 0) {
                 ts.array().then(data => {
+                    data.layerName = "Dense " + i;
                     drawLineCharts(data, normalizeTarget, target_ordered, "layerContainer" + timeStamp, "layer" + timeStamp, lineChartSettings, false);
                 });
             }

@@ -6,8 +6,6 @@ let sampleOutput = {
 drawSampleInputOutput(sampleOutput, "Sample LSTM intermediate output", "sampleOutput");
 
 async function drawSampleInputOutput(data, title, container) {
-    data.y.reverse();
-    data.z = data.z.map(row => row.reverse());
     //Draw the feature.
     let hm = new HeatMap(document.getElementById(container), data, {
         noSvg: true,
@@ -63,6 +61,39 @@ async function drawSampleOutput(data, title, container) {
     lc.plot();
 }
 
+function drawHeatmapDetails(selector, d, data) {
+    let theMapContainer = document.getElementById("mapDetailsContent");
+    d3.select(theMapContainer).selectAll("*").remove();
+    let hmData = mapObjects[selector + d].data;
+    let hmSettings = {
+        noSvg: true,
+        showAxes: true,
+        paddingLeft: 50,
+        paddingRight: 50,
+        paddingTop: 50,
+        paddingBottom: 50,
+        borderWidth: 0,
+        title: {
+            text: `Layer: ${data.layerName}, feature: ${data.layerName === "Input" ? features[d] : d}`
+        },
+        xAxisLabel: {},
+        yAxisLabel: {
+            text: 'Data items'
+        },
+        showColorBar: true,
+        width: 350,
+        height: 350,
+        xTickValues: Array.from(new Array(hmData.x.length), (x, i) => i).filter((x, i) => i % 5 === 0),
+        yTickValues: Array.from(new Array(hmData.y.length), (x, i) => i).filter((x, i) => i % 20 === 0)
+    };
+
+    let hm = new HeatMap(theMapContainer, hmData, hmSettings);
+    hm.plot();
+
+    let mapDetails = M.Modal.getInstance(document.getElementById("mapDetails"));
+    mapDetails.open();
+}
+
 async function drawHeatmaps(data, container, selector) {
     let noOfItems = data.length;
     let noOfSteps = data[0].length;
@@ -70,14 +101,18 @@ async function drawHeatmaps(data, container, selector) {
     //Generate steps
     let x = Array.from(Array(noOfSteps), (x, i) => i);
     //Generate items
-    let y = Array.from(Array(noOfItems), (x, i) => i);
+    let y = Array.from(Array(noOfItems), (x, i) => i).reverse();//reverse since we sort from lower engine number to higher engine number
     //Generate div for the inputs
     let enters = d3.select(`#${container}`).selectAll(`.${selector}`).data(Array.from(Array(noOfFeatures), (x, i) => i), d => d).enter().append("div").style("width", "100px");
     if (container === "inputContainer") {
         enters.append("div").text((d, i) => features.filter((f, fi) => selectedFeatures[fi])[i]).style("font-size", "10px").style("height", "10px").style("width", "100px").style("text-align", "center");
-        enters.append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "2px").style("margin-bottom", "0px").style("border", "1px solid black").style("display", "inline-block");
+        enters.append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "2px").style("margin-bottom", "0px").style("border", "1px solid black").style("display", "inline-block").on("click", (d) => {
+            drawHeatmapDetails(selector, d, data);
+        });
     } else {
-        enters.append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px").style("margin-bottom", "0px").style("border", "1px solid black").style("display", "inline-block");
+        enters.append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px").style("margin-bottom", "0px").style("border", "1px solid black").style("display", "inline-block").on("click", (d) => {
+            drawHeatmapDetails(selector, d, data);
+        });
     }
     //Generate data.
     for (let featureIdx = 0; featureIdx < noOfFeatures; featureIdx++) {
@@ -118,6 +153,44 @@ async function drawHeatmaps(data, container, selector) {
     }
 }
 
+function drawLinechartDetails(selector, d, data) {
+    let theMapContainer = document.getElementById("mapDetailsContent");
+    d3.select(theMapContainer).selectAll("*").remove();
+    let mData = mapObjects[selector + d].data;
+    let mSettings = {
+        noSvg: true,
+        showAxes: true,
+        paddingLeft: 50,
+        paddingRight: 50,
+        paddingTop: 50,
+        paddingBottom: 50,
+        borderWidth: 0,
+        title: {
+            text: `Layer: ${data.layerName}, feature: ${data.layerName === "Input" ? features[d] : d}`
+        },
+        xAxisLabel: {
+            text: 'Predicted value'
+        },
+        yAxisLabel: {
+            text: 'Data items'
+        },
+        showColorBar: true,
+        yTicks: 10,
+        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"],
+        legend: {
+            x: 60,
+            y: 60
+        },
+        width: 350,
+        height: 350
+    };
+
+    let lc = new LineChart(theMapContainer, mData, mSettings);
+    lc.plot();
+
+    let mapDetails = M.Modal.getInstance(document.getElementById("mapDetails"));
+    mapDetails.open();
+}
 async function drawLineCharts(data, normalizer, target, container, selector, lineChartSettings, noBorder) {
     let noOfItems = data.length;
     let noOfFeatures = data[0].length;
@@ -125,7 +198,11 @@ async function drawLineCharts(data, normalizer, target, container, selector, lin
     let y = Array.from(Array(noOfItems), (yV, i) => i);
     //Generate div for the inputs
     let elms = d3.select(`#${container}`).selectAll(`.${selector}`).data(Array.from(Array(noOfFeatures), (x, i) => i), d => d)
-        .enter().append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px");
+        .enter().append("div").attr("class", selector).attr("id", d => selector + d).style("margin-top", "10px")
+        .on("click", (d) => {
+            drawLinechartDetails(selector, d, data);
+        });
+
     if (typeof noBorder === 'undefined' || !noBorder) {
         elms.style("border", "1px solid black").style("display", "inline-block");
     }
@@ -153,7 +230,8 @@ async function drawLineCharts(data, normalizer, target, container, selector, lin
             }
         ];
         if (!mapObjects[selector + featureIdx]) {
-            if (document.getElementById(selector + featureIdx) === null) {//In case the layer is deleted, just move on.
+            if (document.getElementById(selector + featureIdx) === null) {//In case the layer is deleted, delete the data and move on.
+                delete(mapObjects[selector + featureIdx]);
                 console.log("continued");
                 continue;
             }
@@ -164,7 +242,6 @@ async function drawLineCharts(data, normalizer, target, container, selector, lin
             let lc = mapObjects[selector + featureIdx];
             lc.update(lineChartData);
         }
-
     }
 }
 
@@ -237,7 +314,7 @@ async function buildWeightPositionData(weightsT, leftNodeHeight, leftNodeMarginT
                         idx: idx,
                         type: typeIdx,
                         weight: weightData[idx],
-                        scaledWeight: zeroOneScaler(weightData[idx]>0?weightData[idx]:-weightData[idx])
+                        scaledWeight: zeroOneScaler(weightData[idx] > 0 ? weightData[idx] : -weightData[idx])
                     };
                     lineData.push(item);
                     // //TODO: may not break, but for now break for better performance

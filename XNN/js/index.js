@@ -70,6 +70,7 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
     drawOutputColorScale();
     //Draw input
     let X_train_ordered = trainRULOrder.map(d => X_train[d]);
+    X_train_ordered.layerName = "Input";
     drawHeatmaps(X_train_ordered, "inputContainer", "inputDiv").then(() => {
         hideLoader();
     });
@@ -240,9 +241,11 @@ function startTraining() {
     }
 
 }
-function onWeightFilterInput(){
+
+function onWeightFilterInput() {
     dispatch.call("changeWeightFilter", null, undefined);
 }
+
 function onWeightFilterChanged(weightFilter) {
     for (let i = 0; i < layersConfig.length; i++) {
         let containerId = getWeightsContainerId(i);
