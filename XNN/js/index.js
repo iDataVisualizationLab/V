@@ -58,9 +58,9 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
     y_test = y_testR;
     //We build the sorting order.
     trainRULOrder = Array.from(y_train, (val, i) => i);
-    trainRULOrder = trainRULOrder.sort((a, b) => y_train[a] - y_train[b]);
+    // trainRULOrder = trainRULOrder.sort((a, b) => y_train[a] - y_train[b]);
     testRULOrder = Array.from(y_test, (val, i) => i);
-    testRULOrder = testRULOrder.sort((a, b) => y_test[a] - y_test[b]);
+    // testRULOrder = testRULOrder.sort((a, b) => y_test[a] - y_test[b]);
     let flattenedZ = X_train.flat().flat();
     let minZ = d3.min(flattenedZ);
     let maxZ = d3.max(flattenedZ);

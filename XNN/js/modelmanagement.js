@@ -367,6 +367,42 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         });
     }
 
+    function plotTrainLossDetails() {
+        let theMapContainer = document.getElementById("mapDetailsContent");
+        d3.select(theMapContainer).selectAll("*").remove();
+
+        let trainLossBatchSettings = {
+            noSvg: false,
+            showAxes: true,
+            paddingLeft: 60,
+            paddingRight: 10,
+            paddingTop: 20,
+            paddingBottom: 40,
+            width: 350,
+            height: 350,
+            legend: {
+                x: 350 - 50,
+                y: 35
+            },
+            title: {
+                text: 'Training loss vs. testing loss.'
+            },
+
+            xAxisLabel: {
+                text: 'Batch'
+            },
+            yAxisLabel: {
+                text: 'Loss'
+            }
+        };
+
+        let lc = new LineChart(theMapContainer, mapObjects['trainTestLoss'].data, trainLossBatchSettings);
+        lc.plot();
+
+        let mapDetails = M.Modal.getInstance(document.getElementById("mapDetails"));
+        mapDetails.open();
+    }
+
     async function plotTrainLossData(trainLosses, testLosses) {
         if (!trainLossBatchSettings.yScale) {
             trainLossBatchSettings.yScale = d3.scaleLinear().domain([0, trainLosses[0] > testLosses[0] ? trainLosses[0] : testLosses[0]]).range([trainLossBatchSettings.height - trainLossBatchSettings.paddingTop - trainLossBatchSettings.paddingBottom, 0]);
@@ -385,6 +421,9 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         ];
         if (!mapObjects['trainTestLoss']) {
             //Draw the feature.
+            d3.select("#trainTestLoss").on("click", () => {
+                plotTrainLossDetails();
+            });
             let lc = new LineChart(document.getElementById('trainTestLoss'), lineChartData, trainLossBatchSettings);
             lc.plot();
             mapObjects['trainTestLoss'] = lc;

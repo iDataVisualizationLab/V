@@ -90,6 +90,7 @@ function drawHeatmapDetails(selector, d, data) {
         yTickValues: Array.from(new Array(hmData.y.length), (x, i) => i).filter((x, i) => i % 20 === 0)
     };
 
+
     let hm = new HeatMap(theMapContainer, hmData, hmSettings);
     hm.plot();
 
