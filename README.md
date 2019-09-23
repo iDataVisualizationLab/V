@@ -1,32 +1,32 @@
 # Projects
-https://idatavisualizationlab.github.io/VAST2018/ 
+[VAST2018](https://idatavisualizationlab.github.io/VAST2018/) 
 
-https://idatavisualizationlab.github.io/Soil/
+[SOAViz](https://idatavisualizationlab.github.io/Soil/)
 
-https://idatavisualizationlab.github.io/CVSS/
+[CVExplorer](https://idatavisualizationlab.github.io/CVSS/)
 
-https://idatavisualizationlab.github.io/IoT/
+[IoTViz](https://idatavisualizationlab.github.io/IoT/)
 
-https://idatavisualizationlab.github.io/WatViz/demo.html
+[WatViz](https://idatavisualizationlab.github.io/WatViz/demo.html)
 
-https://idatavisualizationlab.github.io/ScagnosticsJS
+[ScagnosticsJS](https://idatavisualizationlab.github.io/ScagnosticsJS)
 
-https://idatavisualizationlab.github.io/V/Threats/index.html
+[Network threats](https://idatavisualizationlab.github.io/V/Threats/index.html)
 
-https://idatavisualizationlab.github.io/V/Honeypots/demos.html
+[Honeypots](https://idatavisualizationlab.github.io/V/Honeypots/demos.html)
 
-https://idatavisualizationlab.github.io/V/Honeypots_Static/demos.html
+[Honeypots statics](https://idatavisualizationlab.github.io/V/Honeypots_Static/demos.html)
 
-https://idatavisualizationlab.github.io/V/RUL/
+[RUL](https://idatavisualizationlab.github.io/V/RUL/)
 
-https://idatavisualizationlab.github.io/V/RUL_Viz/
+[RULViz](https://idatavisualizationlab.github.io/V/RUL_Viz/)
 
-https://idatavisualizationlab.github.io/V/XNN/
+[XNN](https://idatavisualizationlab.github.io/V/XNN/)
 
-https://idatavisualizationlab.github.io/ContiMap/
+[ContiMap](https://idatavisualizationlab.github.io/ContiMap/)
 
 # Outliers
 
-2D: https://outliagnostics.github.io/demos.html
+[2D: Outliers](https://outliagnostics.github.io/demos.html)
 
-nD: https://idatavisualizationlab.github.io/V/MultiOutliers
+[nD: Outliers](https://idatavisualizationlab.github.io/V/MultiOutliers)

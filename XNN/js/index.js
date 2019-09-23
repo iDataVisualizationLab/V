@@ -89,7 +89,7 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
         }
         z.push(row);
     }
-    drawSampleInputOutput({x: x, y: y, z: z}, "Sample input sensor", "sampleInput");
+    // drawSampleInputOutput({x: x, y: y, z: z}, "Sample input sensor", "sampleInput");
     let y_train_ordered = trainRULOrder.map(v => y_train[v][0]).reverse();
     let sampleY = y_train_ordered.map(rulVal => Math.round(rulVal + 30.0 * (Math.random() - 0.5)));
 
@@ -109,7 +109,7 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
             type: 'scatter'
         }
     ];
-    drawSampleOutput(lineChartData, "Target vs. output RUL", "trainRUL");
+    // drawSampleOutput(lineChartData, "Target vs. output RUL", "trainRUL");
     resolve();
 }
 

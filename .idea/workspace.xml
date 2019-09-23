@@ -4,6 +4,7 @@
     <list default="true" id="d42cede2-ea0a-4872-8e02-2ad66063882e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/XNN/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/XNN/js/index.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -143,14 +144,8 @@
       <workItem from="1568085929742" duration="20000" />
       <workItem from="1569088627260" duration="1815000" />
       <workItem from="1569106973692" duration="281000" />
-      <workItem from="1569107624192" duration="17000" />
-    </task>
-    <task id="LOCAL-00076" summary="Updated">
-      <created>1565212618125</created>
-      <option name="number" value="00076" />
-      <option name="presentableId" value="LOCAL-00076" />
-      <option name="project" value="LOCAL" />
-      <updated>1565212618125</updated>
+      <workItem from="1569107624192" duration="490000" />
+      <workItem from="1569252613392" duration="316000" />
     </task>
     <task id="LOCAL-00077" summary="Updated">
       <created>1565213942692</created>
@@ -488,7 +483,14 @@
       <option name="project" value="LOCAL" />
       <updated>1569107243354</updated>
     </task>
-    <option name="localTasksCounter" value="125" />
+    <task id="LOCAL-00125" summary="Updated">
+      <created>1569107680332</created>
+      <option name="number" value="00125" />
+      <option name="presentableId" value="LOCAL-00125" />
+      <option name="project" value="LOCAL" />
+      <updated>1569107680332</updated>
+    </task>
+    <option name="localTasksCounter" value="126" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
