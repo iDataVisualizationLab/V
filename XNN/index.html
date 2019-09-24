@@ -181,7 +181,7 @@
                 y-axis: engines
                 <div class="divider" style="margin-bottom: 5px;"></div>
                 <div class="row">
-                    <svg style="overflow: visible;margin-left: 10px;" height="20">
+                    <svg style="overflow: visible;margin-left: 10px;" height="25">
                         <g id="inputColorScale"></g>
                     </svg>
                 </div>
@@ -205,11 +205,7 @@
         <!-- Dynamic part here. -->
         <div class="grid-item" style="width: 400px !important;" id="layerOutput">
             <div class="row">
-                <p class="range-field" style="float: right;margin-top: 0px;">
-                    <label for="weightFilter">Filter weight (absolute)</label>
-                    <input type="range" id="weightFilter" min="0.0" max="1.0" step="0.01" value="0.0"
-                           oninput="onWeightFilterInput()"/>
-                </p>
+
                 <a href="#addLayerMenu" class="btn-small btn-floating modal-trigger"><i
                         class="material-icons" onclick="displayAddLayerDialog()">add</i></a>
                 <b>Output</b>
@@ -219,10 +215,16 @@
                 <br/>
                 y-axis: engines
                 <div class="divider" style="margin-bottom: 5px;"></div>
-                <div class="row container">
-                    <svg style="overflow: visible;" height="20">
+                <div class="row">
+                    <svg style="overflow: visible;" height="25" width="100">
                         <g id="outputColorScale"></g>
                     </svg>
+                    <p class="range-field"
+                       style="float: right;margin-top: 0px; height: 13px; width: 180px; line-height: 0.0;">
+                        <label for="weightFilter">Filter weight (absolute)</label>
+                        <input type="range" id="weightFilter" min="0.0" max="1.0" step="0.01" value="0.0"
+                               oninput="onWeightFilterInput()"/>
+                    </p>
                 </div>
                 <div class="divider" style="margin-bottom: 10px; margin-top: 5px;"></div>
                 <div class="row">
@@ -283,19 +285,19 @@
                 a saved, trained model.
             </li>
         </ul>
-        <h5>Dataset</h5>
-        This ML Solution works on the <a
-            href="https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/#turbofan"
-            target="_blank">Turbofan Engine Degradation Simulation Data Set</a>.
+        <!--        <h5>Dataset</h5>-->
+        <!--        This ML Solution works on the <a-->
+        <!--            href="https://ti.arc.nasa.gov/tech/dash/groups/pcoe/prognostic-data-repository/#turbofan"-->
+        <!--            target="_blank">Turbofan Engine Degradation Simulation Data Set</a>.-->
         <h5>Graph description</h5>
-<!--        <div class="row">-->
-<!--            <div class="col s4 center" id="sampleInput"-->
-<!--                 style="width: 350px; height: 350px; overflow: visible; margin-left: 20px;"></div>-->
-<!--            <div class="col s4 center" id="sampleOutput"-->
-<!--                 style="width: 350px; height: 350px; overflow: visible; margin-left: 20px;"></div>-->
-<!--            <div class="col s4 center" id="trainRUL"-->
-<!--                 style="width: 350px; height: 350px; overflow: visible; margin-left: 20px;"></div>-->
-<!--        </div>-->
+        <!--        <div class="row">-->
+        <!--            <div class="col s4 center" id="sampleInput"-->
+        <!--                 style="width: 350px; height: 350px; overflow: visible; margin-left: 20px;"></div>-->
+        <!--            <div class="col s4 center" id="sampleOutput"-->
+        <!--                 style="width: 350px; height: 350px; overflow: visible; margin-left: 20px;"></div>-->
+        <!--            <div class="col s4 center" id="trainRUL"-->
+        <!--                 style="width: 350px; height: 350px; overflow: visible; margin-left: 20px;"></div>-->
+        <!--        </div>-->
         <P>
             Please click on each of the graphs to view the graph in details.
         </P>

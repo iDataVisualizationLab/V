@@ -35,11 +35,13 @@ dispatch.on("changeWeightFilter", () => {
 });
 
 function loadModelClick(modelName) {
+    isTraining = false;
     showLoader();
     loadModel(modelName);
 }
 
 async function loadModel(modelName) {
+
     let layersConfig_ = await loadModelData(modelName, "layersConfig");
     let epochs_ = await loadModelData(modelName, "epochs");
     let batchSize_ = await loadModelData(modelName, "batchSize");
@@ -54,6 +56,15 @@ async function loadModel(modelName) {
     $("#snapshotName").val(modelName);
     trainLosses = trainLosses_;
     testLosses = testLosses_;
+    //clear current map object (so we will redraw instead of updating)
+    mapObjects = {};
+    //Clear prev input
+    d3.select("#inputContainer").selectAll("*").remove();
+    //Clear prev output and test
+    d3.select("#outputContainer").selectAll("*").remove();
+    d3.select("#testContainer").selectAll("*").remove();
+    //Clear also the training/testing loss chart.
+    d3.select("#trainTestLoss").selectAll("*").remove();
     processData(X_train_, y_train_, X_test_, y_test_, () => {
         //Clear prev gui
         clearMiddleLayerGUI();
@@ -61,6 +72,9 @@ async function loadModel(modelName) {
         layersConfig = layersConfig_;
         createTrainingGUI(layersConfig);
         tf.loadLayersModel(`localstorage://${modelName}`).then(model => {
+            //Also
+            //Draw the color scales for the intermediate outputs
+            drawColorScales(layersConfig);
             trainModel(model, X_train, y_train, X_test, y_test, epochs_, batchSize_, true);
         });
     });

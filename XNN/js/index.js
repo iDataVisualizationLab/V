@@ -71,6 +71,7 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
     //Draw input
     let X_train_ordered = trainRULOrder.map(d => X_train[d]);
     X_train_ordered.layerName = "Input";
+
     drawHeatmaps(X_train_ordered, "inputContainer", "inputDiv").then(() => {
         hideLoader();
     });
