@@ -14,7 +14,6 @@ dispatch.on("changeInput", () => {
         d3.select("#layer0Weights").selectAll("*").each(sel => {
         debugger
         });
-        //Reappend the defs for the arrows.
 
         //Remove traintest loss
         d3.select("#trainTestLoss").selectAll("*").remove();
@@ -43,6 +42,7 @@ function loadModelChange(theElm) {
 }
 
 function populateModelGUIFromData(trainLosses_, testLosses_, X_train_, y_train_, X_test_, y_test_, layersConfig_, model, epochs_, batchSize_) {
+    currentModel = model;
     trainLosses = trainLosses_;
     testLosses = testLosses_;
     //clear current map object (so we will redraw instead of updating)
@@ -121,7 +121,7 @@ function displayLoadModelDialog() {
     }
     //Need to reinitialize
     let selectElems = document.querySelectorAll('select');
-    let selectInstances = M.FormSelect.init(selectElems);
+    M.FormSelect.init(selectElems);
     displayDialog("loadModelDialog");
 }
 

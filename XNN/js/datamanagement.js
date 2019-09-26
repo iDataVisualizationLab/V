@@ -24,7 +24,6 @@ function saveModelClick() {
 }
 
 function saveModel(toFile) {
-
     let modelName = $("#modelName").val(),
         epochs = $("#epochs").val(),
         batchSize = $("#batchSize").val(),
@@ -40,7 +39,6 @@ function saveModel(toFile) {
         if (toFile) {
             obj = {};
         }
-
         //Save model config.
         saveModelData(modelName, "layersConfig", layersConfig, obj);
         saveModelData(modelName, "epochs", epochs, obj);
@@ -153,7 +151,6 @@ async function loadModelFromFiles(theElm) {
             let y_test_ = loadModelDataFromObj(modelData, "y_test");
             populateModelGUIFromData(trainLosses_, testLosses_, X_train_, y_train_, X_test_, y_test_, layersConfig_, model, epochs_, batchSize_);
             hideLoader();
-
         };
         reader.readAsText(dataFile);
     }
@@ -164,6 +161,23 @@ function loadModelDataFromObj(obj, variable) {
 }
 
 async function loadModelFromLocalStorage(modelName) {
+    let layersConfig_ = await loadModelData(modelName, "layersConfig");
+    let epochs_ = await loadModelData(modelName, "epochs");
+    let batchSize_ = await loadModelData(modelName, "batchSize");
+    let trainLosses_ = await loadModelData(modelName, "trainLosses");
+    let testLosses_ = await loadModelData(modelName, "testLosses");
+    let X_train_ = await loadModelData(modelName, "X_train");
+    let y_train_ = await loadModelData(modelName, "y_train");
+    let X_test_ = await loadModelData(modelName, "X_test");
+    let y_test_ = await loadModelData(modelName, "y_test");
+    let model = await tf.loadLayersModel(`localstorage://${modelName}`);
+    $("#epochs").val(epochs_);
+    $("#batchSize").val(batchSize_);
+    populateModelGUIFromData(trainLosses_, testLosses_, X_train_, y_train_, X_test_, y_test_, layersConfig_, model, epochs_, batchSize_);
+}
+async function loadModelFromServer(modelName) {
+    //Use this
+    //const model = await tf.loadLayersModel
     let layersConfig_ = await loadModelData(modelName, "layersConfig");
     let epochs_ = await loadModelData(modelName, "epochs");
     let batchSize_ = await loadModelData(modelName, "batchSize");
