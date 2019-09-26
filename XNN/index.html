@@ -191,15 +191,17 @@
     <div class="modal-content" style="height: 300px;">
         <div class="row">
             <div class="input-field col s12">
-                <select id="modelsFromServer">
+                <select id="modelsFromServer" onchange="loadServerModelChange(this)">
                     <option value="" disabled selected>Choose your model</option>
+                    <option value="fullfeatures8884">High-performance Computing Center (8884)</option>
+                    <option value="fullfeatures84">High-performance Computing Center (84)</option>
                 </select>
                 <label>Select a model from server</label>
             </div>
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <select id="modelsFromLocalStorage" onchange="loadModelChange(this)">
+                <select id="modelsFromLocalStorage" onchange="loadLocalStorageModelChange(this)">
                     <option value="" disabled selected>Choose your model</option>
                 </select>
                 <label>Select a model from browser</label>

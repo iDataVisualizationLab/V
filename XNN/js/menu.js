@@ -33,15 +33,36 @@ dispatch.on("changeWeightFilter", () => {
     onWeightFilterChanged(weightFilter);
 });
 
-function loadModelChange(theElm) {
+function loadLocalStorageModelChange(theElm) {
+    loadModelChange("localstorage", theElm);
+}
+
+function loadServerModelChange(theElm) {
+    loadModelChange("server", theElm);
+}
+
+function loadModelChange(sourceType, theElm) {
     let modelName = theElm.value;
     isTraining = false;
     showLoader();
-    loadModelFromLocalStorage(modelName);
+    if (sourceType === "server") {
+        loadModelFromServer(modelName);
+    } else if (sourceType === "localstorage") {
+        loadModelFromLocalStorage(modelName);
+    }
     closeDialog("loadModelDialog");
 }
 
-function populateModelGUIFromData(trainLosses_, testLosses_, X_train_, y_train_, X_test_, y_test_, layersConfig_, model, epochs_, batchSize_) {
+function populateModelGUIFromData(model, modelData) {
+    let layersConfig_ = loadModelDataFromObj(modelData, "layersConfig");
+    let epochs_ = loadModelDataFromObj(modelData, "epochs");
+    let batchSize_ = loadModelDataFromObj(modelData, "batchSize");
+    let trainLosses_ = loadModelDataFromObj(modelData, "trainLosses");
+    let testLosses_ = loadModelDataFromObj(modelData, "testLosses");
+    let X_train_ = loadModelDataFromObj(modelData, "X_train");
+    let y_train_ = loadModelDataFromObj(modelData, "y_train");
+    let X_test_ = loadModelDataFromObj(modelData, "X_test");
+    let y_test_ = loadModelDataFromObj(modelData, "y_test");
     currentModel = model;
     trainLosses = trainLosses_;
     testLosses = testLosses_;

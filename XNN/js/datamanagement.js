@@ -87,7 +87,6 @@ async function saveModelName(modelName) {
 }
 
 async function loadModelFromFiles(theElm) {
-
     const fileList = theElm.files;
     //Need to know which file is which.
     //Take the model name.
@@ -140,16 +139,7 @@ async function loadModelFromFiles(theElm) {
         let reader = new FileReader();
         reader.onload = function (e) {
             let modelData = JSON.parse(e.target.result);
-            let layersConfig_ = loadModelDataFromObj(modelData, "layersConfig");
-            let epochs_ = loadModelDataFromObj(modelData, "epochs");
-            let batchSize_ = loadModelDataFromObj(modelData, "batchSize");
-            let trainLosses_ = loadModelDataFromObj(modelData, "trainLosses");
-            let testLosses_ = loadModelDataFromObj(modelData, "testLosses");
-            let X_train_ = loadModelDataFromObj(modelData, "X_train");
-            let y_train_ = loadModelDataFromObj(modelData, "y_train");
-            let X_test_ = loadModelDataFromObj(modelData, "X_test");
-            let y_test_ = loadModelDataFromObj(modelData, "y_test");
-            populateModelGUIFromData(trainLosses_, testLosses_, X_train_, y_train_, X_test_, y_test_, layersConfig_, model, epochs_, batchSize_);
+            populateModelGUIFromData(model, modelData);
             hideLoader();
         };
         reader.readAsText(dataFile);
@@ -160,7 +150,7 @@ function loadModelDataFromObj(obj, variable) {
     return obj[variable];
 }
 
-async function loadModelFromLocalStorage(modelName) {
+async function loadModelDataFromLocalStorage(modelName) {
     let layersConfig_ = await loadModelData(modelName, "layersConfig");
     let epochs_ = await loadModelData(modelName, "epochs");
     let batchSize_ = await loadModelData(modelName, "batchSize");
@@ -170,24 +160,33 @@ async function loadModelFromLocalStorage(modelName) {
     let y_train_ = await loadModelData(modelName, "y_train");
     let X_test_ = await loadModelData(modelName, "X_test");
     let y_test_ = await loadModelData(modelName, "y_test");
-    let model = await tf.loadLayersModel(`localstorage://${modelName}`);
-
-    populateModelGUIFromData(trainLosses_, testLosses_, X_train_, y_train_, X_test_, y_test_, layersConfig_, model, epochs_, batchSize_);
+    return {
+        "layersConfig": layersConfig_,
+        "epochs": epochs_,
+        "batchSize": batchSize_,
+        "trainLosses": trainLosses_,
+        "testLosses": testLosses_,
+        "X_train": X_train_,
+        "y_train": y_train_,
+        "X_test": X_test_,
+        "y_test": y_test_
+    };
 }
-async function loadModelFromServer(modelName) {
-    //Use this
-    //const model = await tf.loadLayersModel
-    let layersConfig_ = await loadModelData(modelName, "layersConfig");
-    let epochs_ = await loadModelData(modelName, "epochs");
-    let batchSize_ = await loadModelData(modelName, "batchSize");
-    let trainLosses_ = await loadModelData(modelName, "trainLosses");
-    let testLosses_ = await loadModelData(modelName, "testLosses");
-    let X_train_ = await loadModelData(modelName, "X_train");
-    let y_train_ = await loadModelData(modelName, "y_train");
-    let X_test_ = await loadModelData(modelName, "X_test");
-    let y_test_ = await loadModelData(modelName, "y_test");
+
+async function loadModelFromLocalStorage(modelName) {
     let model = await tf.loadLayersModel(`localstorage://${modelName}`);
-    $("#epochs").val(epochs_);
-    $("#batchSize").val(batchSize_);
-    populateModelGUIFromData(trainLosses_, testLosses_, X_train_, y_train_, X_test_, y_test_, layersConfig_, model, epochs_, batchSize_);
+    loadModelDataFromLocalStorage(modelName).then(modelData => {
+        populateModelGUIFromData(model, modelData);
+    });
+}
+
+async function loadModelFromServer(modelName) {
+    showLoader();
+    const model = await tf.loadLayersModel(`data/models/${modelName}.json`);
+    //Now load data.
+    d3.json(`data/models/${modelName}_data.json`).then(modelData => {
+        populateModelGUIFromData(model, modelData);
+        hideLoader();
+    });
+
 }
