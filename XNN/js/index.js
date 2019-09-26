@@ -11,10 +11,17 @@ let link = d3.linkHorizontal()
     });
 processInputs().then(() => {
     //Create default layersConfig.
-    createTrainingGUI(layersConfig);
+    createTrainingGUI(layersConfig).then(() => {
+        loadDefaultModel();
+    });
 });
 
-
+function loadDefaultModel() {
+    //Load default model.
+    let theModelFromServerOptions = document.getElementById("modelsFromServer");
+    theModelFromServerOptions.selectedIndex = 1;
+    theModelFromServerOptions.onchange(theModelFromServerOptions);
+}
 function populateFeatureSelection(features) {
     let cbxFeatures = $('#features');
     d3.select("#features").selectAll("*").remove();
@@ -48,7 +55,6 @@ function copyFeatures(X, selectedFeatures) {
         });
     });
 }
-
 
 function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
     X_train = X_trainR;

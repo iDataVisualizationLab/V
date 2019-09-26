@@ -488,7 +488,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     }
 }
 
-
 async function displayLayerWeights(model, i, containerId) {
     let layer = model.layers[i];
     let weights = layer.getWeights()[0];

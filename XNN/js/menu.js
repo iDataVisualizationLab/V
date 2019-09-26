@@ -130,9 +130,8 @@ function displaySaveModelDialog() {
     displayDialog("saveModelDialog");
 }
 
-function displayLoadModelDialog() {
-    dispatch.call("change", null, undefined);
-    // Clean-up and repopulate the selection options.
+function populateLocalStorageModelNames() {
+// Clean-up and repopulate the selection options.
     let dd = $("#modelsFromLocalStorage");
     dd.empty();
     dd.append($('<option value="" disabled selected>Choose your model</option>'));
@@ -145,6 +144,11 @@ function displayLoadModelDialog() {
     //Need to reinitialize
     let selectElems = document.querySelectorAll('select');
     M.FormSelect.init(selectElems);
+}
+
+function displayLoadModelDialog() {
+    dispatch.call("change", null, undefined);
+    populateLocalStorageModelNames();
     displayDialog("loadModelDialog");
 }
 
