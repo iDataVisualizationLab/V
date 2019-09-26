@@ -22,6 +22,7 @@ function loadDefaultModel() {
     theModelFromServerOptions.selectedIndex = 1;
     theModelFromServerOptions.onchange(theModelFromServerOptions);
 }
+
 function populateFeatureSelection(features) {
     let cbxFeatures = $('#features');
     d3.select("#features").selectAll("*").remove();
@@ -120,6 +121,7 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
     resolve();
 }
 
+//TODO: Since we load the default models => this might not be needed => but there are few dataset specific information that we need to save/load before by passing this. So check again.
 async function processInputs() {
     return new Promise(resolve => {
         // d3.json("data/train_FD001_100x50.json").then(X_trainR => {
