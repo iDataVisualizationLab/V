@@ -47,6 +47,8 @@ function populateModelGUIFromData(trainLosses_, testLosses_, X_train_, y_train_,
     testLosses = testLosses_;
     //clear current map object (so we will redraw instead of updating)
     mapObjects = {};
+    $("#epochs").val(epochs_);
+    $("#batchSize").val(batchSize_);
     //Clear prev input
     d3.select("#inputContainer").selectAll("*").remove();
     //Clear prev output and test

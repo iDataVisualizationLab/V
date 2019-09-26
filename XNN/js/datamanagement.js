@@ -171,8 +171,7 @@ async function loadModelFromLocalStorage(modelName) {
     let X_test_ = await loadModelData(modelName, "X_test");
     let y_test_ = await loadModelData(modelName, "y_test");
     let model = await tf.loadLayersModel(`localstorage://${modelName}`);
-    $("#epochs").val(epochs_);
-    $("#batchSize").val(batchSize_);
+
     populateModelGUIFromData(trainLosses_, testLosses_, X_train_, y_train_, X_test_, y_test_, layersConfig_, model, epochs_, batchSize_);
 }
 async function loadModelFromServer(modelName) {
