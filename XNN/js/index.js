@@ -13,8 +13,7 @@ processInputs().then(() => {
     //Create default layersConfig.
     createTrainingGUI(layersConfig);
 });
-let features;
-let selectedFeatures;
+
 
 function populateFeatureSelection(features) {
     let cbxFeatures = $('#features');
@@ -252,15 +251,17 @@ function onWeightFilterInput() {
 }
 
 function onWeightFilterChanged(weightFilter) {
+    //Reset weight display.
     for (let i = 0; i < layersConfig.length; i++) {
-        let containerId = getWeightsContainerId(i);
+        let weightContainerId = getWeightsContainerId(i);
         if (layersConfig[i].layerType === "lstm") {
-            drawLSTMWeights(containerId);
+            drawLSTMWeights(weightContainerId);
         }
         if (layersConfig[i].layerType === "dense") {
-            drawDenseWeights(containerId);
+            drawDenseWeights(weightContainerId);
         }
     }
+
     for (let i = 0; i < layersConfig.length - 1; i++) {
         let layerInfo = layersConfig[i];
         //Network layer

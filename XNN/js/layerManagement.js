@@ -44,7 +44,7 @@ function createLayerGUI(layerInfo) {
     let colNum = getCSSVariable("--colNum");
     colNum += 1;
     setCSSVariable("--colNum", colNum);
-    let layerInfoStr = displayLayerInfo(layerInfo);
+    let layerInfoStr = getLayerInfo(layerInfo);
     let idVal = layerInfo.id;
     //Create the div.
     let div = $(`<div class='grid-item' id="${idVal}">
@@ -78,14 +78,18 @@ function clearMiddleLayerGUI() {
     });
 }
 
-function displayLayerInfo(layerInfo) {
+function getLayerInfo(layerInfo) {
     let result = "";
     if (layerInfo.layerType === "lstm") {
-        result = `<b>LSTM (${layerInfo.units} units)</b><br/>x-axis: output sequences<br/>y-axis: engines`;
+        result = `<b><a href="#">LSTM (${layerInfo.units} units)</a></b><br/>x-axis: output sequences<br/>y-axis: engines`;
     } else if (layerInfo.layerType === "dense") {
-        result = `<b>Dense (${layerInfo.units} units)</b><br/>x-axis: output values<br/>y-axis: engines`
+        result = `<b><a href="#">Dense (${layerInfo.units} units)</a></b><br/>x-axis: output values<br/>y-axis: engines`
     }
     return result;
+}
+
+function updateLayer(layerInfo) {
+    console.log(layerInfo);
 }
 
 function removeLayerGUI(id) {

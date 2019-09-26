@@ -69,13 +69,11 @@
                 <div class="row">
                     <!--<a href="#" class="btn-menu">train data</a>-->
                     <!--<a href="#" class="btn-menu">testing data</a>-->
-                    <a href="#modelNameDialog" class="btn btn-menu modal-trigger" disabled="true" id="saveModelMenu">Save
+                    <a href="#" class="btn btn-menu" id="saveModelMenu" onclick="displaySaveModelDialog()">Save
                         model</a>
-                    <a href="#" class="btn btn-menu dropdown-trigger" data-target='dropdownModels' id="loadModelMenu">load
+                    <a href="#" class="btn btn-menu" onclick="displayLoadModelDialog()" id="loadModelMenu">load
                         model</a>
-                    <!-- Dropdown Structure -->
-                    <ul id='dropdownModels' class='dropdown-content'>
-                    </ul>
+
                 </div>
                 <div class="row">
                     <div class="container center" style="display: table;">
@@ -101,74 +99,10 @@
         </div>
     </div>
 </div>
-<div class="modal" id="mapDetails" style="width: 400px; height: 440px;">
-    <div class="modal-content" style="width: 400px; height: 400px;" id="mapDetailsContent">
-    </div>
-    <div class="modal-footer">
-        <div class="row" style="padding-right: 10px; height: 20px;">
-            <a href="#" class="modal-close">Close</a>&nbsp;&nbsp;
-        </div>
-    </div>
-</div>
-<div class="modal" id="modelNameDialog" style="width: 400px;">
-    <div class="modal-content" style="height: 200px;">
-        <div class="input-field">
-            <label for="modelName">Model Name</label>
-            <input type="text" id="modelName"/>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <div class="row" style="padding-right: 10px; height: 20px;">
-            <a href="#" class="modal-close" onclick="saveModel()">Save & close</a>&nbsp;&nbsp;
-            <a href="#" class="modal-close">Cancel</a>
-        </div>
-    </div>
-</div>
-<div class="modal" id="configInput" style="width: 630px;">
-    <div class="modal-content" style="height: 200px;">
-        <div class="row" id="features"></div>
-    </div>
-    <div class="modal-footer">
-        <div class="row" style="padding-right: 10px; height: 20px;">
-            <a href="#" class="modal-close" onclick="selectFeatures()">Select & close</a>&nbsp;&nbsp;
-            <a href="#" class="modal-close">Cancel</a>
-        </div>
-    </div>
-</div>
-<div class="modal" id="addLayerMenu" style="width: 630px;">
-    <div class="modal-content" style="height: 200px;">
-        <div class="row">
-            <div class="input-field col">
-                <select id="layerType">
-                    <option value="dense" selected>Dense</option>
-                    <option value="lstm">LSTM</option>
-                </select>
-                <label>Layer</label>
-            </div>
-            <div class="input-field col">
-                <input id="noOfUnits" type="number" value="8">
-                <label for="noOfUnits">Units</label>
-            </div>
-            <div class="input-field col">
-                <select id="activationType">
-                    <option value="default" selected>default</option>
-                    <option value="relu">relu</option>
-                    <option value="tanh">tanh</option>
-                    <option value="sigmoid">sigmoid</option>
-                </select>
-                <label>Activation</label>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <div class="row" style="padding-right: 10px; height: 20px;">
-            <a href="#" class="modal-close" onclick="addLayer()">Add & close</a>&nbsp;&nbsp;
-            <a href="#" class="modal-close">Cancel</a>
-        </div>
-    </div>
-</div>
+<div class="divider"></div>
 <!--</editor-fold>-->
-<div class="container pageWidth" style="margin: auto;">
+
+<div class="container pageWidth" style="margin: auto; margin-top: 10px;">
     <div class="columnWrapper">
         <div class="grid-item" id="layerInput">
             <div class="row">
@@ -238,6 +172,128 @@
     </div>
 </div>
 <div class="divider"></div>
+
+<!--<editor-fold desc="dialogs">-->
+<div class="modal" id="mapDetails" style="width: 400px; height: 440px;">
+    <div class="modal-content" style="width: 400px; height: 400px;" id="mapDetailsContent">
+    </div>
+    <div class="modal-footer">
+        <div class="row" style="padding-right: 10px; height: 20px;">
+            <a href="#" class="modal-close">Close</a>&nbsp;&nbsp;
+        </div>
+    </div>
+</div>
+<div class="modal" id="loadModelDialog" style="width: 400px;">
+    <div class="header center">
+        <h5>Please select a load source</h5>
+    </div>
+    <div class="divider"></div>
+    <div class="modal-content" style="height: 300px;">
+        <div class="row">
+            <div class="input-field col s12">
+                <select id="modelsFromServer">
+                    <option value="" disabled selected>Choose your model</option>
+                </select>
+                <label>Select a model from server</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <select id="modelsFromLocalStorage" onchange="loadModelChange(this)">
+                    <option value="" disabled selected>Choose your model</option>
+                </select>
+                <label>Select a model from browser</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field">
+                <label for="loadFromFile">Upload files<input type="file" id="loadFromFile"
+                                                             onchange="loadModelFromFiles(this)" multiple/></label>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <div class="row" style="padding-right: 10px; height: 20px;">
+            <a href="#" class="modal-close">Cancel</a>
+        </div>
+    </div>
+</div>
+<div class="modal" id="saveModelDialog" style="width: 400px;">
+    <div class="modal-content" style="height: 200px;">
+        <div class="row">
+            <div class="input-field">
+                <label for="modelName">Model Name</label>
+                <input type="text" id="modelName"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s6">
+                <label>
+                    <input type="radio" name="saveOption" id="localstorage"/>
+                    <span>Local storage</span>
+                </label>
+            </div>
+            <div class="input-field col s6">
+                <label>
+                    <input type="radio" name="saveOption" id="downloads" checked/>
+                    <span>Downloads</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="row" style="padding-right: 10px; height: 20px;">
+            <a href="#" class="modal-close" onclick="saveModelClick()">Save & close</a>&nbsp;&nbsp;
+            <a href="#" class="modal-close">Cancel</a>
+        </div>
+    </div>
+</div>
+<div class="modal" id="configInput" style="width: 630px;">
+    <div class="modal-content" style="height: 200px;">
+        <div class="row" id="features"></div>
+    </div>
+    <div class="modal-footer">
+        <div class="row" style="padding-right: 10px; height: 20px;">
+            <a href="#" class="modal-close" onclick="selectFeatures()">Select & close</a>&nbsp;&nbsp;
+            <a href="#" class="modal-close">Cancel</a>
+        </div>
+    </div>
+</div>
+<div class="modal" id="addLayerMenu" style="width: 630px;">
+    <div class="modal-content" style="height: 200px;">
+        <div class="row">
+            <div class="input-field col">
+                <select id="layerType">
+                    <option value="dense" selected>Dense</option>
+                    <option value="lstm">LSTM</option>
+                </select>
+                <label>Layer</label>
+            </div>
+            <div class="input-field col">
+                <input id="noOfUnits" type="number" value="8">
+                <label for="noOfUnits">Units</label>
+            </div>
+            <div class="input-field col">
+                <select id="activationType">
+                    <option value="default" selected>default</option>
+                    <option value="relu">relu</option>
+                    <option value="tanh">tanh</option>
+                    <option value="sigmoid">sigmoid</option>
+                </select>
+                <label>Activation</label>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="row" style="padding-right: 10px; height: 20px;">
+            <a href="#" class="modal-close" onclick="addLayer()">Add & close</a>&nbsp;&nbsp;
+            <a href="#" class="modal-close">Cancel</a>
+        </div>
+    </div>
+</div>
+<!--</editor-fold>-->
 
 <footer style="margin-bottom: 10px;">
     <div class="container">
@@ -334,27 +390,6 @@
         let selectInstances = M.FormSelect.init(selectElems);
         let modalElems = document.querySelectorAll('.modal');
         let modalInstances = M.Modal.init(modalElems);
-        let dropdownElems = document.querySelectorAll(".dropdown-trigger");
-        try {
-            let dropdownInstances = M.Dropdown.init(dropdownElems, {
-                coverTrigger: false, constrainWidth: false, onOpenStart: function () {
-                    let dd = $("#dropdownModels");
-                    dd.empty();
-                    if (d3.select("#loadModelMenu").attr("disabled") !== null || d3.select("#loadModelMenu").attr("disabled") === true) {
-                        return;
-                    }
-                    let savedModelNames = loadSavedModelNames();
-                    if (savedModelNames.length > 0) {
-                        savedModelNames.forEach(modelName => {
-                            dd.append($(`<li><a href='#!' onclick="loadModelClick('${modelName}')">${modelName}</a></li>`));
-                        });
-                    } else {
-                        dd.append($(`<li><a href='#!'>no saved model</a></li>`));
-                    }
-                }
-            });
-        } catch (ex) {
-        }
     });
 </script>
 <!--Scripting-->

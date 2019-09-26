@@ -34,26 +34,15 @@ dispatch.on("changeWeightFilter", () => {
     onWeightFilterChanged(weightFilter);
 });
 
-function loadModelClick(modelName) {
+function loadModelChange(theElm) {
+    let modelName = theElm.value;
     isTraining = false;
     showLoader();
-    loadModel(modelName);
+    loadModelFromLocalStorage(modelName);
+    closeDialog("loadModelDialog");
 }
 
-async function loadModel(modelName) {
-
-    let layersConfig_ = await loadModelData(modelName, "layersConfig");
-    let epochs_ = await loadModelData(modelName, "epochs");
-    let batchSize_ = await loadModelData(modelName, "batchSize");
-    let trainLosses_ = await loadModelData(modelName, "trainLosses");
-    let testLosses_ = await loadModelData(modelName, "testLosses");
-    let X_train_ = await loadModelData(modelName, "X_train");
-    let y_train_ = await loadModelData(modelName, "y_train");
-    let X_test_ = await loadModelData(modelName, "X_test");
-    let y_test_ = await loadModelData(modelName, "y_test");
-    $("#epochs").val(epochs_);
-    $("#batchSize").val(batchSize_);
-    $("#snapshotName").val(modelName);
+function populateModelGUIFromData(trainLosses_, testLosses_, X_train_, y_train_, X_test_, y_test_, layersConfig_, model, epochs_, batchSize_) {
     trainLosses = trainLosses_;
     testLosses = testLosses_;
     //clear current map object (so we will redraw instead of updating)
@@ -71,13 +60,13 @@ async function loadModel(modelName) {
         reviewMode = true;
         layersConfig = layersConfig_;
         createTrainingGUI(layersConfig);
-        tf.loadLayersModel(`localstorage://${modelName}`).then(model => {
-            //Also
-            //Draw the color scales for the intermediate outputs
-            drawColorScales(layersConfig);
-            trainModel(model, X_train, y_train, X_test, y_test, epochs_, batchSize_, true);
-        });
+
+        //Draw the color scales for the intermediate outputs
+        drawColorScales(layersConfig);
+        trainModel(model, X_train, y_train, X_test, y_test, epochs_, batchSize_, true);
+
     });
+    return layersConfig;
 }
 
 function setTrainingConfigEditable(val) {
@@ -107,4 +96,43 @@ function addLayer() {
 
 function displayAddLayerDialog() {
     dispatch.call("change", null, undefined);
+}
+
+//Save model dialog
+function displaySaveModelDialog() {
+    if (!currentModel) {
+        toast("There is no new model to save!");
+        return;
+    }
+    displayDialog("saveModelDialog");
+}
+
+function displayLoadModelDialog() {
+    dispatch.call("change", null, undefined);
+    // Clean-up and repopulate the selection options.
+    let dd = $("#modelsFromLocalStorage");
+    dd.empty();
+    dd.append($('<option value="" disabled selected>Choose your model</option>'));
+    let savedModelNames = loadSavedModelNames();
+    if (savedModelNames.length > 0) {
+        savedModelNames.forEach(modelName => {
+            dd.append($(`<option value='${modelName}'>${modelName}</option>`));
+        });
+    }
+    //Need to reinitialize
+    let selectElems = document.querySelectorAll('select');
+    let selectInstances = M.FormSelect.init(selectElems);
+    displayDialog("loadModelDialog");
+}
+
+function displayDialog(dialogId) {
+    let theElm = document.getElementById(dialogId);
+    let dlg = M.Modal.getInstance(theElm);
+    dlg.open();
+}
+
+function closeDialog(dialogId) {
+    let theElm = document.getElementById(dialogId);
+    let dlg = M.Modal.getInstance(theElm);
+    dlg.close();
 }
