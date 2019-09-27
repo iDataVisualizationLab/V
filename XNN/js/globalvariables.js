@@ -19,3 +19,4 @@ let predictedVariable;
 let dataItemName = "Data items";
 let features;
 let selectedFeatures;
+let defaultModelIndex = 1;

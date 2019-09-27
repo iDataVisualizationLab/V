@@ -140,7 +140,7 @@
         <div class="grid-item" style="width: 400px !important;" id="layerOutput">
             <div class="row">
 
-                <a href="#addLayerMenu" class="btn-small btn-floating modal-trigger"><i
+                <a href="#" class="btn-small btn-floating modal-trigger"><i
                         class="material-icons" onclick="displayAddLayerDialog()">add</i></a>
                 <b>Output</b>
                 <br/>
@@ -193,8 +193,8 @@
             <div class="input-field col s12">
                 <select id="modelsFromServer" onchange="loadServerModelChange(this)">
                     <option value="" disabled selected>Choose your model</option>
-                    <option value="fullfeatures8884">High-performance Computing Center (8884)</option>
-                    <option value="fullfeatures84">High-performance Computing Center (84)</option>
+                    <option value="fullfeatures8884">HPCC (8884)</option>
+                    <option value="fullfeatures84">HPCC (84)</option>
                 </select>
                 <label>Select a model from server</label>
             </div>
@@ -263,8 +263,11 @@
         </div>
     </div>
 </div>
-<div class="modal" id="addLayerMenu" style="width: 630px;">
-    <div class="modal-content" style="height: 200px;">
+<div class="modal" id="changeLayerDialog" style="width: 630px;">
+    <div class="center">
+        <h5><span id="changeLayerDialogTitle"></span></h5>
+    </div>
+    <div class="modal-content" style="height: 85px;">
         <div class="row">
             <div class="input-field col">
                 <select id="layerType">
@@ -290,7 +293,7 @@
     </div>
     <div class="modal-footer">
         <div class="row" style="padding-right: 10px; height: 20px;">
-            <a href="#" class="modal-close" onclick="addLayer()">Add & close</a>&nbsp;&nbsp;
+            <a href="#" class="modal-close" id="changeLayerDialogConfirm">OK</a>&nbsp;&nbsp;
             <a href="#" class="modal-close">Cancel</a>
         </div>
     </div>

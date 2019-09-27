@@ -117,8 +117,38 @@ function addLayer() {
     createLayerGUI(layerInfo);
 }
 
+function updateLayerInfo(layerInfo) {
+    let layerType = $("#layerType").val();
+    let units = +$("#noOfUnits").val();
+    let activation = $("#activationType").val();
+    layerInfo.layerType = layerType;
+    layerInfo.units = units;
+    layerInfo.activation = activation;
+    updateLayerGUI(layerInfo);
+}
+
 function displayAddLayerDialog() {
     dispatch.call("change", null, undefined);
+    //Change the title dialog.
+    $("#changeLayerDialogTitle").text("Adding layer information");
+    //Change the function call.
+    $("#changeLayerDialogConfirm").on("click", addLayer);
+    displayDialog("changeLayerDialog");
+}
+
+function displayUpdateLayerDialog(layerInfo) {
+    dispatch.call("change", null, undefined);
+    //Populate the dialog with current value.
+    $("#layerType").val(layerInfo.layerType);
+    $("#noOfUnits").val(layerInfo.units);
+    $("#activationType").val(layerInfo.activation);
+    //Change the title.
+    $("#changeLayerDialogTitle").text("Updating layer information");
+    //Also update the function call
+    $("#changeLayerDialogConfirm").on("click", () => {
+        updateLayerInfo(layerInfo);
+    });
+    displayDialog("changeLayerDialog");
 }
 
 //Save model dialog

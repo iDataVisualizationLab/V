@@ -19,7 +19,7 @@ processInputs().then(() => {
 function loadDefaultModel() {
     //Load default model.
     let theModelFromServerOptions = document.getElementById("modelsFromServer");
-    theModelFromServerOptions.selectedIndex = 1;
+    theModelFromServerOptions.selectedIndex = defaultModelIndex;
     theModelFromServerOptions.onchange(theModelFromServerOptions);
 }
 
@@ -203,9 +203,9 @@ async function drawOutputColorScale() {
 }
 
 async function createTrainingGUI(layersConfig) {
-    if (layersConfig.length === 0) {
-        createDefaultLayers();
-    }
+    // if (layersConfig.length === 0) {
+    //     createDefaultLayers();
+    // }
     layersConfig.forEach(layerInfo => {
         if (layerInfo.id !== "output" && layerInfo.layerType !== "flatten") {
             createLayerGUI(layerInfo);

@@ -2,8 +2,8 @@ let layersConfig = [];
 
 function createDefaultLayers() {
     createLayer("lstm", 4, "default", 0);
-    // createLayer("lstm", 8, "default", 1);
-    // createLayer("dense", 8, "relu", 2);
+    createLayer("lstm", 8, "default", 1);
+    createLayer("dense", 8, "relu", 2);
     createLayer("dense", 4, "relu", 3);
 }
 
@@ -48,7 +48,7 @@ function createLayerGUI(layerInfo) {
     let idVal = layerInfo.id;
     //Create the div.
     let div = $(`<div class='grid-item' id="${idVal}">
-                    <a class="btn-small btn-floating"><i class="material-icons grey" onclick="deleteLayer('${idVal}')">delete</i></a> ${layerInfoStr}
+                    <a class="btn-small btn-floating"><i class="material-icons grey" onclick="deleteLayer('${idVal}')">delete</i></a> <span id="layerInfoStr${idVal}">${layerInfoStr}</span>
                     <div class="divider" style="margin-bottom: 5px;"></div>
                     <div class="row">
                         <svg style="overflow: visible; margin-left: 10px;" height="25">
@@ -66,6 +66,12 @@ function createLayerGUI(layerInfo) {
     div.insertBefore($("#layerOutput"));
 }
 
+function updateLayerGUI(layerInfo) {
+    let idVal = layerInfo.id;
+    let layerInfoStr = getLayerInfo(layerInfo);
+    $(`#layerInfoStr${idVal}`).html(layerInfoStr);
+}
+
 function clearMiddleLayerGUI() {
     $(".grid-item").each((i, elm) => {
         if (elm.id !== "layerInput" && elm.id !== "layerOutput") {
@@ -81,15 +87,17 @@ function clearMiddleLayerGUI() {
 function getLayerInfo(layerInfo) {
     let result = "";
     if (layerInfo.layerType === "lstm") {
-        result = `<b><a href="#">LSTM (${layerInfo.units} units)</a></b><br/>x-axis: output sequences<br/>y-axis: engines`;
+        result = `<b><a href="#" onclick="updateLayer('${layerInfo.id}')">LSTM (${layerInfo.units} units)</a></b><br/>x-axis: output sequences<br/>y-axis: engines`;
     } else if (layerInfo.layerType === "dense") {
-        result = `<b><a href="#">Dense (${layerInfo.units} units)</a></b><br/>x-axis: output values<br/>y-axis: engines`
+        result = `<b><a href="#" onclick="updateLayer('${layerInfo.id}')">Dense (${layerInfo.units} units)</a></b><br/>x-axis: output values<br/>y-axis: engines`
     }
     return result;
 }
 
-function updateLayer(layerInfo) {
-    console.log(layerInfo);
+function updateLayer(layerId) {
+    //Populate the add laye
+    let layerInfo = layersConfig.find(l => l.id === layerId);
+    displayUpdateLayerDialog(layerInfo);
 }
 
 function removeLayerGUI(id) {
