@@ -180,7 +180,7 @@ function drawLinechartDetails(selector, d, data) {
         },
         showColorBar: true,
         yTicks: 10,
-        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"],
+        colorScheme: data.layerName === "Testing output" ? testOutputColorScheme : outputColorScheme,
         legend: {
             x: 60,
             y: 60

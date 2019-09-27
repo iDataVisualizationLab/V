@@ -100,7 +100,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         paddingBottom: 0,
         width: 100,
         height: 100,
-        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
+        colorScheme: outputColorScheme
     };
     const testWidth = 250;
     const testHeight = 230;
@@ -116,12 +116,16 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         title: {
             text: "Training"
         },
-        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
+        legend: {
+            x: 50,
+            y: 35
+        },
+        colorScheme: outputColorScheme
     };
 
     let batches = Math.ceil(y_train_flat_ordered.length / batchSize) * epochs;
     let trainBatches = Array.from(Array(batches), (x, i) => i);
-    let trainTestSettings = {
+    let testOutputSettings = {
         noSvg: false,
         showAxes: true,
         paddingLeft: 40,
@@ -133,7 +137,11 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         title: {
             text: "Testing"
         },
-        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
+        legend: {
+            x: 50,
+            y: 35
+        },
+        colorScheme: testOutputColorScheme
     };
     let trainLossW = 800;
     let trainLossH = 200;
@@ -146,6 +154,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         paddingBottom: 40,
         width: trainLossW,
         height: trainLossH,
+        colorScheme: trainTestLossColorScheme,
         legend: {
             x: trainLossW - 50,
             y: 35
@@ -387,13 +396,14 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
             title: {
                 text: 'Training loss vs. testing loss.'
             },
-
             xAxisLabel: {
                 text: 'Batch'
             },
             yAxisLabel: {
                 text: 'Loss'
-            }
+            },
+            colorScheme: trainTestLossColorScheme
+
         };
 
         let lc = new LineChart(theMapContainer, mapObjects['trainTestLoss'].data, trainLossBatchSettings);
@@ -470,7 +480,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         test.array().then(data => {
             //We don't normalize the final result.
             data.layerName = "Testing output";
-            drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", trainTestSettings, true).then(() => {
+            drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", testOutputSettings, true).then(() => {
                 //Update test loss
                 testLoss = reviewMode ? testLoss : model.evaluate(X_test_T_ordered, y_test_T_ordered).dataSync()[0];
                 updateGraphTitle("testContainer", "Testing, MSE: " + testLoss.toFixed(2));

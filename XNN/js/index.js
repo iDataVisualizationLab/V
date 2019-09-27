@@ -168,9 +168,9 @@ async function drawColorScales(modelsConfig) {
 async function drawDenseColorScale(containerId) {
     return new Promise(() => {
         let theG = d3.select("#" + containerId);
-        theG.selectAll("text").data([{text: " x : target", color: "gray"}, {
+        theG.selectAll("text").data([{text: " x : target", color: "darkgreen"}, {
             text: " o : output",
-            color: "darkgreen"
+            color: "gray"
         }]).join("text")
             .text(d => d.text)
             .attr("fill", d => d.color)
