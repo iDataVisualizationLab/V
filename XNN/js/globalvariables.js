@@ -17,3 +17,5 @@ const maxLineWeightOpacity = 1.0;
 const minLineWeightOpacity = 0.0;
 let predictedVariable;
 let dataItemName = "Data items";
+let features;
+let selectedFeatures;

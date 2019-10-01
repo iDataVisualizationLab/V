@@ -11,10 +11,17 @@ let link = d3.linkHorizontal()
     });
 processInputs().then(() => {
     //Create default layersConfig.
-    createTrainingGUI(layersConfig);
+    createTrainingGUI(layersConfig).then(() => {
+        loadDefaultModel();
+    });
 });
-let features;
-let selectedFeatures;
+
+function loadDefaultModel() {
+    //Load default model.
+    let theModelFromServerOptions = document.getElementById("modelsFromServer");
+    theModelFromServerOptions.selectedIndex = 1;
+    theModelFromServerOptions.onchange(theModelFromServerOptions);
+}
 
 function populateFeatureSelection(features) {
     let cbxFeatures = $('#features');
@@ -50,7 +57,6 @@ function copyFeatures(X, selectedFeatures) {
     });
 }
 
-
 function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
     X_train = X_trainR;
     X_test = X_testR;
@@ -71,6 +77,7 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
     //Draw input
     let X_train_ordered = trainRULOrder.map(d => X_train[d]);
     X_train_ordered.layerName = "Input";
+
     drawHeatmaps(X_train_ordered, "inputContainer", "inputDiv").then(() => {
         hideLoader();
     });
@@ -114,6 +121,7 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
     resolve();
 }
 
+//TODO: Since we load the default models => this might not be needed => but there are few dataset specific information that we need to save/load before by passing this. So check again.
 async function processInputs() {
     return new Promise(resolve => {
         // d3.json("data/train_FD001_100x50.json").then(X_trainR => {
@@ -251,15 +259,17 @@ function onWeightFilterInput() {
 }
 
 function onWeightFilterChanged(weightFilter) {
+    //Reset weight display.
     for (let i = 0; i < layersConfig.length; i++) {
-        let containerId = getWeightsContainerId(i);
+        let weightContainerId = getWeightsContainerId(i);
         if (layersConfig[i].layerType === "lstm") {
-            drawLSTMWeights(containerId);
+            drawLSTMWeights(weightContainerId);
         }
         if (layersConfig[i].layerType === "dense") {
-            drawDenseWeights(containerId);
+            drawDenseWeights(weightContainerId);
         }
     }
+
     for (let i = 0; i < layersConfig.length - 1; i++) {
         let layerInfo = layersConfig[i];
         //Network layer

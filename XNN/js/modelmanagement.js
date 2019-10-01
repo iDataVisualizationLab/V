@@ -441,6 +441,10 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         trainLosses.push(trainLoss);
         testLosses.push(testLoss);
         plotTrainLossData(trainLosses, testLosses);
+        //TODO: This is slow, due to asynchronous behavior so putting it in epoch ends may have visual display bug
+        if (Math.ceil(X_train.length / batchSize) > 1) {
+            dispatch.call("changeWeightFilter");
+        }
     }
 
     function displayEpochData(model, trainLoss, testLoss) {
@@ -483,7 +487,6 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         }
     }
 }
-
 
 async function displayLayerWeights(model, i, containerId) {
     let layer = model.layers[i];
