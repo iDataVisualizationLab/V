@@ -26,8 +26,7 @@ function saveModelClick() {
 function saveModel(toFile) {
     let modelName = $("#modelName").val(),
         epochs = $("#epochs").val(),
-        batchSize = $("#batchSize").val(),
-        model = currentModel;
+        batchSize = $("#batchSize").val();
 
     let valid = true;
     if (!modelName) {

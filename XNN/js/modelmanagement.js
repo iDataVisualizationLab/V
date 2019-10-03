@@ -352,28 +352,26 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         if (i >= model.layers.length - 1) {
             return;//Do not draw the final output
         }
-        return new Promise((resolve, reject) => {
-            let layer = model.layers[i];
-            let ts = layer.apply(input);
-            let timeStamp = layersConfig[i].timeStamp;
-            if (layer.name.indexOf("lstm") >= 0) {
-                ts.array().then(data => {
-                    data.layerName = "LSTM " + i;
-                    drawHeatmaps(data, "layerContainer" + timeStamp, "layer" + timeStamp);
-                });
-            } else if (layer.name.indexOf("flatten") >= 0) {
-                //For flatten we don't have to do anything.
-            } else if (layer.name.indexOf("dense") >= 0) {
-                ts.array().then(data => {
-                    data.layerName = "Dense " + i;
-                    drawLineCharts(data, normalizeTarget, target_ordered, "layerContainer" + timeStamp, "layer" + timeStamp, lineChartSettings, false);
-                });
-            }
-            //Recurse
-            if (i < model.layers.length - 1) {//We will draw the output separately.
-                displayLayersOutputs(model, i + 1, ts);
-            }
-        });
+        let layer = model.layers[i];
+        let ts = layer.apply(input);
+        let timeStamp = layersConfig[i].timeStamp;
+        if (layer.name.indexOf("lstm") >= 0) {
+            ts.array().then(data => {
+                data.layerName = "LSTM " + i;
+                drawHeatmaps(data, "layerContainer" + timeStamp, "layer" + timeStamp);
+            });
+        } else if (layer.name.indexOf("flatten") >= 0) {
+            //For flatten we don't have to do anything.
+        } else if (layer.name.indexOf("dense") >= 0) {
+            ts.array().then(data => {
+                data.layerName = "Dense " + i;
+                drawLineCharts(data, normalizeTarget, target_ordered, "layerContainer" + timeStamp, "layer" + timeStamp, lineChartSettings, false);
+            });
+        }
+        //Recurse
+        if (i < model.layers.length - 1) {//We will draw the output separately.
+            displayLayersOutputs(model, i + 1, ts);
+        }
     }
 
     function plotTrainLossDetails() {
