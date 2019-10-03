@@ -444,13 +444,18 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     }
 
     function onBatchEnd(batch, logs) {
-        let trainLoss = logs.loss;
-        // let trainLoss = model.evaluate(X_train_T, y_train_T).dataSync()[0];
-        let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
+        // let trainLoss = logs.loss;
+        model.evaluate(X_train_T, y_train_T, {batchSize: batchSize}).data().then(trainRet => {
+                let trainLoss = trainRet[0];
+                model.evaluate(X_test_T, y_test_T, {batchSize: batchSize}).data().then(testRet => {
+                    let testLoss = testRet[0];
+                    trainLosses.push(trainLoss);
+                    testLosses.push(testLoss);
+                    plotTrainLossData(trainLosses, testLosses);
+                });
+            }
+        );
 
-        trainLosses.push(trainLoss);
-        testLosses.push(testLoss);
-        plotTrainLossData(trainLosses, testLosses);
         //TODO: This is slow, due to asynchronous behavior so putting it in epoch ends may have visual display bug
         if (Math.ceil(X_train.length / batchSize) > 1) {
             dispatch.call("changeWeightFilter");
