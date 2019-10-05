@@ -146,12 +146,13 @@ async function drawHeatmaps(data, container, selector) {
             // } else {
             //     hmSettings.title = {text: 'neuron' + featureIdx, fontSize: 6};
             // }
-            let hm = new HeatMap(document.getElementById(selector + featureIdx), {x: x, y: y.reverse(), z: z}, hmSettings);//reverse order of items (from big to small => top - to bottom to make it similar to the y-axis of the output)
+            let hm = new HeatMap(document.getElementById(selector + featureIdx), {x: x, y: y, z: z}, hmSettings);
             hm.plot();
             mapObjects[selector + featureIdx] = hm;
         } else {
             let hm = mapObjects[selector + featureIdx];
-            hm.update({x: x, y: y.reverse(), z: z})//reverse order of items (from big to small => top - to bottom to make it similar to the y-axis of the output)
+            debugger
+            hm.update({x: x, y: y, z: z});
         }
 
     }

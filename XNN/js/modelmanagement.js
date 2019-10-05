@@ -69,13 +69,23 @@ async function createModel(layers, inputShape) {
     });
 }
 
+function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
 async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, batchSize = 8, reviewMode) {
 
     let X_train_T = tf.tensor(X_train);
     let y_train_T = tf.tensor(y_train);
     let X_test_T = tf.tensor(X_test);
     let y_test_T = tf.tensor(y_test);
+    let trainSampleIndices = shuffle(Array.from(new Array(y_train.length), (d, i) => i)).slice(24);
+    let testSampleIndices = shuffle(Array.from(new Array(y_test.length), (d, i) => i)).slice(24);
+    let sample_X_train_T = tf.tensor(trainSampleIndices.map(i => X_train[i]));
+    let sample_y_train_T = tf.tensor(trainSampleIndices.map(i => y_train[i]));
 
+    let sample_X_test_T = tf.tensor(testSampleIndices.map(i => X_test[i]));
+    let sample_y_test_T = tf.tensor(testSampleIndices.map(i => y_test[i]));
 
     let y_train_ordered = trainRULOrder.map(d => y_train[d]);
     let X_train_ordered = trainRULOrder.map(d => X_train[d]);
@@ -125,6 +135,9 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
 
     let batches = Math.ceil(y_train_flat_ordered.length / batchSize) * epochs;
     let trainBatches = Array.from(Array(batches), (x, i) => i);
+    //TODO: Use these if we display train/test loss every epoch
+    // let batches = Math.ceil(y_train_flat_ordered.length / batchSize) * epochs;
+    // let trainBatches = Array.from(Array(batches), (x, i) => i);
     let testOutputSettings = {
         noSvg: false,
         showAxes: true,
@@ -339,6 +352,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     //</editor-fold>
 
     function onTrainEnd(batch, logs) {
+        //Display training time
+        console.log('Training time' + (new Date() - trainStartTime));
         isTraining = false;
         d3.selectAll(".weightLineTraining").classed("weightLineTraining", isTraining);//Done training, stop animating
         //Toggle button.
@@ -443,9 +458,9 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
 
     function onBatchEnd(batch, logs) {
         // let trainLoss = logs.loss;
-        model.evaluate(X_train_T, y_train_T, {batchSize: batchSize}).data().then(trainRet => {
+        model.evaluate(sample_X_train_T, sample_y_train_T).data().then(trainRet => {
                 let trainLoss = trainRet[0];
-                model.evaluate(X_test_T, y_test_T, {batchSize: batchSize}).data().then(testRet => {
+                model.evaluate(sample_X_test_T, sample_y_test_T).data().then(testRet => {
                     let testLoss = testRet[0];
                     trainLosses.push(trainLoss);
                     testLosses.push(testLoss);
@@ -454,7 +469,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
             }
         );
 
-        //TODO: This is slow, due to asynchronous behavior so putting it in epoch ends may have visual display bug
+        //TODO: This is slow, due to asynchronous behavior so putting it in epoch ends may have visual display bug, therefore we put it here, but it lowers the perf.
         if (Math.ceil(X_train.length / batchSize) > 1) {
             dispatch.call("changeWeightFilter");
         }
