@@ -1,7 +1,8 @@
 let trainRULOrder;
 let testRULOrder;
 let X_train, y_train, X_test, y_test;
-let X_trainOrg, y_trainOrg, X_testOrig, y_testOrig;
+let X_trainOrg, y_tstartTrainingrainOrg, X_testOrig, y_testOrig;
+let trainStartTime = null;
 let link = d3.linkHorizontal()
     .x(function (d) {
         return d.x;
@@ -11,10 +12,18 @@ let link = d3.linkHorizontal()
     });
 processInputs().then(() => {
     //Create default layersConfig.
-    createTrainingGUI(layersConfig);
+    // createDefaultLayers();
+    createTrainingGUI(layersConfig).then(() => {
+        loadDefaultModel();
+    });
 });
-let features;
-let selectedFeatures;
+
+function loadDefaultModel() {
+    //Load default model.
+    let theModelFromServerOptions = document.getElementById("modelsFromServer");
+    theModelFromServerOptions.selectedIndex = defaultModelIndex;
+    theModelFromServerOptions.onchange(theModelFromServerOptions);
+}
 
 function populateFeatureSelection(features) {
     let cbxFeatures = $('#features');
@@ -50,7 +59,6 @@ function copyFeatures(X, selectedFeatures) {
     });
 }
 
-
 function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
     X_train = X_trainR;
     X_test = X_testR;
@@ -70,6 +78,8 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
     drawOutputColorScale();
     //Draw input
     let X_train_ordered = trainRULOrder.map(d => X_train[d]);
+    X_train_ordered.layerName = "Input";
+
     drawHeatmaps(X_train_ordered, "inputContainer", "inputDiv").then(() => {
         hideLoader();
     });
@@ -89,7 +99,7 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
         }
         z.push(row);
     }
-    drawSampleInputOutput({x: x, y: y, z: z}, "Sample input sensor", "sampleInput");
+    // drawSampleInputOutput({x: x, y: y, z: z}, "Sample input sensor", "sampleInput");
     let y_train_ordered = trainRULOrder.map(v => y_train[v][0]).reverse();
     let sampleY = y_train_ordered.map(rulVal => Math.round(rulVal + 30.0 * (Math.random() - 0.5)));
 
@@ -109,10 +119,11 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
             type: 'scatter'
         }
     ];
-    drawSampleOutput(lineChartData, "Target vs. output RUL", "trainRUL");
+    // drawSampleOutput(lineChartData, "Target vs. output RUL", "trainRUL");
     resolve();
 }
 
+//TODO: Since we load the default models => this might not be needed => but there are few dataset specific information that we need to save/load before by passing this. So check again.
 async function processInputs() {
     return new Promise(resolve => {
         d3.json("data/train_FD001_100x50.json").then(X_trainR => {
@@ -120,13 +131,18 @@ async function processInputs() {
                 d3.json("data/test_FD001_100x50.json").then(X_testR => {
                     d3.json("data/test_RUL_FD001_100x50.json").then(y_testR => {
                         features = [2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 15, 17, 20, 21].map(ss => "sensor" + ss);
+                        predictedVariable = "RUL";
+                        dataItemName = "Engines";
                         // d3.json("data/X_train_HPCC_1_20.json").then(X_trainR => {
                         //     d3.json("data/y_train_HPCC_1_20.json").then(y_trainR => {
                         //         d3.json("data/X_test_HPCC_1_20.json").then(X_testR => {
                         //             d3.json("data/y_test_HPCC_1_20.json").then(y_testR => {
                         //                 features = ['arrTemperature0', 'arrTemperature1', 'arrTemperature2', 'arrCPU_load0', 'arrMemory_usage0', 'arrFans_health0', 'arrFans_health1', 'arrFans_health2', 'arrFans_health3', 'arrPower_usage0'];
+                        //                 predictedVariable = "arrTemperature0";
+                        //                 dataItemName = "Computes";
                         populateFeatureSelection(features);
                         selectedFeatures = features.map(_ => true);
+                        // selectedFeatures = [false, false, false, false, 7, false, 9, 11, 12, 13, 14, 15, 17, false, false];
                         X_train = copyFeatures(X_trainR, selectedFeatures);
                         X_test = copyFeatures(X_testR, selectedFeatures);
                         processData(X_train, y_trainR, X_test, y_testR, resolve);
@@ -155,9 +171,9 @@ async function drawColorScales(modelsConfig) {
 async function drawDenseColorScale(containerId) {
     return new Promise(() => {
         let theG = d3.select("#" + containerId);
-        theG.selectAll("text").data([{text: " x : target", color: "gray"}, {
+        theG.selectAll("text").data([{text: " x : target", color: "darkgreen"}, {
             text: " o : output",
-            color: "darkgreen"
+            color: "gray"
         }]).join("text")
             .text(d => d.text)
             .attr("fill", d => d.color)
@@ -190,9 +206,9 @@ async function drawOutputColorScale() {
 }
 
 async function createTrainingGUI(layersConfig) {
-    if (layersConfig.length === 0) {
-        createDefaultLayers();
-    }
+    // if (layersConfig.length === 0) {
+    //     createDefaultLayers();
+    // }
     layersConfig.forEach(layerInfo => {
         if (layerInfo.id !== "output" && layerInfo.layerType !== "flatten") {
             createLayerGUI(layerInfo);
@@ -212,6 +228,7 @@ async function createTrainingGUI(layersConfig) {
 }
 
 function startTraining() {
+    trainStartTime = new Date();
     let epochs = +$("#epochs").val();
     let batchSize = +$("#batchSize").val();
 
@@ -232,7 +249,7 @@ function startTraining() {
                 //Reset train losses, test losses for the first creation.
                 trainLosses = [];
                 testLosses = [];
-                trainModel(currentModel, X_train, y_train, X_test, y_test, epochs, batchSize, false);
+                trainModel(model, X_train, y_train, X_test, y_test, epochs, batchSize, false);
             }
         });
     } else {
@@ -246,15 +263,17 @@ function onWeightFilterInput() {
 }
 
 function onWeightFilterChanged(weightFilter) {
+    //Reset weight display.
     for (let i = 0; i < layersConfig.length; i++) {
-        let containerId = getWeightsContainerId(i);
+        let weightContainerId = getWeightsContainerId(i);
         if (layersConfig[i].layerType === "lstm") {
-            drawLSTMWeights(containerId);
+            drawLSTMWeights(weightContainerId);
         }
         if (layersConfig[i].layerType === "dense") {
-            drawDenseWeights(containerId);
+            drawDenseWeights(weightContainerId);
         }
     }
+
     for (let i = 0; i < layersConfig.length - 1; i++) {
         let layerInfo = layersConfig[i];
         //Network layer

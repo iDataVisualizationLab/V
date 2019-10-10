@@ -69,13 +69,23 @@ async function createModel(layers, inputShape) {
     });
 }
 
+function shuffle(array) {
+    return array.sort(() => Math.random() - 0.5);
+}
+
 async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, batchSize = 8, reviewMode) {
 
     let X_train_T = tf.tensor(X_train);
     let y_train_T = tf.tensor(y_train);
     let X_test_T = tf.tensor(X_test);
     let y_test_T = tf.tensor(y_test);
+    let trainSampleIndices = shuffle(Array.from(new Array(y_train.length), (d, i) => i)).slice(24);
+    let testSampleIndices = shuffle(Array.from(new Array(y_test.length), (d, i) => i)).slice(24);
+    let sample_X_train_T = tf.tensor(trainSampleIndices.map(i => X_train[i]));
+    let sample_y_train_T = tf.tensor(trainSampleIndices.map(i => y_train[i]));
 
+    let sample_X_test_T = tf.tensor(testSampleIndices.map(i => X_test[i]));
+    let sample_y_test_T = tf.tensor(testSampleIndices.map(i => y_test[i]));
 
     let y_train_ordered = trainRULOrder.map(d => y_train[d]);
     let X_train_ordered = trainRULOrder.map(d => X_train[d]);
@@ -100,7 +110,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         paddingBottom: 0,
         width: 100,
         height: 100,
-        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
+        colorScheme: outputColorScheme
     };
     const testWidth = 250;
     const testHeight = 230;
@@ -116,12 +126,19 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         title: {
             text: "Training"
         },
-        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
+        legend: {
+            x: 50,
+            y: 35
+        },
+        colorScheme: outputColorScheme
     };
 
     let batches = Math.ceil(y_train_flat_ordered.length / batchSize) * epochs;
     let trainBatches = Array.from(Array(batches), (x, i) => i);
-    let trainTestSettings = {
+    //TODO: Use these if we display train/test loss every epoch
+    // let batches = Math.ceil(y_train_flat_ordered.length / batchSize) * epochs;
+    // let trainBatches = Array.from(Array(batches), (x, i) => i);
+    let testOutputSettings = {
         noSvg: false,
         showAxes: true,
         paddingLeft: 40,
@@ -133,7 +150,11 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         title: {
             text: "Testing"
         },
-        colorScheme: ["#6a8759", "#a8aaab", "#0877bd"]
+        legend: {
+            x: 50,
+            y: 35
+        },
+        colorScheme: testOutputColorScheme
     };
     let trainLossW = 800;
     let trainLossH = 200;
@@ -146,6 +167,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         paddingBottom: 40,
         width: trainLossW,
         height: trainLossH,
+        colorScheme: trainTestLossColorScheme,
         legend: {
             x: trainLossW - 50,
             y: 35
@@ -330,6 +352,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     //</editor-fold>
 
     function onTrainEnd(batch, logs) {
+        //Display training time
+        console.log('Training time' + (new Date() - trainStartTime));
         isTraining = false;
         d3.selectAll(".weightLineTraining").classed("weightLineTraining", isTraining);//Done training, stop animating
         //Toggle button.
@@ -343,26 +367,63 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         if (i >= model.layers.length - 1) {
             return;//Do not draw the final output
         }
-        return new Promise((resolve, reject) => {
-            let layer = model.layers[i];
-            let ts = layer.apply(input);
-            let timeStamp = layersConfig[i].timeStamp;
-            if (layer.name.indexOf("lstm") >= 0) {
-                ts.array().then(data => {
-                    drawHeatmaps(data, "layerContainer" + timeStamp, "layer" + timeStamp);
-                });
-            } else if (layer.name.indexOf("flatten") >= 0) {
-                //For flatten we don't have to do anything.
-            } else if (layer.name.indexOf("dense") >= 0) {
-                ts.array().then(data => {
-                    drawLineCharts(data, normalizeTarget, target_ordered, "layerContainer" + timeStamp, "layer" + timeStamp, lineChartSettings, false);
-                });
-            }
-            //Recurse
-            if (i < model.layers.length - 1) {//We will draw the output separately.
-                displayLayersOutputs(model, i + 1, ts);
-            }
-        });
+        let layer = model.layers[i];
+        let ts = layer.apply(input);
+        let timeStamp = layersConfig[i].timeStamp;
+        if (layer.name.indexOf("lstm") >= 0) {
+            ts.array().then(data => {
+                data.layerName = "LSTM " + i;
+                drawHeatmaps(data, "layerContainer" + timeStamp, "layer" + timeStamp);
+            });
+        } else if (layer.name.indexOf("flatten") >= 0) {
+            //For flatten we don't have to do anything.
+        } else if (layer.name.indexOf("dense") >= 0) {
+            ts.array().then(data => {
+                data.layerName = "Dense " + i;
+                drawLineCharts(data, normalizeTarget, target_ordered, "layerContainer" + timeStamp, "layer" + timeStamp, lineChartSettings, false);
+            });
+        }
+        //Recurse
+        if (i < model.layers.length - 1) {//We will draw the output separately.
+            displayLayersOutputs(model, i + 1, ts);
+        }
+    }
+
+    function plotTrainLossDetails() {
+        let theMapContainer = document.getElementById("mapDetailsContent");
+        d3.select(theMapContainer).selectAll("*").remove();
+
+        let trainLossBatchSettings = {
+            noSvg: false,
+            showAxes: true,
+            paddingLeft: 60,
+            paddingRight: 10,
+            paddingTop: 20,
+            paddingBottom: 40,
+            width: 350,
+            height: 350,
+            legend: {
+                x: 350 - 50,
+                y: 35
+            },
+            title: {
+                text: 'Training loss vs. testing loss.'
+            },
+            xAxisLabel: {
+                text: 'Batch'
+            },
+            yAxisLabel: {
+                text: 'Loss'
+            },
+            colorScheme: trainTestLossColorScheme
+
+        };
+
+        let lc = new LineChart(theMapContainer, mapObjects['trainTestLoss'].data, trainLossBatchSettings);
+        lc.plot();
+
+        let mapDetails = M.Modal.getInstance(document.getElementById("mapDetails"));
+        mapDetails.open();
     }
 
     async function plotTrainLossData(trainLosses, testLosses) {
@@ -383,6 +444,9 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         ];
         if (!mapObjects['trainTestLoss']) {
             //Draw the feature.
+            d3.select("#trainTestLoss").on("click", () => {
+                plotTrainLossDetails();
+            });
             let lc = new LineChart(document.getElementById('trainTestLoss'), lineChartData, trainLossBatchSettings);
             lc.plot();
             mapObjects['trainTestLoss'] = lc;
@@ -393,13 +457,22 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     }
 
     function onBatchEnd(batch, logs) {
-        let trainLoss = logs.loss;
-        // let trainLoss = model.evaluate(X_train_T, y_train_T).dataSync()[0];
-        let testLoss = model.evaluate(X_test_T, y_test_T).dataSync()[0];
+        // let trainLoss = logs.loss;
+        model.evaluate(sample_X_train_T, sample_y_train_T).data().then(trainRet => {
+                let trainLoss = trainRet[0];
+                model.evaluate(sample_X_test_T, sample_y_test_T).data().then(testRet => {
+                    let testLoss = testRet[0];
+                    trainLosses.push(trainLoss);
+                    testLosses.push(testLoss);
+                    plotTrainLossData(trainLosses, testLosses);
+                });
+            }
+        );
 
-        trainLosses.push(trainLoss);
-        testLosses.push(testLoss);
-        plotTrainLossData(trainLosses, testLosses);
+        //TODO: This is slow, due to asynchronous behavior so putting it in epoch ends may have visual display bug, therefore we put it here, but it lowers the perf.
+        if (Math.ceil(X_train.length / batchSize) > 1) {
+            dispatch.call("changeWeightFilter");
+        }
     }
 
     function displayEpochData(model, trainLoss, testLoss) {
@@ -414,6 +487,7 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         let ts = model.predict(X_train_T_ordered);
         ts.array().then(data => {
             //We don't normalize the final result.
+            data.layerName = "Training output";
             drawLineCharts(data, null, y_train_flat_ordered, "outputContainer", "output", outputSettings, true).then(() => {
                 //Update the training loss
                 updateGraphTitle("outputContainer", "Training, MSE: " + trainLoss.toFixed(2));
@@ -423,7 +497,8 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
         let test = model.predict(X_test_T_ordered);
         test.array().then(data => {
             //We don't normalize the final result.
-            drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", trainTestSettings, true).then(() => {
+            data.layerName = "Testing output";
+            drawLineCharts(data, null, y_test_flat_ordered, "testContainer", "test", testOutputSettings, true).then(() => {
                 //Update test loss
                 testLoss = reviewMode ? testLoss : model.evaluate(X_test_T_ordered, y_test_T_ordered).dataSync()[0];
                 updateGraphTitle("testContainer", "Testing, MSE: " + testLoss.toFixed(2));
@@ -434,13 +509,12 @@ async function trainModel(model, X_train, y_train, X_test, y_test, epochs = 50, 
     function onEpochEnd(epoch, logs) {
         hideLoader();
         displayEpochData(model, logs.loss);
-        if(epoch>1){
+        if (epoch > 1) {
             //We don't update for the first epoch
             dispatch.call("changeWeightFilter");
         }
     }
 }
-
 
 async function displayLayerWeights(model, i, containerId) {
     let layer = model.layers[i];
