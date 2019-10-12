@@ -12,7 +12,7 @@ dispatch.on("changeInput", () => {
         d3.select("#inputContainer").selectAll("*").remove();
         //Remove weights out from input layer.
         d3.select("#layer0Weights").selectAll("*").each(sel => {
-        debugger
+            debugger
         });
 
         //Remove traintest loss
@@ -137,14 +137,19 @@ function displayAddLayerDialog() {
 }
 
 function displayUpdateLayerDialog(layerInfo) {
+    debugger
     dispatch.call("change", null, undefined);
     //Populate the dialog with current value.
     $("#layerType").val(layerInfo.layerType);
+    //Need to re-initialize
+    $("#layerType").formSelect();
     $("#noOfUnits").val(layerInfo.units);
     $("#activationType").val(layerInfo.activation);
+    $("#activationType").formSelect();
     //Change the title.
     $("#changeLayerDialogTitle").text("Updating layer information");
     //Also update the function call
+    $("#changeLayerDialogConfirm").unbind("click");//need to unbind the previous click function.
     $("#changeLayerDialogConfirm").on("click", () => {
         updateLayerInfo(layerInfo);
     });
