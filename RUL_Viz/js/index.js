@@ -12,9 +12,9 @@ let link = d3.linkHorizontal()
     });
 processInputs().then(() => {
     //Create default layersConfig.
-    // createDefaultLayers();
+    createDefaultLayers();
     createTrainingGUI(layersConfig).then(() => {
-        loadDefaultModel();
+        // loadDefaultModel();
     });
 });
 
@@ -142,7 +142,7 @@ async function processInputs() {
         //                 dataItemName = "Computes";
                         populateFeatureSelection(features);
                         selectedFeatures = features.map(_ => true);
-                        // selectedFeatures = [false, false, false, false, 7, false, 9, 11, 12, 13, 14, 15, 17, false, false];
+                        selectedFeatures = [false, false, false, false, false, false, 9, 11, 12, 13, false, false, false, false, false];
                         X_train = copyFeatures(X_trainR, selectedFeatures);
                         X_test = copyFeatures(X_testR, selectedFeatures);
                         processData(X_train, y_trainR, X_test, y_testR, resolve);
