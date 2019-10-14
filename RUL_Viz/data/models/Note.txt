@@ -1,0 +1,1 @@
+Model 8884_7, weight filter 0.79 => will lead to 8 sensors 2, 4, 6, 7, 9, 12, 13, 14

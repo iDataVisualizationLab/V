@@ -124,7 +124,7 @@ function processData(X_trainR, y_trainR, X_testR, y_testR, resolve) {
 }
 
 //TODO: Since we load the default models => this might not be needed => but there are few dataset specific information that we need to save/load before by passing this. So check again.
-async function processInputs() {
+async function processInputs(sFs) {
     return new Promise(resolve => {
         d3.json("data/train_FD001_100x50.json").then(X_trainR => {
             d3.json("data/train_RUL_FD001_100x50.json").then(y_trainR => {
@@ -141,8 +141,14 @@ async function processInputs() {
         //                 predictedVariable = "arrTemperature0";
         //                 dataItemName = "Computes";
                         populateFeatureSelection(features);
-                        selectedFeatures = features.map(_ => true);
-                        selectedFeatures = [false, false, false, false, false, false, 9, 11, 12, 13, false, false, false, false, false];
+                        if(!sFs){
+                            selectedFeatures = features.map(_ => true);
+                        }else{
+                            selectedFeatures = sFs;
+                        }
+                        //TODO: These for testing the models.
+                        // selectedFeatures = [2, false, 4, 6, 7, false, 9, false, 12, 13, false, false, 17, false, false]; // for 8_8884
+                        // selectedFeatures = [false, 3, false, false, false, 8, false, 11, false, false, 14, 15, false, 20, 21];
                         X_train = copyFeatures(X_trainR, selectedFeatures);
                         X_test = copyFeatures(X_testR, selectedFeatures);
                         processData(X_train, y_trainR, X_test, y_testR, resolve);

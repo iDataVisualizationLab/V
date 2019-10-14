@@ -25,7 +25,7 @@ dispatch.on("changeInput", () => {
         d3.selectAll(".layerContainer").selectAll("*").remove();
         d3.selectAll(".weightLine").remove();
         //Start from beginning
-        processInputs();
+        processInputs(selectedFeatures);
     });
 });
 dispatch.on("changeWeightFilter", () => {
@@ -42,6 +42,8 @@ function loadServerModelChange(theElm) {
 }
 
 function loadModelChange(sourceType, theElm) {
+    //Reset the selected features to all features
+    selectedFeatures = features.map(_=>true);
     let modelName = theElm.value;
     isTraining = false;
     showLoader();
