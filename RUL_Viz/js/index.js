@@ -12,9 +12,9 @@ let link = d3.linkHorizontal()
     });
 processInputs().then(() => {
     //Create default layersConfig.
-    createDefaultLayers();
+    // createDefaultLayers();
     createTrainingGUI(layersConfig).then(() => {
-        // loadDefaultModel();
+        loadDefaultModel();
     });
 });
 
