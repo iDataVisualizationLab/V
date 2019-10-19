@@ -10,8 +10,8 @@ var graphByMonths = [];
 var numCut = 5;
 var cutOffvalue = [];
 
-let forceSize = 180; // Max size of force layouts at the bottom
-let snapshotSize = 50;
+let forceSize = 120; // Max size of force layouts at the bottom
+let snapshotSize = 30;
 var snapshotScale = snapshotSize / (forceSize - 10); // Snapshiot Size******************************************************
 var maxRel = 15;   // for scaling, if count > 6 the link will looks similar to 6
 

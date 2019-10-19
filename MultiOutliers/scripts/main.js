@@ -86,6 +86,8 @@ var fileList = [
     // "HPCC_04Oct",
     "HPCC_04Oct_5v",
     "HPCC_26June_5v",
+    "HPCC_26June_10v",
+    "HPCC_26June_9v",
     // "HPCC_04Oct",
 ];
 var fileAbbreviations = [
@@ -101,6 +103,8 @@ var fileAbbreviations = [
     // 'HPCC',
     "HPCC04105V",
     "HPCC26065V",
+    "HPCC260610V",
+    "HPCC26069V",
     // "HPCC0410"
 ];
 
@@ -117,6 +121,8 @@ var processedData = {
     // "HPCC_04Oct": null,
     "HPCC_04Oct_5v": null,
     "HPCC_26June_5v": null,
+    "HPCC_26June_10v": null,
+    "HPCC_26June_9v": null,
     // "HPCC0410": null
 };
 
@@ -137,11 +143,13 @@ var timeSteps = {
     // "HPCCTempVsFan": {minTime: 1, maxTime: 18, type: "quarter"},
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
     "HPCC_04Oct_5v": {minTime: 0, maxTime: 32, type: "quarter"},
-    "HPCC_26June_5v": {minTime: 0, maxTime: 20, type: "quarter"},
+    "HPCC_26June_5v": {minTime: 0, maxTime: 93, type: "quarter"},
+    "HPCC_26June_10v": {minTime: 0, maxTime: 93, type: "quarter"},
+    "HPCC_26June_9v": {minTime: 0, maxTime: 93, type: "quarter"},
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
 };
 // var fileName = fileList[fileList.length-1];
-var fileName = fileList[1];
+var fileName = fileList[3];
 
 // START: loader spinner settings ****************************
 var opts = {

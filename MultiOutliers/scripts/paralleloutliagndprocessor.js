@@ -7,8 +7,9 @@ class OutliagNDProcessor {
         this.scagOptions = {
             startBinGridSize: 20,
             minBins: 10,
-            maxBins: 30,
-            outlyingCoefficient: 2.48181993,
+            maxBins: 20,
+            // outlyingCoefficient: 2.48181993,
+            outlyingCoefficient: 3,
             incrementA: 1,
             incrementB: 5,
             decrementA: 0.9,

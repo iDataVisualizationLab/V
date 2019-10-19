@@ -76,6 +76,15 @@ function updateSubLayout(m) {
                 }
             });
         }
+
+        item.forEach(x => {
+            let m = (x[1] - x[0]) / 4;
+            if (x[0] !== x[1]) {//TODO: This we are taking 0.25 to 0.75 of the band of each group (to avoid cluttering issue).
+                x[0] = x[0] + m;
+                x[1] = x[1] - m;
+            }
+        });
+
         return item;
     });
 
