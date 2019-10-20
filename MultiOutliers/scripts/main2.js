@@ -12,6 +12,10 @@ var cutOffvalue = [];
 
 let forceSize = 120; // Max size of force layouts at the bottom
 let snapshotSize = 30;
+// TODO: Change this for paper display only.
+// let forceSize = 180; // Max size of force layouts at the bottom
+// let snapshotSize = 40;
+
 var snapshotScale = snapshotSize / (forceSize - 10); // Snapshiot Size******************************************************
 var maxRel = 15;   // for scaling, if count > 6 the link will looks similar to 6
 

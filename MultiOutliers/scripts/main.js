@@ -146,6 +146,7 @@ var timeSteps = {
     "HPCC_26June_5v": {minTime: 0, maxTime: 93, type: "quarter"},
     "HPCC_26June_10v": {minTime: 0, maxTime: 93, type: "quarter"},
     "HPCC_26June_9v": {minTime: 0, maxTime: 93, type: "quarter"},
+    // "HPCC_26June_9v": {minTime: 0, maxTime: 20, type: "quarter"},//TODO: Change this for paper display
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
 };
 // var fileName = fileList[fileList.length-1];
