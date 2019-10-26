@@ -134,6 +134,7 @@ function displayAddLayerDialog() {
     //Change the title dialog.
     $("#changeLayerDialogTitle").text("Adding layer information");
     //Change the function call.
+    $("#changeLayerDialogConfirm").unbind("click");//need to unbind the previous click function.
     $("#changeLayerDialogConfirm").on("click", addLayer);
     displayDialog("changeLayerDialog");
 }

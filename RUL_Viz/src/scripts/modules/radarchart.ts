@@ -173,7 +173,7 @@ export class RadarChart {
             angleSlice = Math.PI * 2 / total;		//The width in radians of each "slice"
         //Scale for the radius
         const rScale = d3.scaleLinear()
-            .range([0, radius])
+            .range([radius/5, radius])
             .domain([0, maxValue]);
         //</editor-fold>
 
@@ -287,6 +287,8 @@ export class RadarChart {
             .enter().append("g")
             .attr("class", "radarWrapper");
 
+        //interpolation
+        let interpolation = this.settings.roundStrokes ? d3.curveCardinalClosed.tension(0.5) : d3.curveLinearClosed;
         if (!this.settings.blobMode) {
             /////////////////////////////////////////////////////////
             ////////// Draw the radar chart using lines //////////////
@@ -298,7 +300,8 @@ export class RadarChart {
             //<editor-fold desc="Draw the radar chart blobs">
             //The radial line function
             const radarLine = d3.radialLine()
-                .curve(this.settings.roundStrokes ? d3.curveCardinalClosed : d3.curveLinearClosed)
+                // .curve(this.settings.roundStrokes ? d3.curveCardinalClosed : d3.curveLinearClosed)
+                .curve(interpolation)
                 .radius(d => rScale(d.value))
                 .angle((d, i) => i * angleSlice);
 
@@ -414,11 +417,11 @@ export class RadarChart {
             //<editor-fold desc="Draw the radar chart blobs">
             //The radial line function
             const radarLine0 = d3.radialLine()
-                .curve(this.settings.roundStrokes ? d3.curveCardinalClosed : d3.curveLinearClosed)
+                .curve(interpolation)
                 .radius(d => rScale(d.value.min))
                 .angle((d, i) => (this.dims - i - 1) * angleSlice);//Need to reverse the angle too, since we reversed the order of the path inside to create a hole.
             const radarLine1 = d3.radialLine()
-                .curve(this.settings.roundStrokes ? d3.curveCardinalClosed : d3.curveLinearClosed)
+                .curve(interpolation)
                 .radius(d => rScale(d.value.max))
                 .angle((d, i) => i * angleSlice);
             //Append the backgrounds
