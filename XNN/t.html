@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    function f(){
+        let x = false;
+        let master = {};
+        master.data = function (){
+            handle();
+            return master;
+        };
+        function handle(){
+            x = !x;
+        }
+        master.show = function(){
+            console.log(x);
+        };
+        return master;
+    }
+</script>
+</body>
+</html>
