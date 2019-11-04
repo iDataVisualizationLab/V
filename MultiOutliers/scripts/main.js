@@ -89,6 +89,7 @@ var fileList = [
     "HPCC_26June_10v",
     "HPCC_26June_9v",
     "HPCC_21Mar_9v",
+    "HPCC_26Sep_9v",
     // "HPCC_04Oct",
 ];
 var fileAbbreviations = [
@@ -107,6 +108,7 @@ var fileAbbreviations = [
     "HPCC260610V",
     "HPCC26069V",
     "HPCC21039V",
+    "HPCC26099V",
     // "HPCC0410"
 ];
 
@@ -126,6 +128,7 @@ var processedData = {
     "HPCC_26June_10v": null,
     "HPCC_26June_9v": null,
     "HPCC_21Mar_9v": null,
+    "HPCC_26Sep_9v": null,
     // "HPCC0410": null
 };
 
@@ -150,6 +153,7 @@ var timeSteps = {
     "HPCC_26June_10v": {minTime: 0, maxTime: 93, type: "quarter"},
     "HPCC_26June_9v": {minTime: 0, maxTime: 93, type: "quarter"},
     "HPCC_21Mar_9v": {minTime: 0, maxTime: 26, type: "quarter"},
+    "HPCC_26Sep_9v": {minTime: 0, maxTime: 17, type: "quarter"},
     // "HPCC_26June_9v": {minTime: 0, maxTime: 20, type: "quarter"},//TODO: Change this for paper display
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
 };
@@ -245,6 +249,7 @@ function loadData() {
         //Parallel version
         if (processedData[fileName] == null) {
             dataS = data_;
+
             let op = new OutliagNDProcessor(dataS);
 
             op.processOutliagData(onCompleted);

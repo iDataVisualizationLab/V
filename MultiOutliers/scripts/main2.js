@@ -228,7 +228,9 @@ function drawCountryProfiles() {
     // countryListYDistance = 80;
     // countryListFiltered = countryListFiltered.filter(c => c[0].country === "Lesotho" || c[0].country === "Zimbabwe"  || c[0].country === "Swaziland");
     // </editor-fold>
-
+    if(countryListFiltered.length === 0){
+        return;
+    }
     yStart = yStartBoxplot + hBoxplotScale(d3.max(boxplotNodes.map(obj => -obj.maxBelow))) + yScaleS(d3.max(countryListFiltered[0].map(d => d.Outlying + Math.abs(d.OutlyingDif)))) + 10;//10 is for the margin
 
     var yTemp2 = yStart;

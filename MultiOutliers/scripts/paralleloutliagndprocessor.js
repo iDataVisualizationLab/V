@@ -43,6 +43,30 @@ class OutliagNDProcessor {
             // //</editor-fold>
 
             yearsData.map((d, i) => {
+                //If a variable has all values as null => then remove the whole variable
+                let allNullsCount = [];
+                for (let j = 0; j < d[0].length; j++) {
+                    allNullsCount[j] = true;
+                    for (let k = 0; k < d.length; k++) {
+                        if(typeof (d[k][j]) === 'number'){
+                            allNullsCount[j] = false;
+                            break;
+                        }
+                    }
+                }
+                //Remove columns with all nulls.
+                let dc = d.map(item=>{
+                    let ret = [];
+                    allNullsCount.forEach((val, val_i)=>{
+                        if(!val){
+                            ret.push(item[val_i]);
+                        }
+                    });
+                    ret.data = item.data;
+                    return ret;
+                });
+                dc.year = d.year;
+                d = dc;
                 const y = d.filter(p => isValidPoint(p));
                 const data = {
                     'data': y,
