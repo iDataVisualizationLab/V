@@ -67,6 +67,20 @@ function updateElements(brushingIndex) {
          .style("fill-opacity", function(d2){ return (dataS.Countries[brushingIndex]==d2[0].country) ? 1 : 0.1; });  
       svg.selectAll(".maxBelowText")
          .style("fill-opacity", function(d2){ return (dataS.Countries[brushingIndex]==d2[0].country) ? 1 : 0.1; });
+      //Highlight its cluster or item.
+      //Highlight item or item group for strokes
+      let country = dataS.Countries[brushingIndex];
+      d3.selectAll(".radarStroke").each(highlightItem);
+      d3.selectAll(".radarArea").each(highlightItem);
+      function highlightItem() {
+          let theItem = d3.select(this);
+          if (theItem.data()[0].data.itemNames.indexOf(country) >= 0) {
+              theItem.style("opacity", 1)
+          } else {
+              theItem.style("opacity", 0.1);
+          }
+
+      }
   }
 }
 
