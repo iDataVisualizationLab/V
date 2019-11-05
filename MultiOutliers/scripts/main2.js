@@ -10,8 +10,8 @@ var graphByMonths = [];
 var numCut = 5;
 var cutOffvalue = [];
 
-let forceSize = 120; // Max size of force layouts at the bottom
-let snapshotSize = 30;
+let forceSize = 180; // Max size of force layouts at the bottom
+let snapshotSize = 40;
 // TODO: Change this for paper display only.
 // let forceSize = 180; // Max size of force layouts at the bottom
 // let snapshotSize = 40;

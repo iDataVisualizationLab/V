@@ -8,8 +8,9 @@ class OutliagNDProcessor {
             startBinGridSize: 20,
             minBins: 10,
             maxBins: 20,
+            outlyingCoefficient: 1.5,
             // outlyingCoefficient: 2.48181993,
-            outlyingCoefficient: 3,
+            // outlyingCoefficient: 3,
             incrementA: 1,
             incrementB: 5,
             decrementA: 0.9,
@@ -48,17 +49,17 @@ class OutliagNDProcessor {
                 for (let j = 0; j < d[0].length; j++) {
                     allNullsCount[j] = true;
                     for (let k = 0; k < d.length; k++) {
-                        if(typeof (d[k][j]) === 'number'){
+                        if (typeof (d[k][j]) === 'number') {
                             allNullsCount[j] = false;
                             break;
                         }
                     }
                 }
                 //Remove columns with all nulls.
-                let dc = d.map(item=>{
+                let dc = d.map(item => {
                     let ret = [];
-                    allNullsCount.forEach((val, val_i)=>{
-                        if(!val){
+                    allNullsCount.forEach((val, val_i) => {
+                        if (!val) {
                             ret.push(item[val_i]);
                         }
                     });
@@ -67,6 +68,13 @@ class OutliagNDProcessor {
                 });
                 dc.year = d.year;
                 d = dc;
+                //TODO: This part we are setting null (if not all null) to zero
+                d.forEach(item => {
+                    for (let j = 0; j < item.length; j++) {
+                        if (typeof (item[j]) !== 'number') item[j] = 0;
+                    }
+                });
+                // //TODO: Another approach is to just filter the point out (but we still displays as zero so it leads to inconsistency)
                 const y = d.filter(p => isValidPoint(p));
                 const data = {
                     'data': y,
