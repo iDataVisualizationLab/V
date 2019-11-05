@@ -228,7 +228,7 @@ function drawCountryProfiles() {
     // countryListYDistance = 80;
     // countryListFiltered = countryListFiltered.filter(c => c[0].country === "Lesotho" || c[0].country === "Zimbabwe"  || c[0].country === "Swaziland");
     // </editor-fold>
-    if(countryListFiltered.length === 0){
+    if (countryListFiltered.length === 0) {
         return;
     }
     yStart = yStartBoxplot + hBoxplotScale(d3.max(boxplotNodes.map(obj => -obj.maxBelow))) + yScaleS(d3.max(countryListFiltered[0].map(d => d.Outlying + Math.abs(d.OutlyingDif)))) + 10;//10 is for the margin
@@ -350,7 +350,9 @@ function drawCountryProfiles() {
             return d[0].country;
         })
         .on("mouseover", function (d) {
+            let country = d[0].country;
             var countryIndex = dataS.Countries.indexOf(d[0].country);
+
             brushingStreamText(countryIndex);
             // if autolensing is enable
             if (document.getElementById("checkbox1").checked && d.maxYearBelow != undefined) {
@@ -361,9 +363,35 @@ function drawCountryProfiles() {
                 updateTimeLegend();
                 updateTimeBox();
             }
+            //Highlight item or item group for strokes
+            d3.selectAll(".radarStroke").each(highlightItem);
+            d3.selectAll(".radarArea").each(highlightItem);
+
+            function highlightItem() {
+
+                let theItem = d3.select(this);
+                if (theItem.data()[0].data.itemNames.indexOf(country) >= 0) {
+                    theItem.style("opacity", 1)
+                } else {
+                    theItem.style("opacity", 0.1);
+                }
+
+            }
         })
         .on("mouseout", function (d) {
             hideTip(d);
+            //Reset the view.
+            d3.selectAll(".radarStroke").each(resetDisplay);
+            d3.selectAll(".radarArea").each(resetDisplay);
+
+            function resetDisplay() {
+                let theItem = d3.select(this);
+                if (theItem.data()[0].data.itemNames.length > 1) {//Area
+                    theItem.style("opacity", 0.35);
+                } else {//The singleton
+                    theItem.style("opacity", 1.0);
+                }
+            }
         });
 
     // Text of max different appearing on top of the stream graph

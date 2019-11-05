@@ -54,13 +54,17 @@ function updateSubLayout(m) {
         //initialize.
         if (bin.length === 1) {
             for (let i = 0; i < dataS.Variables.length; i++) {
-                item.push([bin[0][i], bin[0][i]]);//Min for the first and max for the second (both are the same).
+                item.push([bin[0][i], bin[0][i]]);
             }
-            item.data = {strokeWidth: 0.3, outlyingDif: bin[0].data.outlyingDif};
+            item.data = {
+                strokeWidth: 0.3,
+                outlyingDif: bin[0].data.outlyingDif,
+                itemNames: bin.map(b => b.data.country)
+            };
         } else {
             for (let i = 0; i < dataS.Variables.length; i++) {
                 item.push([Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER]);//Min for the first and max for the second.
-                item.data = {strokeWidth: 0, outlyingDif: 0};
+                item.data = {strokeWidth: 0, outlyingDif: 0, itemNames: bin.map(b => b.data.country)};
             }
             //For each point in bin.
             bin.forEach(point => {
