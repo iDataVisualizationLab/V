@@ -86,9 +86,9 @@ var fileList = [
     // "HPCC_04Oct",
     "HPCC_21Mar_9v",
     "HPCC_26Sep_9v",
-    "HPCC_04Oct_5v",
-    "HPCC_26June_5v",
-    "HPCC_26June_10v",
+    // "HPCC_04Oct_5v",
+    // "HPCC_26June_5v",
+    // "HPCC_26June_10v",
     "HPCC_26June_9v",
     // "HPCC_04Oct",
 ];
@@ -105,9 +105,9 @@ var fileAbbreviations = [
     // 'HPCC',
     "HPCC21039V",
     "HPCC26099V",
-    "HPCC04105V",
-    "HPCC26065V",
-    "HPCC260610V",
+    // "HPCC04105V",
+    // "HPCC26065V",
+    // "HPCC260610V",
     "HPCC26069V",
     // "HPCC0410"
 ];
@@ -125,9 +125,9 @@ var processedData = {
     // "HPCC_04Oct": null,
     "HPCC_21Mar_9v": null,
     "HPCC_26Sep_9v": null,
-    "HPCC_04Oct_5v": null,
-    "HPCC_26June_5v": null,
-    "HPCC_26June_10v": null,
+    // "HPCC_04Oct_5v": null,
+    // "HPCC_26June_5v": null,
+    // "HPCC_26June_10v": null,
     "HPCC_26June_9v": null,
     // "HPCC0410": null
 };
@@ -151,9 +151,9 @@ var timeSteps = {
     "HPCC_21Mar_9v": {minTime: 0, maxTime: 26, type: "quarter"},
     // "HPCC_21Mar_9v": {minTime: 9, maxTime: 26, type: "quarter"},//TODO: Change for the display of the paper only
     "HPCC_26Sep_9v": {minTime: 0, maxTime: 17, type: "quarter"},
-    "HPCC_04Oct_5v": {minTime: 0, maxTime: 32, type: "quarter"},
-    "HPCC_26June_5v": {minTime: 0, maxTime: 93, type: "quarter"},
-    "HPCC_26June_10v": {minTime: 0, maxTime: 93, type: "quarter"},
+    // "HPCC_04Oct_5v": {minTime: 0, maxTime: 32, type: "quarter"},
+    // "HPCC_26June_5v": {minTime: 0, maxTime: 93, type: "quarter"},
+    // "HPCC_26June_10v": {minTime: 0, maxTime: 93, type: "quarter"},
     "HPCC_26June_9v": {minTime: 0, maxTime: 93, type: "quarter"},
     // "HPCC_26June_9v": {minTime: 0, maxTime: 20, type: "quarter"},//TODO: Change this for paper display
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},

@@ -2,7 +2,7 @@ let allSVG = [];
 let pointOpacity = 0.9;
 let selectedVar = 0;
 let selectedScag = 0;
-
+let blobColor = '#474747';
 function updateSubLayout(m) {
     svg.selectAll(".force" + m).remove();
     let svg2 = svg.append("svg")
@@ -37,7 +37,7 @@ function updateSubLayout(m) {
     let binOptions = {
         startBinGridSize: 10,
         minBins: 3,
-        maxBins: 10,
+        maxBins: 7,
         incrementA: 1,
         incrementB: 5,
         decrementA: 0.9,
@@ -105,15 +105,18 @@ function updateSubLayout(m) {
         showLevelLabels: false,
         showAxisLabels: false,
         roundStrokes: true,
-        strokeWidth: (d) => d.data.strokeWidth,
-        fillColor: (d) => d.data.outlyingDif == 0 ? 'black' : d.data.outlyingDif < 0 ? 'red' : 'green',
-        strokeColor: (d) => d.data.outlyingDif == 0 ? 'black' : d.data.outlyingDif < 0 ? 'red' : 'green',
+        showRings: true,
+        levels: 5,
+        strokeWidth: (d) => d.data.strokeWidth + 0.01,
+        fillColor: (d) => d.data.outlyingDif == 0 ? blobColor : d.data.outlyingDif < 0 ? 'red' : 'green',
+        strokeColor: (d) => d.data.outlyingDif == 0 ? blobColor : d.data.outlyingDif < 0 ? 'red' : 'green',
         showMarkers: false,
         showToolTip: false,
         fillBlobs: true,
         blobMode: true
     };
-    let radarChartData = RadarChart.pointsToRadarChartBlobData(dataPoints, dataS.Variables.map((d, i) => "v" + i));
+
+    let radarChartData = RadarChart.pointsToRadarChartBlobData(dataPoints, dataS.Variables);
     svg2.node().chartData = radarChartData; //Store the data for future use.
 
     let rc = new RadarChart(svg2.node(), radarChartData, radarChartSettings);
@@ -123,37 +126,45 @@ function updateSubLayout(m) {
 }
 
 function showDetails() {
+    d3.select(".d3-tip").style("background-color", "white");
     tip.html(function () {
-        return "<div id='chartDetails' style='width:300px; height:300px; pointer-events: auto;'></div>"
+        return "<div id='chartDetails' style='width:400px; height:400px; pointer-events: auto; opacity: 1.0; background-color: white;'>" +
+            "<a href='#' class='close' onclick='tip.hide()'>" +
+            "</div>"
     });
 
-    tip.direction('s')
-    // tip.offset([-200, 200]); // d3.event.pageX is the mouse position in the main
+    tip.direction('s');
+    tip.offset([40, 0]);
     tip.show();
 
     let radarChartSettings = {
-        width: 300,
-        height: 300,
-        margin: {left: 1, top: 1, right: 1, bottom: 1},
-        paddingLeft: 10,
-        paddingTop: 10,
-        paddingRight: 10,
-        paddingBottom: 10,
+        width: 400,
+        height: 400,
+        margin: {left: 50, top: 50, right: 50, bottom: 50},
+        paddingLeft: 20,
+        paddingTop: 20,
+        paddingRight: 20,
+        paddingBottom: 20,
         showAxes: true,
         legend: false,
-        showLevelLabels: true,
+        showLevelLabels: false,
         showAxisLabels: true,
         roundStrokes: true,
-        strokeWidth: (d) => d.data.strokeWidth,
-        fillColor: (d) => d.data.outlyingDif == 0 ? 'black' : d.data.outlyingDif < 0 ? 'red' : 'green',
-        strokeColor: (d) => d.data.outlyingDif == 0 ? 'black' : d.data.outlyingDif < 0 ? 'red' : 'green',
+        showRings: true,
+        levels: 5,
+        strokeWidth: (d) => 5*d.data.strokeWidth + 0.1,
+        fillColor: (d) => d.data.outlyingDif == 0 ? blobColor : d.data.outlyingDif < 0 ? 'red' : 'green',
+        strokeColor: (d) => d.data.outlyingDif == 0 ? blobColor : d.data.outlyingDif < 0 ? 'red' : 'green',
         showMarkers: false,
         showToolTip: false,
         fillBlobs: true,
         blobMode: true
     };
-    debugger
     new RadarChart(document.getElementById('chartDetails'), this.chartData, radarChartSettings);
+}
 
-
+document.onkeyup = function (e) {
+    if (e.key === "Escape") {
+        tip.hide();
+    }
 }
