@@ -114,5 +114,46 @@ function updateSubLayout(m) {
         blobMode: true
     };
     let radarChartData = RadarChart.pointsToRadarChartBlobData(dataPoints, dataS.Variables.map((d, i) => "v" + i));
+    svg2.node().chartData = radarChartData; //Store the data for future use.
+
     let rc = new RadarChart(svg2.node(), radarChartData, radarChartSettings);
+
+
+    svg2.on("click", showDetails);
+}
+
+function showDetails() {
+    tip.html(function () {
+        return "<div id='chartDetails' style='width:300px; height:300px; pointer-events: all;'></div>"
+    });
+
+    tip.direction('s')
+    // tip.offset([-200, 200]); // d3.event.pageX is the mouse position in the main
+    tip.show();
+
+    let radarChartSettings = {
+        width: 300,
+        height: 300,
+        margin: {left: 1, top: 1, right: 1, bottom: 1},
+        paddingLeft: 10,
+        paddingTop: 10,
+        paddingRight: 10,
+        paddingBottom: 10,
+        showAxes: true,
+        legend: false,
+        showLevelLabels: true,
+        showAxisLabels: true,
+        roundStrokes: true,
+        strokeWidth: (d) => d.data.strokeWidth,
+        fillColor: (d) => d.data.outlyingDif == 0 ? 'black' : d.data.outlyingDif < 0 ? 'red' : 'green',
+        strokeColor: (d) => d.data.outlyingDif == 0 ? 'black' : d.data.outlyingDif < 0 ? 'red' : 'green',
+        showMarkers: false,
+        showToolTip: false,
+        fillBlobs: true,
+        blobMode: true
+    };
+    debugger
+    new RadarChart(document.getElementById('chartDetails'), this.chartData, radarChartSettings);
+
+
 }

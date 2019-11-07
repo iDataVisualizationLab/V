@@ -130,7 +130,7 @@ function showPopup(d,brushingIndex) {
   tip.offset([-d3.event.pageY+380,-d3.event.pageX]); // d3.event.pageX is the mouse position in the main windown
       
   tip.show(d);   
-}    
+}
 
 function hexToRgbA(hex){
     var c;

@@ -149,6 +149,7 @@ var timeSteps = {
     // "HPCCTempVsFan": {minTime: 1, maxTime: 18, type: "quarter"},
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
     "HPCC_21Mar_9v": {minTime: 0, maxTime: 26, type: "quarter"},
+    // "HPCC_21Mar_9v": {minTime: 9, maxTime: 26, type: "quarter"},//TODO: Change for the display of the paper only
     "HPCC_26Sep_9v": {minTime: 0, maxTime: 17, type: "quarter"},
     "HPCC_04Oct_5v": {minTime: 0, maxTime: 32, type: "quarter"},
     "HPCC_26June_5v": {minTime: 0, maxTime: 93, type: "quarter"},
