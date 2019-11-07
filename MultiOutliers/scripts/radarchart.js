@@ -124,7 +124,7 @@ function updateSubLayout(m) {
 
 function showDetails() {
     tip.html(function () {
-        return "<div id='chartDetails' style='width:300px; height:300px; pointer-events: all;'></div>"
+        return "<div id='chartDetails' style='width:300px; height:300px; pointer-events: auto;'></div>"
     });
 
     tip.direction('s')
