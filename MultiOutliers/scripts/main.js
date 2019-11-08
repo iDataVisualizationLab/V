@@ -85,7 +85,7 @@ var fileList = [
     // "HPCCTempVsFan",
     // "HPCC_04Oct",
     "HPCC_21Mar_9v",
-    "HPCC_26Sep_9v",
+    // "HPCC_26Sep_9v",
     // "HPCC_04Oct_5v",
     // "HPCC_26June_5v",
     // "HPCC_26June_10v",
@@ -104,7 +104,7 @@ var fileAbbreviations = [
     // 'Donotuse',
     // 'HPCC',
     "HPCC21039V",
-    "HPCC26099V",
+    // "HPCC26099V",
     // "HPCC04105V",
     // "HPCC26065V",
     // "HPCC260610V",
@@ -124,7 +124,7 @@ var processedData = {
     // "HPCCTempVsFan": null,
     // "HPCC_04Oct": null,
     "HPCC_21Mar_9v": null,
-    "HPCC_26Sep_9v": null,
+    // "HPCC_26Sep_9v": null,
     // "HPCC_04Oct_5v": null,
     // "HPCC_26June_5v": null,
     // "HPCC_26June_10v": null,
@@ -148,13 +148,13 @@ var timeSteps = {
     // // "USEmpRGoodVsService":  {minTime:205 , maxTime: 220, type: "month"},//TODO: Change this For Customized Scatterplots
     // "HPCCTempVsFan": {minTime: 1, maxTime: 18, type: "quarter"},
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
-    "HPCC_21Mar_9v": {minTime: 0, maxTime: 26, type: "quarter"},
+    "HPCC_21Mar_9v": {minTime: 0, maxTime: 26, type: "5min", startTimeStamp: new Date("2019-03-21 14:00"), stepTime: 5*60*1000},
     // "HPCC_21Mar_9v": {minTime: 9, maxTime: 26, type: "quarter"},//TODO: Change for the display of the paper only
-    "HPCC_26Sep_9v": {minTime: 0, maxTime: 17, type: "quarter"},
+    // "HPCC_26Sep_9v": {minTime: 0, maxTime: 17, type: "quarter"},
     // "HPCC_04Oct_5v": {minTime: 0, maxTime: 32, type: "quarter"},
     // "HPCC_26June_5v": {minTime: 0, maxTime: 93, type: "quarter"},
     // "HPCC_26June_10v": {minTime: 0, maxTime: 93, type: "quarter"},
-    "HPCC_26June_9v": {minTime: 0, maxTime: 93, type: "quarter"},
+    "HPCC_26June_9v": {minTime: 0, maxTime: 85, type: "hour"}, //, startTimeStamp: new Date("2019-06-23 01:00"), stepTime: 60*60*1000
     // "HPCC_26June_9v": {minTime: 0, maxTime: 20, type: "quarter"},//TODO: Change this for paper display
     // "HPCC_04Oct": {minTime: 0, maxTime: 32, type: "quarter"},
 };

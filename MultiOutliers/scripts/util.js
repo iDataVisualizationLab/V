@@ -277,14 +277,20 @@ function drawTimeText() {
         .attr("font-family", "sans-serif")
         .attr("font-size", "15px")
         .text(function (d, i) {
-            if (fileName.indexOf("Political") >= 0) {
-                if (i % 12 == 0)
-                    return d.year;
-                else
-                    return months[i % 12];
+            // if (fileName.indexOf("Political") >= 0) {
+            //     if (i % 12 == 0)
+            //         return d.year;
+            //     else
+            //         return months[i % 12];
+            // } else {
+            //     return "A" + d.year;
+            // }
+            if (timeSteps[fileName].startTimeStamp && timeSteps[fileName].stepTime) {
+                return d3.timeFormat("%b %d, %I:%M%p")(new Date(timeSteps[fileName].startTimeStamp.getTime() + (d.year) * timeSteps[fileName].stepTime));
             } else {
                 return d.year;
             }
+
         });
 }
 
