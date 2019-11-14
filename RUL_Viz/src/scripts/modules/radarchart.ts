@@ -173,7 +173,7 @@ export class RadarChart {
             angleSlice = Math.PI * 2 / total;		//The width in radians of each "slice"
         //Scale for the radius
         const rScale = d3.scaleLinear()
-            .range([radius/5, radius])
+            .range([radius / 5, radius])
             .domain([0, maxValue]);
         //</editor-fold>
 
@@ -287,6 +287,30 @@ export class RadarChart {
             .enter().append("g")
             .attr("class", "radarWrapper");
 
+        function mouseOverBlob(d, i) {
+            //Dim all blobs
+            parent.selectAll(".radarArea")
+                .transition().duration(200)
+                .style("opacity", 0.1);
+            parent.selectAll(".radarStroke")
+                .transition().duration(200)
+                .style("opacity", 0.1);
+            //Bring back the hovered over blob
+            d3.select(this)
+                .transition().duration(200)
+                .style("opacity", 1.0);
+        }
+
+        function mouseOutBlob() {
+            //Bring back all blobs
+            parent.selectAll(".radarArea")
+                .transition().duration(200)
+                .style("opacity", thisObj.settings.opacityArea);
+            parent.selectAll(".radarStroke")
+                .transition().duration(200)
+                .style("opacity", 1.0);
+        }
+
         //interpolation
         let interpolation = this.settings.roundStrokes ? d3.curveCardinalClosed.tension(0.5) : d3.curveLinearClosed;
         if (!this.settings.blobMode) {
@@ -300,7 +324,7 @@ export class RadarChart {
             //<editor-fold desc="Draw the radar chart blobs">
             //The radial line function
             const radarLine = d3.radialLine()
-                // .curve(this.settings.roundStrokes ? d3.curveCardinalClosed : d3.curveLinearClosed)
+            // .curve(this.settings.roundStrokes ? d3.curveCardinalClosed : d3.curveLinearClosed)
                 .curve(interpolation)
                 .radius(d => rScale(d.value))
                 .angle((d, i) => i * angleSlice);
@@ -313,22 +337,8 @@ export class RadarChart {
                     .attr("d", d => radarLine(d.axes))
                     .style("fill", d => this.settings.fillColor(d))
                     .style("fill-opacity", this.settings.opacityArea)
-                    .on('mouseover', function (d, i) {
-                        //Dim all blobs
-                        parent.selectAll(".radarArea")
-                            .transition().duration(200)
-                            .style("fill-opacity", 0.1);
-                        //Bring back the hovered over blob
-                        d3.select(this)
-                            .transition().duration(200)
-                            .style("fill-opacity", 0.7);
-                    })
-                    .on('mouseout', () => {
-                        //Bring back all blobs
-                        parent.selectAll(".radarArea")
-                            .transition().duration(200)
-                            .style("fill-opacity", this.settings.opacityArea);
-                    });
+                    .on('mouseover', mouseOverBlob)
+                    .on('mouseout', mouseOutBlob);
             }
             //</editor-fold>
 
@@ -345,7 +355,9 @@ export class RadarChart {
                 .style("stroke-width", d => this.settings.strokeWidth(d) + "px")
                 .style("stroke", (d) => this.settings.strokeColor(d))
                 .style("fill", "none")
-                .style("filter", "url(#glow)");
+                .on('mouseover', mouseOverBlob)
+                .on('mouseout', mouseOutBlob);
+            // .style("filter", "url(#glow)");
 
             if (this.settings.showMarkers) {
                 //Append the circles
@@ -433,22 +445,28 @@ export class RadarChart {
                         return radarLine1(d.axes) + radarLine0(d.axes.map(d => Object.assign({}, d)).reverse());
                     })
                     .style("fill", d => this.settings.fillColor(d))
-                    .style("fill-opacity", this.settings.opacityArea)
+                    .style("opacity", this.settings.opacityArea)
                     .on('mouseover', function (d, i) {
                         //Dim all blobs
                         parent.selectAll(".radarArea")
                             .transition().duration(200)
-                            .style("fill-opacity", 0.1);
+                            .style("opacity", 0.1);
+                        parent.selectAll(".radarStroke")
+                            .transition().duration(200)
+                            .style("opacity", 0.1);
                         //Bring back the hovered over blob
                         d3.select(this)
                             .transition().duration(200)
-                            .style("fill-opacity", 0.7);
+                            .style("opacity", 1.0);
                     })
                     .on('mouseout', () => {
                         //Bring back all blobs
                         parent.selectAll(".radarArea")
                             .transition().duration(200)
-                            .style("fill-opacity", this.settings.opacityArea);
+                            .style("opacity", this.settings.opacityArea);
+                        parent.selectAll(".radarStroke")
+                            .transition().duration(200)
+                            .style("opacity", 1.0);
                     });
             }
             //</editor-fold>
@@ -465,7 +483,29 @@ export class RadarChart {
                 .style("stroke-width", d => this.settings.strokeWidth(d) + "px")
                 .style("stroke", (d) => this.settings.strokeColor(d))
                 .style("fill", "none")
-                .style("filter", "url(#glow)");
+                .on('mouseover', function (d, i) {
+                    //Dim all blobs
+                    parent.selectAll(".radarArea")
+                        .transition().duration(200)
+                        .style("opacity", 0.1);
+                    parent.selectAll(".radarStroke")
+                        .transition().duration(200)
+                        .style("opacity", 0.1);
+                    //Bring back the hovered over blob
+                    d3.select(this)
+                        .transition().duration(200)
+                        .style("opacity", 1.0);
+                })
+                .on('mouseout', () => {
+                    //Bring back all blobs
+                    parent.selectAll(".radarArea")
+                        .transition().duration(200)
+                        .style("opacity", this.settings.opacityArea);
+                    parent.selectAll(".radarStroke")
+                        .transition().duration(200)
+                        .style("opacity", 1.0);
+                });
+            // .style("filter", "url(#glow)");
 
             if (this.settings.showMarkers) {
                 //Append the circles

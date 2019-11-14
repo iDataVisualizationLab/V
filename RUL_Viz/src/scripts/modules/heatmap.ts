@@ -70,6 +70,7 @@ export class HeatMap {
 
 
     constructor(htmlContainer, heatMapData: HeatMapData, heatMapSettings: HeatMapSettings) {
+
         this.data = heatMapData;
         //Copy the settings if there are.
         if (heatMapSettings != null) {
@@ -113,15 +114,9 @@ export class HeatMap {
 
         //Color scales
         if (!this.settings.colorScale) {
-            let flattenedZ = [].concat(...this.data.z);
-            let minZ = d3.min(flattenedZ);
-            let maxZ = d3.max(flattenedZ);
-            let avgZ = (maxZ - minZ) / 2 + minZ;
-            this.settings.colorScale = d3.scaleLinear<string, number>()
-                .domain([minZ, avgZ, maxZ])
-                .range(this.settings.colorScheme ? this.settings.colorScheme : ["#0877bd", "#e8eaeb", "#f59322"])
-                .clamp(true);
+            this.calculateColorScale();
         }
+
         let container = d3.select(htmlContainer).append("div")
             .style("width", `${this.settings.width}px`)
             .style("height", `${this.settings.height}px`)
@@ -210,6 +205,16 @@ export class HeatMap {
         }
     }
 
+    calculateColorScale() {
+        let flattenedZ = [].concat(...this.data.z);
+        let minZ = d3.min(flattenedZ);
+        let maxZ = d3.max(flattenedZ);
+        let avgZ = (maxZ - minZ) / 2 + minZ;
+        this.settings.colorScale = d3.scaleLinear<string, number>()
+            .domain([minZ, avgZ, maxZ])
+            .range(this.settings.colorScheme ? this.settings.colorScheme : ["#0877bd", "#e8eaeb", "#f59322"])
+    }
+
     public async plot() {
         //clear the canvas
         this.canvas.node().getContext("2d").clearRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -224,6 +229,7 @@ export class HeatMap {
     public async update(newData) {
         this.data = newData;
         //TODO: we may need to recalculate the scale.
+        this.calculateColorScale();
         this.plot();
     }
 
