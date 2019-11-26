@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../build/js/charts.min.js"></script>
+</head>
+<body>
+<div id="heatMapContainer" style="width: 800px; height: 400px;border:1px solid red;"></div>
+<!--<div id="lineChartContainer" style="width: 800px; height: 300px;border:1px solid red;"></div>-->
+<!--<div id="radarChartContainer0" style="width: 600px; height: 600px;border:1px solid red;"></div>-->
+<!--<div id="radarChartContainer1" style="width: 600px; height: 600px;border:1px solid red;"></div>-->
+<script>
+    let x = Array.from(new Array(10), (_, i) => i); //Features
+    let y = Array.from(new Array(5), (_, i) => i); //Records
+    let z = [];
+    for (let i = 0; i < y.length; i++) {
+        let row = [];
+        for (let j = 0; j < x.length; j++) {
+            row.push(Math.random());
+            if (i == 2) {
+                row[j] += 2;
+            }
+        }
+        z.push(row);
+    }
+    let hm = new HeatMap(document.getElementById('heatMapContainer'), {x: x, y: y, z: z}, {
+        noSvg: false,
+        showAxes: true,
+        paddingLeft: 40,
+        paddingRight: 50,
+        paddingTop: 50,
+        paddingBottom: 25,
+        showColorBar: true,
+        xAxisLabel: {
+            text: "Columns"
+        },
+        yAxisLabel: {
+            text: "Rows"
+        },
+        reverseY: true
+    });
+    hm.plot();
+    // let lc = new LineChart(document.getElementById('lineChartContainer'), [
+    //     {
+    //         x: [1, 2, 3, 4, 5],
+    //         y: [1, 4, 5, 2, 3],
+    //         series: 'line1',
+    //         marker: 'o'
+    //     },
+    //     {
+    //         x: [1, 2, 3, 4, 5],
+    //         y: [3, 5, 2, 1, 4],
+    //         series: 'line2',
+    //         marker: 'x'
+    //     }
+    // ], {
+    //     noSvg: false,
+    //     showAxes: true,
+    //     paddingLeft: 40,
+    //     paddingRight: 30,
+    //     paddingTop: 50,
+    //     paddingBottom: 25,
+    // });
+    // lc.plot();
+
+    // let radarChartSettings0 = {
+    //     levelStrokeColorScheme: ['green', 'orange', 'red'],
+    //     legend: true,
+    //     showLevelLabels: false,
+    //     showAxisLabels: false,
+    //     roundStrokes: true,
+    //     showMarkers: true,
+    //     showToolTip: true,
+    //     fillBlobs: true
+    // };
+    // let radarChartPoints0 = [[1, 2, 3, 4, 5], [1, 1, 1, 2, 3], [2, 3, 4, 4, 5], [1, 1, 5, 6, 2], [2, 3, 4, 5, 6]];
+    // let radarChartData0 = RadarChart.pointsToRadarChartData(radarChartPoints0, ["d1", "d2", "d3", "d4", "d5"]);
+    // let rc0 = new RadarChart(document.getElementById("radarChartContainer0"), radarChartData0, radarChartSettings0);
+
+
+    // let radarChartSettings1 = {
+    //     levelStrokeColorScheme: ['green', 'orange', 'red'],
+    //     legend: true,
+    //     showAxes: false,
+    //     showLevelLabels: false,
+    //     showAxisLabels: false,
+    //     roundStrokes: true,
+    //     showMarkers: true,
+    //     showToolTip: true,
+    //     fillBlobs: true,
+    //     blobMode: true,
+    //     strokeWidth: (d) => d.data.strokeWidth
+    // };
+    // let radarChartPoints1 = [
+    //     [[1, 1], [1, 2], [2, 3], [2, 4], [3, 5]],
+    //     [[1, 2], [1, 3], [1, 1], [2, 3], [3, 3]],
+    //     [[2, 2], [3, 3], [4, 4], [4, 4], [5, 5]],
+    //     [[1, 2], [1, 3], [5, 6], [6, 7], [2, 8]],
+    //     [[2, 2], [3, 3], [5, 5], [7, 7], [8, 8]],
+    //     [[6, 6], [6, 6], [5, 5], [7, 7], [8, 8]]
+    // ];
+    // radarChartPoints1.forEach(item => {
+    //     item.data = {strokeWidth: 0};
+    // });
+    // radarChartPoints1[4].data = {strokeWidth: 2};
+    // radarChartPoints1[5].data = {strokeWidth: 2};
+    // let radarChartData1 = RadarChart.pointsToRadarChartBlobData(radarChartPoints1, ["d1", "d2", "d3", "d4", "d5"]);
+    // let rc1 = new RadarChart(document.getElementById("radarChartContainer1"), radarChartData1, radarChartSettings1);
+
+
+</script>
+</body>
+</html>
