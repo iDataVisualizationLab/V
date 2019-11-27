@@ -3,6 +3,11 @@ import * as d3 from 'd3';
 
 /**
  * A two dimensional x and y coordinates with the value (z).
+ * x    {Array}: x values (for x axis)
+ * y    {Array}: y values (for each of the x value)
+ * series   string: "Name of the series"
+ * marker   letter: used to mark the point
+ * tye  ["scatter", "line"]: used to control whether it is a scatter plot or a line chart
  */
 export type LineChartTrace = {
     x: number[],
@@ -29,6 +34,7 @@ export type YAxisLabel = {
 
 export interface LineChartSettings {
     [key: string]: any;
+
     showAxes?: boolean;
     noSvg?: boolean;
     width?: number;
@@ -45,7 +51,8 @@ export interface LineChartSettings {
     legend?: any;
     title?: Title;
     xAxisLabel?: XAxisLabel,
-    yAxisLabel?: YAxisLabel
+    yAxisLabel?: YAxisLabel,
+    eventHandlers?: any
 }
 
 export class LineChart {
@@ -56,17 +63,19 @@ export class LineChart {
         paddingLeft: 0,
         paddingTop: 0,
         paddingBottom: 0,
-        paddingRight: 0
+        paddingRight: 0,
     };
     private colorScale;
     private canvas;
     private canvasWidth;
     private canvasHeight;
     private svg;
+    private contentSvg;
     private data: LineChartTrace[];
 
     constructor(htmlContainer, lineChartData: LineChartTrace[], lineChartSettings: LineChartSettings) {
         this.data = lineChartData;
+        let thisObject = this;
         //Copy the settings if there are.
         if (lineChartSettings != null) {
             for (let prop in lineChartSettings) {
@@ -140,6 +149,53 @@ export class LineChart {
                 .append("g")
                 .attr("transform", "translate(0, 0)");
         }
+        let arrBisector = d3.bisector((d, x) => d - x).left;
+
+        //Closest point for all traces (the indexes not the actual values)
+        function getClosestIndicesForTraces(point) {
+            let x = point[0];
+            // console.log(point);
+            let xVal = thisObject.settings.xScale.invert(x);
+            let results = thisObject.data.map(trace => {
+                let idx = arrBisector(trace.x, xVal);
+                return idx;
+            });
+            return results;
+        }
+
+        //Closest point (traceIdx, xIdx, yIdx)
+        function getClosestPointsInfo(point) {
+            let cps = getClosestIndicesForTraces(point);
+            let x = thisObject.settings.xScale(thisObject.data[0].x[cps[0]]);
+            let y = thisObject.settings.yScale(thisObject.data[0].y[cps[0]]);
+            let closestPointIdx = cps[0];
+            let closestTraceIdx = 0;
+            let closestDistance = distance([x, y], point);
+            let closestPoint = [x, y];
+            for (let i = 1; i < cps.length; i++) {
+                x = thisObject.settings.xScale(thisObject.data[i].x[cps[i]]);
+                y = thisObject.settings.yScale(thisObject.data[i].y[cps[i]]);
+                let d = distance([x, y], point);
+                if (d < closestDistance) {
+                    closestDistance = d;
+                    closestPointIdx = cps[i];
+                    closestTraceIdx = i;
+                    closestPoint = [x, y];
+                }
+            }
+            return {
+                closestDistance: closestDistance,
+                closestPointIdx: closestPointIdx,
+                closestTraceIdx: closestTraceIdx,
+                closestPoint: closestPoint,
+                closestIndicesForTraces: cps,
+            }
+        }
+
+        function distance(p1, p2) {
+            return Math.sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]));
+        }
+
         this.canvas = container.append("canvas")
             .attr("width", contentWidth)
             .attr("height", contentHeight)
@@ -147,11 +203,16 @@ export class LineChart {
             .style("height", (contentHeight) + "px")
             .style("position", "absolute")
             .style("top", `${this.settings.paddingTop}px`)
-            .style("left", `${this.settings.paddingLeft}px`)
-            .on("mousemove", function(){
+            .style("left", `${this.settings.paddingLeft}px`);
+        Object.keys(this.settings.eventHandlers).forEach(event => {
+            thisObject.canvas.on(event, function () {
                 let point = d3.mouse(this);
-
+                let info = getClosestPointsInfo(point);
+                info['pageX'] = d3.event.pageX;
+                info['pageY'] = d3.event.pageY;
+                thisObject.settings.eventHandlers[event](info);
             });
+        });
         //Show axes
         if (this.settings.showAxes) {
             let xAxis = d3.axisBottom()
@@ -213,7 +274,7 @@ export class LineChart {
             let x = trace.x;
             let y = trace.y;
             let color = this.settings.colorScale(trace.series);
-            this.draw(x, y, this.settings.lineWidth, color, trace.marker, trace.type);
+            this.draw(x, y, this.settings.lineWidth, color, trace);
 
         });
     }
@@ -224,8 +285,9 @@ export class LineChart {
         this.plot();
     }
 
-    private async draw(x: number[], y: number[], lineWidth: number, strokeStyle: string, marker: string, type: string) {
-
+    private async draw(x: number[], y: number[], lineWidth: number, strokeStyle: string, trace: any) {
+        let marker = trace.marker;
+        let type = trace.type;
         //Convert data to d3 format.
         let lineData = x.map((xVal, i) => {
             return {
@@ -234,8 +296,8 @@ export class LineChart {
             }
         });
 
-
         let ctx = this.canvas.node().getContext("2d");
+        //TODO: Shall we update the scales when updating the data?
         let xScale = this.settings.xScale;
         let yScale = this.settings.yScale;
 

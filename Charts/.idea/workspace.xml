@@ -1,13 +1,100 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ca391dce-9265-4bcb-bf19-b8c2dd73e065" name="Default Changelist" comment="Fixed on displaying of the heatmap (x for the columns, y for the rows: there is an option to display y as top-down or bottom-up).">
+      <change afterPath="$PROJECT_DIR$/tests/lib/d3.v5.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/js/charts.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/build/js/charts.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scripts/charts.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/scripts/charts.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/scripts/modules/linechart.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/scripts/modules/linechart.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/testcharts.html" beforeDir="false" afterPath="$PROJECT_DIR$/tests/testcharts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MultiOutliers/scripts/main2.js" beforeDir="false" afterPath="$PROJECT_DIR$/../MultiOutliers/scripts/main2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RUL_Viz/src/scripts/modules/linechart.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../RUL_Viz/src/scripts/modules/linechart.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/generateData.js" beforeDir="false" afterPath="$PROJECT_DIR$/../ScagnosticsML/js/generateData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/generateDataFromFile.js" beforeDir="false" afterPath="$PROJECT_DIR$/../ScagnosticsML/js/generateDataFromFile.js" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="1UA160oTjyukhO1LlfQoitjebC9" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/tests/lib" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tests/lib" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="testcharts.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/Charts/tests/testcharts.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.testcharts.html" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ca391dce-9265-4bcb-bf19-b8c2dd73e065" name="Default Changelist" comment="" />
+      <created>1574784406445</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1574784406445</updated>
+      <workItem from="1574784409053" duration="7940000" />
+      <workItem from="1574809092421" duration="10526000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fixed on displaying of the heatmap (x for the columns, y for the rows: there is an option to display y as top-down or bottom-up)." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed on displaying of the heatmap (x for the columns, y for the rows: there is an option to display y as top-down or bottom-up)." />
   </component>
 </project>
