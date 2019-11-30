@@ -18,20 +18,19 @@ let lineChartPaddings = {
 //The model
 let model;
 //Sizes
-const navHeight = 60;
-const articleHeight = 0;
-let windowHeight = window.innerHeight;
-let contentHeight = windowHeight - navHeight - articleHeight - 10;
-let predictionChartHeight = (contentHeight - 40) / 9;
-let imageSize = predictionChartHeight - lineChartPaddings.paddingTop - lineChartPaddings.paddingBottom;
+// const navHeight = 60;
+// const articleHeight = 0;
+// let windowHeight = window.innerHeight;
+// let contentHeight = windowHeight - navHeight - articleHeight - 10;
+// let predictionChartHeight = (contentHeight - 40) / 9;
+// let imageSize = predictionChartHeight - lineChartPaddings.paddingTop - lineChartPaddings.paddingBottom;
 //New sizes scheme
 const navHeight = 60;
 const articleHeight = 0;
 let imageSize = 160;
 let windowHeight = window.innerHeight;
 let contentHeight = windowHeight - navHeight - articleHeight - 10;
-predictionChartHeight - lineChartPaddings.paddingTop - lineChartPaddings.paddingBottom
-let predictionChartHeight = (contentHeight - 40) / 9;
+let predictionChartHeight = imageSize + lineChartPaddings.paddingTop - lineChartPaddings.paddingBottom;
 
 //Storages
 let XArr;
