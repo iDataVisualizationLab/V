@@ -121,7 +121,7 @@ export class LineChart {
 
             this.settings.colorScale = d3.scaleOrdinal()
                 .domain(series)
-                .range(series.map((sr, i) => {
+                .range(series.map((_, i) => {
                     return colorScale(i / seriesLength);
                 }));
         }

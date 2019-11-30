@@ -153,7 +153,6 @@ function drawModelOutput(modelIdx) {
         yAxisDomain: [0, 150],
         xType: 'nominal'
     });
-
 }
 
 /**

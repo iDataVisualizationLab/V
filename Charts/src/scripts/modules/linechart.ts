@@ -1,5 +1,6 @@
 /** Some ideas of this class are adopted from: https://github.com/tensorflow/playground/blob/master/src/linechart.ts*****/
 import * as d3 from 'd3';
+import {color} from 'd3-color';
 
 /**
  * A two dimensional x and y coordinates with the value (z).
@@ -23,7 +24,11 @@ export type Legend = {
 export type Title = {
     text: string,
     fontSize?: number,
-    fontFamily?: string
+    fontFamily?: string,
+    x?: number,
+    y?: number,
+    textAnchor?: string,
+    alignmentBaseline?: string
 }
 export type XAxisLabel = {
     text: string
@@ -52,7 +57,9 @@ export interface LineChartSettings {
     title?: Title;
     xAxisLabel?: XAxisLabel,
     yAxisLabel?: YAxisLabel,
-    eventHandlers?: any
+    eventHandlers?: any,
+    markerHighlightOpacity?: number,
+    markerFadeOpacity?: number
 }
 
 export class LineChart {
@@ -72,6 +79,7 @@ export class LineChart {
     private svg;
     private contentSvg;
     private data: LineChartTrace[];
+    private markersToHighlight = [];
 
     constructor(htmlContainer, lineChartData: LineChartTrace[], lineChartSettings: LineChartSettings) {
         this.data = lineChartData;
@@ -234,8 +242,20 @@ export class LineChart {
 
         //Show title
         if (this.settings.title) {
-            let title = this.svg.append("g").append("text").attr("class", "graphTitle").attr("x", this.settings.paddingLeft + contentWidth / 2).attr("y", this.settings.paddingTop / 2)
-                .text(this.settings.title.text).attr("alignment-baseline", "middle").attr("text-anchor", "middle").attr("font-weight", "bold");
+            if (this.settings.title.x === undefined) {
+                this.settings.title.x = this.settings.paddingLeft + contentWidth / 2;
+            }
+            if (this.settings.title.y === undefined) {
+                this.settings.title.y = this.settings.paddingTop / 2;
+            }
+            if(this.settings.title.alignmentBaseline===undefined){
+                this.settings.title.alignmentBaseline = "middle";
+            }
+            if(this.settings.title.textAnchor === undefined){
+                this.settings.title.textAnchor = "middle";
+            }
+            let title = this.svg.append("g").append("text").attr("class", "graphTitle").attr("x", this.settings.title.x).attr("y", this.settings.title.y)
+                .text(this.settings.title.text).attr("alignment-baseline", this.settings.title.alignmentBaseline).attr("text-anchor", this.settings.title.textAnchor).attr("font-weight", "bold");
             if (this.settings.title.fontFamily) {
                 title.attr("font-family", this.settings.title.fontFamily);
             }
@@ -270,12 +290,8 @@ export class LineChart {
         //clear the canvas
         this.canvas.node().getContext("2d").clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         //start the drawing
-        this.data.forEach(trace => {
-            let x = trace.x;
-            let y = trace.y;
-            let color = this.settings.colorScale(trace.series);
-            this.draw(x, y, this.settings.lineWidth, color, trace);
-
+        this.data.forEach((trace, traceIdx) => {
+            this.draw(this.settings.lineWidth, traceIdx);
         });
     }
 
@@ -285,7 +301,35 @@ export class LineChart {
         this.plot();
     }
 
-    private async draw(x: number[], y: number[], lineWidth: number, strokeStyle: string, trace: any) {
+    /**
+     * Highlight the markers for each trace
+     * @param markersToHighlight
+     * @param higlightOpacity
+     * @param fadeOpacity
+     */
+    public async highlightMarkers(markersToHighlight, highlightOpacity, fadeOpacity) {
+        //Initialize
+        if (highlightOpacity !== undefined) {
+            this.settings.markerHighlightOpacity = highlightOpacity;
+        }
+        if (fadeOpacity !== undefined) {
+            this.settings.markerFadeOpacity = fadeOpacity;
+        }
+        this.markersToHighlight = markersToHighlight;
+        //Plot
+        this.plot();
+
+    }
+
+    public async highlightLines(lines, highlightOpacity, fadeOpacity) {
+
+    }
+
+    private async draw(lineWidth: number, traceIdx) {
+        let trace = this.data[traceIdx];
+        let x = trace.x;
+        let y = trace.y;
+        let strokeStyle = this.settings.colorScale(trace.series);
         let marker = trace.marker;
         let type = trace.type;
         //Convert data to d3 format.
@@ -316,11 +360,30 @@ export class LineChart {
             ctx.font = `${fontSize}px Monospace`;
             let mkW = ctx.measureText(marker).width;
             let mkH = fontSize;
-            lineData.forEach(point => {
-                ctx.fillStyle = strokeStyle;
+            lineData.forEach((point, i) => {
+                let c = color(strokeStyle);
+                if (this.markersToHighlight.flat().length > 0) {
+                    if (this.markersToHighlight[traceIdx].indexOf(i) >= 0) {
+                        c.opacity = this.settings.markerHighlightOpacity;
+                        ctx.fillStyle = c;
+                        if (this.settings.highlightWithBar) {
+                            let recX = xScale(point.x - 10);
+                            let recY = yScale(point.y);
+                            ctx.fillRect(recX, recY, 10, this.canvasHeight - recY);
+                        }
+                    } else {
+                        c.opacity = this.settings.markerFadeOpacity;
+                        ctx.fillStyle = c;
+                    }
+                } else {
+                    c.opacity = 1.0;
+                    ctx.fillStyle = c;
+                }
                 ctx.fillText(marker, (xScale(point.x) - mkW / 2), (yScale(point.y) + mkH / 4));
             });
+
         }
+
 
     }
 }

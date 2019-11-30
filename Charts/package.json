@@ -25,6 +25,7 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
+    "d3-color": "^1.4.0",
     "d3-tip": "^0.9.1"
   }
 }
