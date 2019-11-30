@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Scagnostics CNN</title>
+    <style>
+        @import "lib/materialize/css/materialize.css";
+        @import "lib/jqueryresizable/jquery-resizable.css";
+        @import "js/loader/loader.css";
+        @import "js/tooltip/tooltip.css";
+        @import "js/toast/toast.css";
+    </style>
+    <!--GUI Lib-->
+    <script src="lib/d3.v5.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="lib/jquery-3.4.1.js"></script>
+    <script src="lib/materialize/js/materialize.js"></script>
+    <!--JQuery Resizable-->
+    <script src="lib/jqueryresizable/jquery-resizable.js"></script>
+    <!--ML Lib-->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis"></script>
+    <!--custom-->
+    <script src="js/cssvariable/cssvariables.js"></script>
+    <script src="js/globalsettings.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/charts.min.js"></script>
+    <script src="js/toast/toast.js"></script>
+    <script src="js/modelmanagement.js"></script>
+    <style>
+        .borderBottom {
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+<div id="snackbar"></div>
+<!--loader-->
+<script src="js/loader/loader.js"></script>
+<script>
+    hideLoader();
+</script>
+
+
+<nav class="nav-wrapper indigo borderBottom">
+    <div class="container">
+        <a href="#" class="brand-logo">ScagCNN: Can Machine Learning Support Visual Analytics?</a>
+        <ul class="right">
+            <li><a href="#article"><span>Article</span></a></li>
+            <li><a href="#" onclick="toast('Will be updated after notification status')"><span>Github</span></a>
+            </li>
+            <li><a href="#" onclick="toast('Will be updated after notification status')"><span>Contact</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="borderBottom" style="margin: auto;" id="mainContent">
+    <div class="container" id="container">
+        <div class="panel-container">
+            <div class="panel-left">
+                <div id="predictions"></div>
+            </div>
+            <div class="splitter">
+            </div>
+
+            <div class="panel-right">
+                <div class="panel-container-vertical">
+
+                    <div class="panel-top">
+                        <div id="CNN"></div>
+                    </div>
+
+                    <div class="splitter-horizontal">
+                    </div>
+
+                    <div class="panel-bottom" style="overflow: scroll">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<footer style="margin-bottom: 10px;">
+    <div class="container">
+        <h3><a name="article">The article</a></h3>
+        <h5>Quick start:</h5>
+        <p>
+           Mouse-over the item for prediction. Click when an item is highlighted to display its binned image that was fed to the model for predictions.
+        </p>
+    </div>
+</footer>
+<!--UI initialization-->
+<script>
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     let selectElems = document.querySelectorAll('select');
+    //     let selectInstances = M.FormSelect.init(selectElems);
+    //     let modalElems = document.querySelectorAll('.modal');
+    //     let modalInstances = M.Modal.init(modalElems);
+    // });
+
+    $(".panel-top").resizable({
+        handleSelector: ".splitter-horizontal",
+        resizeWidth: false
+    });
+    $(".panel-left").resizable({
+        handleSelector: ".splitter",
+        resizeHeight: false
+    });
+
+    setCSSVariable("--window-height", `${windowHeight}px`);
+    setCSSVariable("--nav-height", `${navHeight}px`);
+    setCSSVariable("--article-height", `${articleHeight}`);
+    setCSSVariable("--content-height", `${contentHeight}px`);
+    contentWidth = document.getElementById("container").getBoundingClientRect().width;
+    setCSSVariable("--content-width", `${contentWidth}px`);
+
+    function handleWindowSize() {
+        setCSSVariable("--window-height", `${window.innerHeight}px`);
+        setCSSVariable("--window-width", `${document.getElementById("container").getBoundingClientRect().width}px`);
+    }
+
+    window.onresize = handleWindowSize;
+
+</script>
+<!--Scripting-->
+<script src="js/tooltip/tooltip.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>
