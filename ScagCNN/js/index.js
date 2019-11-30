@@ -1,14 +1,14 @@
 async function main() {
-    let selectedModelPath = 'data/models/model1/model.json';
+    // let selectedModelPath = 'data/models/model1/model.json';
 
-    // let selectedModelPath = 'data/models/model2/model.json';
+    let selectedModelPath = 'data/models/model2/model.json';
     model = await loadModel(selectedModelPath);
 
-    let testdata = await d3.json("data/RealWorldData.json");
-    XArr = testdata.flat().map(d => d.rectangularBins);
-    yArr = testdata.flat().map(d => d.scagnostics);
-    // XArr = await d3.json("data/X_test.json");
-    // yArr = await d3.json("data/y_test.json");
+    // let testdata = await d3.json("data/RealWorldData.json");
+    // XArr = testdata.flat().map(d => d.rectangularBins);
+    // yArr = testdata.flat().map(d => d.scagnostics);
+    XArr = await d3.json("data/X_test.json");
+    yArr = await d3.json("data/y_test.json");
 
     let X_test = tf.tensor(XArr);
     X_test = X_test.reshape([X_test.shape[0], X_test.shape[1], X_test.shape[2], 1]);

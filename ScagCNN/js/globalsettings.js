@@ -30,7 +30,7 @@ const articleHeight = 0;
 let imageSize = 160;
 let windowHeight = window.innerHeight;
 let predictionChartHeight = imageSize + lineChartPaddings.paddingTop + lineChartPaddings.paddingBottom;
-let contentHeight = predictionChartHeight*9 + 20; //20 for the margin
+let contentHeight = predictionChartHeight * 9 + 20; //20 for the margin
 
 //Storages
 let XArr;
