@@ -14,7 +14,7 @@ let typeList = [
 let datasets = typeList.map(f => {
     return f();
 })
-let defaultSetIndex = 3;
+let defaultSetIndex = 2;
 
 let binType = "leader";
 // let binType = "hexagon";

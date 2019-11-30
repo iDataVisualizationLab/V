@@ -63,7 +63,7 @@ function skewedScatterPlot() {
 
 function clumpyScatterPlot() {
     let points = [];
-    let numberOfClusters = d3.randomInt(2, 6)();
+    let numberOfClusters = d3.randomInt(2, 4)();
     //Push few more outlying points.
     let distance = d3.randomUniform(0.5, 0.1);//Around the center
     let corner = () => d3.randomUniform(0, 2)() * Math.PI;
@@ -74,7 +74,7 @@ function clumpyScatterPlot() {
     };
     for (let cluster = 0; cluster < numberOfClusters; cluster++) {
         let groupCenter = genGroupPoint();
-        let groupSigma = d3.randomNormal(0.015, 0.02)();
+        let groupSigma = d3.randomUniform(0.01, 0.02)();
         let randomX = d3.randomNormal(groupCenter[0], groupSigma),
             randomY = d3.randomNormal(groupCenter[1], groupSigma);
         d3.range(50).map(function () {
@@ -82,7 +82,6 @@ function clumpyScatterPlot() {
         });
     }
     return points;
-
 }
 
 /***********SPARSED DATA*******************
@@ -194,9 +193,9 @@ function convexScatterPlot() {
     let points;
     let randomX = d3.randomNormal(1.0 / 2, 0.5),
         randomY = d3.randomNormal(1.0 / 2, 0.5);
-        points = d3.range(2000).map(function () {
-            return [randomX(), randomY()];
-        });
+    points = d3.range(2000).map(function () {
+        return [randomX(), randomY()];
+    });
     return points;
 }
 

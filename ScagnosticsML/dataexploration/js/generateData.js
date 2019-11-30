@@ -1,7 +1,7 @@
 const binType = "leader";
 const startBinGridSize = 20;//TODO: consider this too.
-generateDataFromDS();
-// generateDataFromTypicalSets();
+// generateDataFromDS();
+generateDataFromTypicalSets();
 //Next method is used to generate data from typical dataexploration data.
 function generateDataFromTypicalSets() {
     let typeList = [
