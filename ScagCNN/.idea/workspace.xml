@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="b2ed2c3a-2783-4dd4-8902-2f8e57f1b8c2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/dist/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/css/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/preprocessing/.ipynb_checkpoints/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/preprocessing/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/lib/Icon&#10;" beforeDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+        <option value="JavaScript File" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1SzRotaFYopoZ6PsNOgPlY8kDXV" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data" />
+      <recent name="$PROJECT_DIR$/js" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/lib/jqueryresizable" />
+      <recent name="$PROJECT_DIR$/data/preprocessing" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/data/preprocessing" />
+      <recent name="$PROJECT_DIR$/js" />
+      <recent name="$PROJECT_DIR$/dataexploration" />
+      <recent name="$PROJECT_DIR$/scagnostics" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="JavaScript Debug.index.html (1)">
+    <configuration name="exploreData.html (1)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/ScagnosticsML/dataexploration/exploreData.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="exploreData.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/ScagnosticsML/scagnostics/exploreData.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="generateData.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/ScagnosticsML/scagnostics/generateData.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="index.html (1)" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/ScagCNN/index.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="index.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/ScagnosticsML/index.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.index.html (1)" />
+        <item itemvalue="JavaScript Debug.index.html" />
+        <item itemvalue="JavaScript Debug.exploreData.html (1)" />
+        <item itemvalue="JavaScript Debug.exploreData.html" />
+        <item itemvalue="JavaScript Debug.generateData.html" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b2ed2c3a-2783-4dd4-8902-2f8e57f1b8c2" name="Default Changelist" comment="" />
+      <created>1572564615242</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1572564615242</updated>
+      <workItem from="1572564617719" duration="2224000" />
+      <workItem from="1572621601788" duration="10558000" />
+      <workItem from="1572709874191" duration="22163000" />
+      <workItem from="1573511089931" duration="1048000" />
+      <workItem from="1574291437045" duration="1792000" />
+      <workItem from="1574294034020" duration="12384000" />
+      <workItem from="1574876317515" duration="26565000" />
+      <workItem from="1575001240605" duration="4747000" />
+      <workItem from="1575130031885" duration="5158000" />
+      <workItem from="1575149825197" duration="260000" />
+      <workItem from="1575150311982" duration="13239000" />
+    </task>
+    <task id="LOCAL-00001" summary="Commit">
+      <created>1575149585139</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1575149585139</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Commit">
+      <created>1575150337308</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1575150337308</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Updated sizes">
+      <created>1575150593929</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1575150593929</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Updated sizes">
+      <created>1575150730370</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1575150730370</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Correct train/test data.">
+      <created>1575151859601</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1575151859601</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Display top 10 most differences each score type.">
+      <created>1575165379187</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1575165379187</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Update the alignment">
+      <created>1575166368585</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1575166368585</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list />
+          </value>
+        </entry>
+        <entry key="User">
+          <value>
+            <list />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="Commit" />
+    <MESSAGE value="Updated sizes" />
+    <MESSAGE value="Correct train/test data." />
+    <MESSAGE value="Display top 10 most differences each score type." />
+    <MESSAGE value="Update the alignment" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update the alignment" />
+  </component>
+</project>

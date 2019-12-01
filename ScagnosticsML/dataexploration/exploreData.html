@@ -1,0 +1,219 @@
+<!--The template of this page is inspired from https://playground.tensorflow.org/-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Compiled and minified CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet"
+          type="text/css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis"></script>
+    <style>
+        @import "css/playground.css";
+    </style>
+
+    <script src="lib/d3.v5.min.js"></script>
+    <script src="lib/d3-random.v2.min.js"></script>
+    <script src="js/scagnostics.min.js"></script>
+    <script src="js/outliagnostics.min.js"></script>
+    <script src="https://underscorejs.org/underscore-min.js"></script>
+
+    <title>Scagnostics</title>
+    <style>
+        .hexagon {
+            stroke: #000;
+            stroke-width: 0.5px;
+        }
+
+        .triangles {
+            fill: none;
+            stroke: black;
+            stroke-width: 0.5px;
+        }
+
+        .links {
+            stroke: #000;
+        }
+
+        .sites {
+            fill: #000;
+            stroke: #fff;
+        }
+
+        .triangles .primary {
+            stroke: #fff;
+        }
+
+        .sites :first-child {
+            fill: #fff;
+        }
+
+        path {
+            opacity: 0.8
+        }
+
+        /*these are for the tooltip*/
+        div.tooltip {
+            position: absolute;
+            line-height: 1;
+            font-weight: bold;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border-radius: 2px;
+            pointer-events: none;
+        }
+
+        /* Creates a small triangle extender for the tooltip */
+        div.tooltip:after {
+            box-sizing: border-box;
+            display: inline;
+            font-size: 10px;
+            width: 100%;
+            line-height: 1;
+            color: rgba(0, 0, 0, 0.8);
+            content: "\25BC";
+            position: absolute;
+            left: 6px;
+            bottom: -10px;
+            text-align: left;
+        }
+
+        /* Style northward tooltips differently */
+        div.tooltip.n:after {
+            margin: -1px 0 0 0;
+            top: 100%;
+            left: 0;
+        }
+
+        /*end tooltip section*/
+        /*Section for the plot title style*/
+        .plottitle {
+            position: relative;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1 class="page"><a href="../documentation.html"><b>ScagnosticsJS</b></a> <span
+            class="optional">Exploration Page</span>.</h1>
+</header>
+<div id="top-controls">
+    <div class="container page">
+        <div class="control">
+            <label for="scagnostics">Select a dataset</label>
+            <div class="select">
+                <select class="select multiple" id="scagnostics" onchange="changeDataset(this);">
+                    <option value="outlying">Outlying scatter plot</option>
+                    <option value="skewed">Skewed scatter plot</option>
+                    <option value="clumpy">Clumpy scatter plot</option>
+                    <option value="sparse">Sparse scatter plot</option>
+                    <option value="striated">Striated scatter plot</option>
+                    <option value="convex">Convex scatter plot</option>
+                    <option value="skinny">Skinny scatter plot</option>
+                    <option value="stringy">Stringy scatter plot</option>
+                    <option value="monotonic">Monotonic scatter plot</option>
+                    <option value="xLine">X line</option>
+                    <option value="yLine">Y line</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page" id="main-part">
+    <div style="width: 1400px; margin-left: auto; margin-right: auto;">
+        <div style="float:left">
+            <svg id="normalizedsvg"
+                 style="overflow: visible; margin-top:0px;"></svg>
+            <svg id="scagsvg"
+                 style="overflow: visible; margin-top:0px;"></svg>
+        </div>
+        <div style="float: right;">
+            <p><b>Calculation information:</b> number of bins: <span id="scagBinsLengthMsg"></span>,
+                outlying edge cut point: <span id="outlyingUpperBoundMsg"></span></p>
+            <table class="highlight" style="width: 600px">
+                <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Name</th>
+                    <th>Score</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1.</td>
+                    <td>Outlying score</td>
+                    <td><span id="outlyingScoreMsg"></span></td>
+                </tr>
+                <tr>
+                    <td>2.</td>
+                    <td>Skewed score</td>
+                    <td><span id="skewedScoreMsg"></span></td>
+                </tr>
+                <tr>
+                    <td>3.</td>
+                    <td>Sparse score</td>
+                    <td><span id="sparseScoreMsg"></span></td>
+                </tr>
+                <tr>
+                    <td>4.</td>
+                    <td>Clumpy score</td>
+                    <td><span id="clumpyScoreMsg"></span></td>
+                </tr>
+                <tr>
+                    <td>5.</td>
+                    <td>Striated score</td>
+                    <td><span id="striatedScoreMsg"></span></td>
+                </tr>
+                <tr>
+                    <td>6.</td>
+                    <td>Convex score</td>
+                    <td><span id="convexScoreMsg"></span></td>
+                </tr>
+                <tr>
+                    <td>7.</td>
+                    <td>Skinny score</td>
+                    <td><span id="skinnyScoreMsg"></span></td>
+                </tr>
+                <tr>
+                    <td>8.</td>
+                    <td>Stringy score</td>
+                    <td><span id="stringyScoreMsg"></span></td>
+                </tr>
+                <tr>
+                    <td>9.</td>
+                    <td>Monotonic score</td>
+                    <td><span id="monotonicScoreMsg"></span></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<div class="more">
+    <a href="#scagStages">
+        <button class="mdl-button mdl-js-button mdl-button--fab" data-upgraded=",MaterialButton">
+            <i class="material-icons">keyboard_arrow_down</i>
+        </button>
+    </a>
+</div>
+<article id="article-text">
+    <div class="page">
+        <h5><a name="scagStages">Computation stages</a></h5>
+        <div id="controlButtons"></div>
+    </div>
+</article>
+<script src="js/generateTypicalData.js"></script>
+<script src="js/exploreData.js"></script>
+<script src="js/mlmodel.js"></script>
+</body>
+</html>
