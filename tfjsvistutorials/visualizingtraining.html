@@ -2,9 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Visualizing training</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis"></script>
 </head>
 <body>
-
+<button onclick="makeSurface();">Make a surface</button>
+<script>
+    function makeSurface(){
+        tfvis.visor().toggle();
+    }
+</script>
 </body>
 </html>

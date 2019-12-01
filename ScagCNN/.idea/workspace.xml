@@ -1,17 +1,147 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b2ed2c3a-2783-4dd4-8902-2f8e57f1b8c2" name="Default Changelist" comment="">
+    <list default="true" id="b2ed2c3a-2783-4dd4-8902-2f8e57f1b8c2" name="Default Changelist" comment="Update the alignment">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Charts/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/Icon&#10;" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/dist/Icon&#10;" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/build/js/charts.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/build/js/charts.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/.eslintrc.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/node_modules/d3-color/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/node_modules/d3-color/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/dist/d3-color.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/node_modules/d3-color/dist/d3-color.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/dist/d3-color.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/node_modules/d3-color/dist/d3-color.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/node_modules/d3-color/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/rollup.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/color.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/color.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/cubehelix.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/cubehelix.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/define.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/define.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/lab.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/lab.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/math.js" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/node_modules/d3-color/src/math.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/node_modules/d3-color/yarn.lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/src/scripts/modules/linechart.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/src/scripts/modules/linechart.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/tests/testcharts.html" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/tests/testcharts.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Charts/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Charts/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../MultiOutliers/scripts/main2.js" beforeDir="false" afterPath="$PROJECT_DIR$/../MultiOutliers/scripts/main2.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RUL/scripts/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/../RUL/scripts/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RUL_Viz/src/scripts/modules/linechart.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../RUL_Viz/src/scripts/modules/linechart.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/models/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/models/model1/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/models/model2/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/preprocessing/.ipynb_checkpoints/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/preprocessing/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataexploration/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataexploration/css/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataexploration/data/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataexploration/data/preprocessing/.ipynb_checkpoints/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataexploration/data/preprocessing/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataexploration/js/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataexploration/js/generateData.js" beforeDir="false" afterPath="$PROJECT_DIR$/dataexploration/js/generateData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataexploration/lib/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dataexploration/lib/d3.v5.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/dataexploration/lib/d3.v5.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/cssvariable/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/cssvariable/cssvariables.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/cssvariable/cssvariables.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/cssvariable/variables.css" beforeDir="false" afterPath="$PROJECT_DIR$/js/cssvariable/variables.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/loader/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/loader/loader.css" beforeDir="false" afterPath="$PROJECT_DIR$/js/loader/loader.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/loader/loader.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/loader/loader.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/toast/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/toast/toast.css" beforeDir="false" afterPath="$PROJECT_DIR$/js/toast/toast.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/toast/toast.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/toast/toast.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/tooltip/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/tooltip/tooltip.css" beforeDir="false" afterPath="$PROJECT_DIR$/js/tooltip/tooltip.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/tooltip/tooltip.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/tooltip/tooltip.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/d3.v5.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/d3.v5.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/jquery-3.4.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/jquery-3.4.1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/jqueryresizable/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/jqueryresizable/assets/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/jqueryresizable/jquery-3.4.1.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/jqueryresizable/jquery-3.4.1.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/materialize/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/materialize/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/lib/materialize/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/materialize/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/lib/materialize/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/materialize/css/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/materialize/css/materialize.css" beforeDir="false" afterPath="$PROJECT_DIR$/lib/materialize/css/materialize.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/materialize/css/materialize.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/lib/materialize/css/materialize.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/materialize/js/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/materialize/js/materialize.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/materialize/js/materialize.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/materialize/js/materialize.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/materialize/js/materialize.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/.idea/ScagnosticsML.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/data/RealWorldData.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/data/models/model1/group1-shard1of1.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/data/models/model1/model.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/data/preprocessing/best_model.h5" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/css/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/css/playground.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/HPCCTempVsFan.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/HPCC_04Oct.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/InternationalDebtData.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/LifeExpectancy263.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/NYSEPriceVsVolume.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/PrevalenceOfHIV.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/RealWorldData10.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/USEmpRGoodVsService.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/USUnEmpRateMenVsWomen.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/UnemploymentRate.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/WorldTerrorism.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/preprocessing/.ipynb_checkpoints/Icon&#10;" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/preprocessing/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/preprocessing/RealWorldData.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/preprocessing/ScagnosticsML.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/preprocessing/ScagnosticsML.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/data/preprocessing/ScagnosticsTypicalData.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/exploreData.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/generateData.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/js/exploreData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/js/generateData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/js/generateDataFromFile.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/js/generateTypicalData.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/js/mlmodel.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/js/outliagnostics.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/js/scagnostics.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/js/utils.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/lib/Icon&#10;" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/lib/d3-random.v2.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/dataexploration/lib/d3.v5.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/charts.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/cssvariable/cssvariables.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/cssvariable/variables.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/globalsettings.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/loader/loader.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/loader/loader.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/modelmanagement.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/toast/toast.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/toast/toast.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/tooltip/tooltip.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/tooltip/tooltip.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/js/utils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/d3.v5.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/jquery-3.4.1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/jqueryresizable/assets/hsizegrip.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/jqueryresizable/assets/vsizegrip.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/jqueryresizable/initialize.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/jqueryresizable/jquery-3.4.1.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/jqueryresizable/jquery-resizable.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/jqueryresizable/jquery-resizable.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/jqueryresizable/testusage.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/materialize/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/materialize/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/materialize/css/materialize.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/materialize/css/materialize.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/materialize/js/materialize.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ScagnosticsML/lib/materialize/js/materialize.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../tfjsvistutorials/visualizingtraining.html" beforeDir="false" afterPath="$PROJECT_DIR$/../tfjsvistutorials/visualizingtraining.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -40,10 +170,20 @@
   </component>
   <component name="ProjectId" id="1SzRotaFYopoZ6PsNOgPlY8kDXV" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane" />
+      <pane id="Scope" />
+    </panes>
+  </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
@@ -125,6 +265,7 @@
       <workItem from="1575130031885" duration="5158000" />
       <workItem from="1575149825197" duration="260000" />
       <workItem from="1575150311982" duration="13239000" />
+      <workItem from="1575234014030" duration="652000" />
     </task>
     <task id="LOCAL-00001" summary="Commit">
       <created>1575149585139</created>
@@ -178,6 +319,40 @@
     <option name="localTasksCounter" value="8" />
     <servers />
   </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="652000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1680" height="1027" extended-state="0" />
+    <layout>
+      <window_info id="Favorites" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24954791" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Terminal" sideWeight="0.4996986" visible="true" weight="0.3297062" />
+      <window_info active="true" anchor="bottom" id="Event Log" sideWeight="0.50030136" side_tool="true" visible="true" weight="0.3297062" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.4996986" weight="0.3297062" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
@@ -187,6 +362,12 @@
         <entry key="MAIN">
           <value>
             <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
               <option name="COLUMN_ORDER" />
             </State>
           </value>
