@@ -5,7 +5,7 @@ async function loadModel(path) {
 }
 
 //Note: must call this before the drawEvaluations method, to make sure that the orders of the scores are not changed yet.
-async function findTop10Differences(arrActual, arrPredicted){
+async function findTop10Differences(arrActual, arrPredicted) {
     let numOfScores = arrActual.length;
     let numOfItems = arrActual[0].length;
     let distances = [];
@@ -14,16 +14,18 @@ async function findTop10Differences(arrActual, arrPredicted){
         for (let scoreIdx = 0; scoreIdx < numOfScores; scoreIdx++) {
             let actualScore = arrActual[scoreIdx][itemIdx];
             let predictedScore = arrPredicted[scoreIdx][itemIdx];
-            distance += (actualScore-predictedScore)*(actualScore-predictedScore);
+            distance += (actualScore - predictedScore) * (actualScore - predictedScore);
         }
         distances.push(Math.sqrt(distance));
     }
     let sortedIdxs = argsort(distances);
     return sortedIdxs.slice(sortedIdxs.length - 10, sortedIdxs.length).reverse();//Reverse since we need to display the most different first.
 }
-async function drawTop10Differences(itemIdxs){
+
+async function drawTop10Differences(itemIdxs) {
     drawTop10Items("top10differences", itemIdxs);
 }
+
 async function findTop10DifferencesEachType(arrActual, arrPredicted) {
     let top10DifferencesEachType = [];
     arrActual.forEach((actualValues, scoreIdx) => {
@@ -37,6 +39,7 @@ async function findTop10DifferencesEachType(arrActual, arrPredicted) {
 
 function drawTop10Items(containerId, itemIdxs) {
     let container = d3.select(`#${containerId}`);
+
     container.selectAll(".top10differencesforeach").data(itemIdxs, d => d).join("div").classed("cnnDataItem", true)
         .style("display", "inline")
         .style("margin-left", imageMargins.left + "px")
@@ -50,6 +53,8 @@ function drawTop10Items(containerId, itemIdxs) {
         .on("mouseover", (d) => {
             let theItemOriginalIdx = d;
             highlightItem(theItemOriginalIdx);
+
+
         });
 }
 
@@ -57,7 +62,7 @@ async function drawTop10DifferencesEachType(top10DifferencesEachType) {
     top10DifferencesEachType.forEach((itemIdxs, scoreIdx) => {
         let scoreType = typeList[scoreIdx];
         let containerId = `top10differences${scoreType}`;
-        let container = d3.select(`#scoreDiv${scoreType}`).append("div").attr("id", containerId)
+        d3.select(`#scoreDiv${scoreType}`).append("div").attr("id", containerId)
             .style("float", "left")
             .style("margin-top", imageMargins.top + "px");
 
@@ -185,6 +190,15 @@ async function renderImage(container, tensor, imageOpts) {
 async function highlightItem(theItemOriginalIdx) {
     allPredictionGraphs.forEach((pg, idx) => pg.highlightMarkers([[allPredictionGraphsOrder[idx].indexOf(theItemOriginalIdx)], [allPredictionGraphsOrder[idx].indexOf(theItemOriginalIdx)]],
         1.0, 0.05));
+    //Also highlight the in the scatter plot view too.
+    d3.selectAll(".cnnDataItem").each(function () {
+        let thisItem = d3.select(this);
+        if (thisItem.datum() === theItemOriginalIdx) {
+            thisItem.select("canvas").style('border', '1px solid red');
+        } else {
+            thisItem.select("canvas").style('border', '1px solid silver');
+        }
+    });
 }
 
 function convertBlackToWhite(imgData) {
