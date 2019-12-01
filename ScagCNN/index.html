@@ -12,7 +12,7 @@
     </style>
     <!--GUI Lib-->
     <script src="lib/d3.v5.min.js"></script>
-<!--    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
+    <!--    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
     <script src="lib/jquery-3.4.1.js"></script>
     <script src="lib/materialize/js/materialize.js"></script>
     <!--JQuery Resizable-->
@@ -32,10 +32,7 @@
             border-bottom: 1px solid #ddd;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
         }
-
     </style>
-
-
 </head>
 <body>
 
@@ -59,40 +56,19 @@
         </ul>
     </div>
 </nav>
-<div class="borderBottom" style="margin: auto;" id="mainContent">
-    <div class="container" id="container">
-        <div class="panel-container">
-            <div class="panel-left">
-                <div id="predictions"></div>
-            </div>
-            <div class="splitter">
-            </div>
-
-            <div class="panel-right">
-                <div class="panel-container-vertical">
-
-                    <div class="panel-top">
-                        <div id="CNN"></div>
-                    </div>
-
-                    <div class="splitter-horizontal">
-                    </div>
-
-                    <div class="panel-bottom" style="overflow: scroll">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div>
+<div class="row" style="overflow-x: scroll; white-space: nowrap">
+    <div id="CNN"></div>
+</div>
+<div class="row" style="overflow-x: scroll; white-space: nowrap">
+    <div id="scores"></div>
 </div>
 <footer style="margin-bottom: 10px;">
     <div class="container">
         <h3><a name="article">The article</a></h3>
         <h5>Quick start:</h5>
         <p>
-           Mouse-over the item for prediction. Click when an item is highlighted to display its binned image that was fed to the model for predictions.
+            Mouse-over the item for prediction. Click when an item is highlighted to display its binned image that was
+            fed to the model for predictions.
         </p>
     </div>
 </footer>
@@ -104,29 +80,6 @@
     //     let modalElems = document.querySelectorAll('.modal');
     //     let modalInstances = M.Modal.init(modalElems);
     // });
-
-    $(".panel-top").resizable({
-        handleSelector: ".splitter-horizontal",
-        resizeWidth: false
-    });
-    $(".panel-left").resizable({
-        handleSelector: ".splitter",
-        resizeHeight: false
-    });
-
-    setCSSVariable("--window-height", `${windowHeight}px`);
-    setCSSVariable("--nav-height", `${navHeight}px`);
-    setCSSVariable("--article-height", `${articleHeight}`);
-    setCSSVariable("--content-height", `${contentHeight}px`);
-    contentWidth = document.getElementById("container").getBoundingClientRect().width;
-    setCSSVariable("--content-width", `${contentWidth}px`);
-
-    function handleWindowSize() {
-        setCSSVariable("--window-height", `${window.innerHeight}px`);
-        setCSSVariable("--window-width", `${document.getElementById("container").getBoundingClientRect().width}px`);
-    }
-
-    window.onresize = handleWindowSize;
 
 </script>
 <!--Scripting-->

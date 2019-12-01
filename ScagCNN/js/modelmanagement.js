@@ -4,21 +4,56 @@ async function loadModel(path) {
     return model;
 }
 
+//Note: must call this before the drawEvaluations method, to make sure that the orders of the scores are not changed yet.
+
+async function findTop10DifferencesEachType(arrActual, arrPredicted) {
+    let top10DifferencesEachType = [];
+    arrActual.forEach((actualValues, scoreIdx) => {
+        let predictedValues = arrPredicted[scoreIdx];
+        let scoreDiffs = actualValues.map((actual, itemIdx) => Math.abs(actual - predictedValues[itemIdx]));
+        let sortedIdxs = argsort(scoreDiffs);
+        top10DifferencesEachType.push(sortedIdxs.slice(sortedIdxs.length - 10, sortedIdxs.length).reverse());//Reverse since we need to display the most different first.
+    });
+    return top10DifferencesEachType;
+}
+
+async function drawTop10DifferencesEachType(top10DifferencesEachType) {
+    debugger
+    top10DifferencesEachType.forEach((itemIdxs, scoreIdx) => {
+        let scoreType = typeList[scoreIdx];
+        let container = d3.select(`#scoreDiv${scoreType}`).append("div").attr("id", `top10differences${scoreType}`);
+        container.selectAll(".top10differencesforeach").data(itemIdxs, d => d).join("div").classed("cnnDataItem", true).style("display", "inline").attr("id", d => `item${d}`).each(function () {
+            let theItemOriginalIdx = d3.select(this).datum();
+            let imgData = convertBlackToWhite(XArr[theItemOriginalIdx]);
+            let imgts = tf.tidy(() => tf.tensor(imgData, [40, 40, 1]));
+            renderImage(this, imgts, {width: imageSize, height: imageSize});
+            imgts.dispose();
+        })
+            .on("mouseover", (d) => {
+                let theItemOriginalIdx = d;
+                highlightItem(theItemOriginalIdx);
+            });
+    });
+}
+
 async function drawEvaluations(arrActual, arrPredicted) {
-    let predictionChartWidth = (contentWidth / 2 - 20); //-20 is for the two padding left and right
-    let noOfItems = arrActual[0].length;
+    //Copy to make sure that we don't modify the original data unnecessarily.
+    let arrActualCopied = arrActual.map(score => score.slice());
+    let arrPredictedCopied = arrPredicted.map(score => score.slice());
+    let noOfItems = arrActualCopied[0].length;
     let xSeries = Array.from(new Array(noOfItems), (_, i) => i);
     //Use only one yScale ranging from 0 to 1
-    let yScale = d3.scaleLinear().domain([0, 1]).range([predictionChartHeight-lineChartPaddings.paddingTop - lineChartPaddings.paddingBottom, 0]);
+    let yScale = d3.scaleLinear().domain([0, 1]).range([predictionChartHeight - lineChartPaddings.paddingTop - lineChartPaddings.paddingBottom, 0]);
     //Append div for the plots if they are not there.
-    d3.select("#predictions").selectAll(".predictionGraph").data(typeList).join("div").classed("predictionGraph", true)
-        .attr("id", type => `prediction${type}`).style("width", `${predictionChartWidth}px`).style("height", `${predictionChartHeight}px`);
+    d3.selectAll(".scoreDiv").append("div").classed("predictionGraph", true).attr("id", d => "prediction" + d)
+        .style("display", "inline");
 
-    arrActual.forEach((actualValues, i) => {
+    arrActualCopied.forEach((actualValues, scoreIdx) => {
         let orderIdxs = argsort(actualValues);
-        allPredictionGraphsOrder[i] = orderIdxs;
+        allPredictionGraphsOrder[scoreIdx] = orderIdxs;
         actualValues.sort((a, b) => a - b);
-        let predictedValues = orderIdxs.map(val => arrPredicted[i][val]);
+        let predictedValues = orderIdxs.map(val => arrPredictedCopied[scoreIdx][val]);
+
         let mse = tf.tidy(() => tf.metrics.meanSquaredError(actualValues, predictedValues));
         let mae = tf.tidy(() => tf.metrics.meanAbsoluteError(actualValues, predictedValues));
 
@@ -49,10 +84,12 @@ async function drawEvaluations(arrActual, arrPredicted) {
             paddingBottom: lineChartPaddings.paddingBottom,
             yScale: yScale,
             highlightWithBar: false,
+            width: predictionChartWidth,
+            height: predictionChartHeight,
             eventHandlers: {
                 "click": (mouseInfo) => {
                     let theItemIdx = mouseInfo.closestPointIdx;
-                    let theItemOriginalIdx = allPredictionGraphsOrder[i][theItemIdx];
+                    let theItemOriginalIdx = allPredictionGraphsOrder[scoreIdx][theItemIdx];
                     if (investigatingItems.has(theItemOriginalIdx)) {
                         investigatingItems.delete(theItemOriginalIdx);
                     } else {
@@ -61,9 +98,8 @@ async function drawEvaluations(arrActual, arrPredicted) {
 
                     let cnn = d3.select("#CNN").selectAll(".cnnDataItem").data(Array.from(investigatingItems), d => d);
                     let enterItems = cnn.enter();
-                    enterItems.append("div").classed("cnnDataItem", true).attr("id", d => `item${d}`).each(function () {
-                        let theIdx = d3.select(this).datum();
-                        let imgData = convertBlackToWhite(XArr[theIdx]);
+                    enterItems.append("div").classed("cnnDataItem", true).style("display", "inline").attr("id", d => `item${d}`).each(function () {
+                        let imgData = convertBlackToWhite(XArr[theItemOriginalIdx]);
                         let imgts = tf.tidy(() => tf.tensor(imgData, [40, 40, 1]));
                         renderImage(this, imgts, {width: imageSize, height: imageSize});
                         imgts.dispose();
@@ -75,7 +111,7 @@ async function drawEvaluations(arrActual, arrPredicted) {
                 },
                 "mousemove": (mouseInfo) => {
                     let theItemIdx = mouseInfo.closestPointIdx;
-                    let theItemOriginalIdx = allPredictionGraphsOrder[i][theItemIdx];
+                    let theItemOriginalIdx = allPredictionGraphsOrder[scoreIdx][theItemIdx];
                     highlightItem(theItemOriginalIdx);
                 },
                 "mouseout": (mouseInfo) => {
@@ -83,7 +119,7 @@ async function drawEvaluations(arrActual, arrPredicted) {
                 }
             },
             title: {
-                text: `${typeList[i]}, mse = ${mse.dataSync()[0].toFixed(3)}, mae = ${mae.dataSync()[0].toFixed(3)}`,
+                text: `${typeList[scoreIdx]}, mse = ${mse.dataSync()[0].toFixed(3)}, mae = ${mae.dataSync()[0].toFixed(3)}`,
                 x: lineChartPaddings.paddingLeft + 10,
                 y: lineChartPaddings.paddingTop,
                 alignmentBaseline: "hanging",
@@ -99,9 +135,9 @@ async function drawEvaluations(arrActual, arrPredicted) {
             .range(lineChartData.map((_, i) => {
                 return d3.schemeCategory10[i];
             }));
-        let lc = new LineChart(document.getElementById(`prediction${typeList[i]}`), lineChartData, lineChartSettings);
+        let lc = new LineChart(document.getElementById(`prediction${typeList[scoreIdx]}`), lineChartData, lineChartSettings);
         lc.plot();
-        allPredictionGraphs[i] = lc;
+        allPredictionGraphs[scoreIdx] = lc;
     });
 }
 
@@ -140,3 +176,4 @@ function getActivation(input, model, layer) {
     });
     return activationModel.predict(input);
 }
+
