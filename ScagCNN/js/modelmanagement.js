@@ -23,10 +23,12 @@ async function drawTop10DifferencesEachType(top10DifferencesEachType) {
         let scoreType = typeList[scoreIdx];
         let container = d3.select(`#scoreDiv${scoreType}`).append("div").attr("id", `top10differences${scoreType}`)
             .style("float", "left")
-            .style("margin-top", lineChartPaddings.paddingTop + "px")
-            .style("margin-left", "10px");
+            .style("margin-top", imageMargins.top + "px");
+
         container.selectAll(".top10differencesforeach").data(itemIdxs, d => d).join("div").classed("cnnDataItem", true)
-            .style("display", "inline").attr("id", d => `item${d}`).each(function () {
+            .style("display", "inline")
+            .style("margin-left", imageMargins.left + "px")
+            .attr("id", d => `item${d}`).each(function () {
             let theItemOriginalIdx = d3.select(this).datum();
             let imgData = convertBlackToWhite(XArr[theItemOriginalIdx]);
             let imgts = tf.tidy(() => tf.tensor(imgData, [40, 40, 1]));
@@ -151,7 +153,7 @@ async function renderImage(container, tensor, imageOpts) {
     const canvas = container.querySelector('canvas') || document.createElement('canvas');
     canvas.width = imageOpts.width;
     canvas.height = imageOpts.height;
-    canvas.style = `margin: 4px; width:${imageOpts.width}px; height:${imageOpts.height}px; border: 1px solid silver;`;
+    canvas.style = `width:${imageOpts.width}px; height:${imageOpts.height}px; border: 1px solid silver;`;
     container.appendChild(canvas);
     await tf.browser.toPixels(resized, canvas);
     resized.dispose();
