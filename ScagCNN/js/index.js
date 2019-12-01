@@ -12,6 +12,13 @@ async function main() {
 
     let arrPredicted = y_predicted.transpose().arraySync();//Keep the original order
     let arrActual = y_test.transpose().arraySync();//Keep the original order
+
+    //Set the size for the menu bar
+    d3.select("#menu")
+        .style("width", `${predictionChartWidth}px`)
+        .style("height", `${imageSize}px`)
+        .style("padding-left", `${lineChartPaddings.paddingLeft}px`);
+
     //Create divs for the scores.
     let scoreDiv = d3.select("#scores");
     scoreDiv.style("width", `${predictionChartWidth + 10 * (imageMargins.left+imageSize) + 20}px`);
@@ -20,6 +27,9 @@ async function main() {
     drawEvaluations(arrActual, arrPredicted).then(() => {
         findTop10DifferencesEachType(arrActual, arrPredicted).then((top10DifferencesEachType) => {
             drawTop10DifferencesEachType(top10DifferencesEachType);
+        });
+        findTop10Differences(arrActual, arrPredicted).then((top10differences)=>{
+            drawTop10Differences(top10differences);
         });
     });
 }
