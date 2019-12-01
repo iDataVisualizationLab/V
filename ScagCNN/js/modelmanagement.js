@@ -21,8 +21,12 @@ async function drawTop10DifferencesEachType(top10DifferencesEachType) {
     debugger
     top10DifferencesEachType.forEach((itemIdxs, scoreIdx) => {
         let scoreType = typeList[scoreIdx];
-        let container = d3.select(`#scoreDiv${scoreType}`).append("div").attr("id", `top10differences${scoreType}`);
-        container.selectAll(".top10differencesforeach").data(itemIdxs, d => d).join("div").classed("cnnDataItem", true).style("display", "inline").attr("id", d => `item${d}`).each(function () {
+        let container = d3.select(`#scoreDiv${scoreType}`).append("div").attr("id", `top10differences${scoreType}`)
+            .style("float", "left")
+            .style("margin-top", lineChartPaddings.paddingTop + "px")
+            .style("margin-left", "10px");
+        container.selectAll(".top10differencesforeach").data(itemIdxs, d => d).join("div").classed("cnnDataItem", true)
+            .style("display", "inline").attr("id", d => `item${d}`).each(function () {
             let theItemOriginalIdx = d3.select(this).datum();
             let imgData = convertBlackToWhite(XArr[theItemOriginalIdx]);
             let imgts = tf.tidy(() => tf.tensor(imgData, [40, 40, 1]));
@@ -46,7 +50,7 @@ async function drawEvaluations(arrActual, arrPredicted) {
     let yScale = d3.scaleLinear().domain([0, 1]).range([predictionChartHeight - lineChartPaddings.paddingTop - lineChartPaddings.paddingBottom, 0]);
     //Append div for the plots if they are not there.
     d3.selectAll(".scoreDiv").append("div").classed("predictionGraph", true).attr("id", d => "prediction" + d)
-        .style("display", "inline");
+        .style("float", "left");
 
     arrActualCopied.forEach((actualValues, scoreIdx) => {
         let orderIdxs = argsort(actualValues);
