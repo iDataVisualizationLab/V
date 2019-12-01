@@ -1,12 +1,12 @@
 const binType = "leader";
 const startBinGridSize = 20;//TODO: consider this too.
-<<<<<<< HEAD:ScagnosticsML/dataexploration/js/generateData.js
+
 generateDataFromDS();
 // generateDataFromTypicalSets();
-=======
+
 // generateDataFromDS();
 generateDataFromTypicalSets();
->>>>>>> origin/master:ScagCNN/dataexploration/js/generateData.js
+
 //Next method is used to generate data from typical dataexploration data.
 function generateDataFromTypicalSets() {
     let typeList = [
