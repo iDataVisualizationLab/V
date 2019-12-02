@@ -50,7 +50,11 @@ function drawTop10Items(containerId, itemIdxs) {
         .on("mouseover", (d) => {
             let theItemOriginalIdx = d;
             highlightItem(theItemOriginalIdx);
+        })
+        .on("mouseout", _=>{
+            highlightItem(undefined);
         });
+
 }
 
 async function drawTop10DifferencesEachType(top10DifferencesEachType) {
@@ -203,8 +207,14 @@ async function renderImage(container, tensor, imageOpts) {
 }
 
 async function highlightItem(theItemOriginalIdx) {
-    allPredictionGraphs.forEach((pg, idx) => pg.highlightMarkers([[allPredictionGraphsOrder[idx].indexOf(theItemOriginalIdx)], [allPredictionGraphsOrder[idx].indexOf(theItemOriginalIdx)]],
-        1.0, 0.2));
+    if(theItemOriginalIdx===undefined){
+        //Show all
+        allPredictionGraphs.forEach((pg, idx) => pg.highlightMarkers([], 1.0, 0.2));
+
+    }else{
+        allPredictionGraphs.forEach((pg, idx) => pg.highlightMarkers([[allPredictionGraphsOrder[idx].indexOf(theItemOriginalIdx)], [allPredictionGraphsOrder[idx].indexOf(theItemOriginalIdx)]],
+            1.0, 0.2));
+    }
     //Also highlight the in the scatter plot view too.
     d3.selectAll(".cnnDataItem").each(function () {
         let thisItem = d3.select(this);
@@ -214,6 +224,7 @@ async function highlightItem(theItemOriginalIdx) {
             thisItem.select("canvas").style('border', '1px solid silver');
         }
     });
+
 }
 
 function convertBlackToWhite(imgData) {
