@@ -99,6 +99,16 @@ async function drawEvaluations(arrActual, arrPredicted) {
                 y: predictedValues,
                 series: "Predicted",
                 marker: "o",
+                abstractLevel: {
+                    type: "bin",
+                    options: {
+                        numOfBins: 30,
+                        curve: d3.curveCardinal.tension(0.5),
+                        bandOpacity: 0.7,
+                        lowerQuantile: 0.1,
+                        upperQuantile: 0.9
+                    }
+                },
                 type: "scatter"
             }
         ];
@@ -139,13 +149,14 @@ async function drawEvaluations(arrActual, arrPredicted) {
                     let theItemOriginalIdx = allPredictionGraphsOrder[scoreIdx][theItemIdx];
                     highlightItem(theItemOriginalIdx);
                     //Show tip for the item.
-                    showTipWithPos("<div id='itemtooltip'></div>", mouseInfo.pageX, mouseInfo.pageY - imageSize).then(()=>{
+                    showTipWithPos("<div id='itemtooltip'></div>", mouseInfo.pageX, mouseInfo.pageY - imageSize).then(() => {
                         renderImageForItemIdx(document.getElementById("itemtooltip"), theItemOriginalIdx);
                     });
                 },
 
                 "mouseout": (mouseInfo) => {
                     allPredictionGraphs.forEach(pg => pg.highlightMarkers([], 1.0, 1.0));
+                    hideTip();
                 }
             },
             title: {
