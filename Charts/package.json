@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "d3-color": "^1.4.0",
-    "d3-tip": "^0.9.1"
+    "d3-tip": "^0.9.1",
+    "simple-statistics": "^7.0.7"
   }
 }

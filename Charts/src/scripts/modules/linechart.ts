@@ -1,6 +1,7 @@
 /** Some ideas of this class are adopted from: https://github.com/tensorflow/playground/blob/master/src/linechart.ts*****/
 import * as d3 from 'd3';
 import {color} from 'd3-color';
+import {quantile} from "simple-statistics";
 
 /**
  * A two dimensional x and y coordinates with the value (z).
@@ -15,7 +16,8 @@ export type LineChartTrace = {
     y: number[],
     series: string,
     marker?: string,
-    type?: string
+    type?: string,
+    abstractionLevel?: AbstractLevel
 }
 export type Legend = {
     x: number,
@@ -35,6 +37,10 @@ export type XAxisLabel = {
 }
 export type YAxisLabel = {
     text: string
+}
+export type AbstractLevel = {
+    type: string,
+    options?: any
 }
 
 export interface LineChartSettings {
@@ -59,7 +65,8 @@ export interface LineChartSettings {
     yAxisLabel?: YAxisLabel,
     eventHandlers?: any,
     markerHighlightOpacity?: number,
-    markerFadeOpacity?: number
+    markerFadeOpacity?: number,
+    abstractLevel?: AbstractLevel
 }
 
 export class LineChart {
@@ -77,7 +84,6 @@ export class LineChart {
     private canvasWidth;
     private canvasHeight;
     private svg;
-    private contentSvg;
     private data: LineChartTrace[];
     private markersToHighlight = [];
 
@@ -248,10 +254,10 @@ export class LineChart {
             if (this.settings.title.y === undefined) {
                 this.settings.title.y = this.settings.paddingTop / 2;
             }
-            if(this.settings.title.alignmentBaseline===undefined){
+            if (this.settings.title.alignmentBaseline === undefined) {
                 this.settings.title.alignmentBaseline = "middle";
             }
-            if(this.settings.title.textAnchor === undefined){
+            if (this.settings.title.textAnchor === undefined) {
                 this.settings.title.textAnchor = "middle";
             }
             let title = this.svg.append("g").append("text").attr("class", "graphTitle").attr("x", this.settings.title.x).attr("y", this.settings.title.y)
@@ -329,6 +335,58 @@ export class LineChart {
         let trace = this.data[traceIdx];
         let x = trace.x;
         let y = trace.y;
+        //TODO: Shall we update the scales when updating the data?
+        let xScale = this.settings.xScale;
+        let yScale = this.settings.yScale;
+        //Check for option
+        if (trace.abstractionLevel) {
+            let abstraction = trace.abstractionLevel;
+            if (abstraction.type === "bin") {
+                //Initialize bins as empty arrays
+                let bins = new Array(10).map(_ => []);
+                let numOfBins = abstraction.options.numOfBins;
+                //Note, we scale as x already scaled since we may need to do binning like with dates
+                //And the x may not guarantee equal distances every step
+                let binStep = this.canvasWidth / numOfBins;
+                for (let i = 0; i < x.length; i++) {
+                    bins[Math.floor(xScale(x[i]) / binStep)].push(i);
+                }
+                //Now y values for each bins
+                let binYValues = bins.map(bin => {
+                    let yValues = bin.map(idx => y[idx]);
+                    return yValues;
+                });
+                //Bounds for each bean [lowerBound, upperBound]
+                let binYBounds = binYValues.map(binYs => {
+                    return [quantile(binYs, 0.25), quantile(binYs, 0.75)];
+                });
+                //Now resetup the bin data.
+                let binData = bins.map((binItemIdxs, binIdx) => {
+                    let bounds = binYBounds[binIdx];
+                    let upperItemIdxs = [];
+                    let normalItemIdxs = [];
+                    let lowerItemIdxs = [];
+                    binItemIdxs.forEach(binItemIdx => {
+                        if (y[binItemIdx] < bounds[0]) {
+                            lowerItemIdxs.push(binItemIdx);
+                        } else if (y[binItemIdx] > bounds[1]) {
+                            upperItemIdxs.push(binItemIdx);
+                        } else {
+                            normalItemIdxs.push(binItemIdx);
+                        }
+                    });
+                    return {
+                        bounds: bounds,
+                        upperItemIdxs: upperItemIdxs,
+                        normalItemIdxs: normalItemIdxs,
+                        lowerItemIdxs: lowerItemIdxs,
+                    };
+                });
+
+            }
+        }
+
+
         let strokeStyle = this.settings.colorScale(trace.series);
         let marker = trace.marker;
         let type = trace.type;
@@ -341,9 +399,6 @@ export class LineChart {
         });
 
         let ctx = this.canvas.node().getContext("2d");
-        //TODO: Shall we update the scales when updating the data?
-        let xScale = this.settings.xScale;
-        let yScale = this.settings.yScale;
 
         if (type !== 'scatter') {
             let line = d3.line().x(d => xScale(d.x)).y(d => yScale(d.y)).context(ctx);
