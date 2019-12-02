@@ -147,6 +147,8 @@ async function drawEvaluations(arrActual, arrPredicted) {
                     let theItemIdx = mouseInfo.closestPointIdx;
                     let theItemOriginalIdx = allPredictionGraphsOrder[scoreIdx][theItemIdx];
                     highlightItem(theItemOriginalIdx);
+                    //Show tip for the item.
+
                 },
                 "mouseout": (mouseInfo) => {
                     allPredictionGraphs.forEach(pg => pg.highlightMarkers([], 1.0, 1.0));
