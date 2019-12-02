@@ -102,9 +102,11 @@ async function drawEvaluations(arrActual, arrPredicted) {
                 abstractLevel: {
                     type: "bin",
                     options: {
-                        numOfBins: 30,
+                        numOfBins: 50,
+                        // curve: d3.curveCardinal.tension(0.5),
                         curve: d3.curveCardinal.tension(0.5),
                         bandOpacity: 0.7,
+                        bandColor: 'grey',
                         lowerQuantile: 0.1,
                         upperQuantile: 0.9
                     }
@@ -202,7 +204,7 @@ async function renderImage(container, tensor, imageOpts) {
 
 async function highlightItem(theItemOriginalIdx) {
     allPredictionGraphs.forEach((pg, idx) => pg.highlightMarkers([[allPredictionGraphsOrder[idx].indexOf(theItemOriginalIdx)], [allPredictionGraphsOrder[idx].indexOf(theItemOriginalIdx)]],
-        1.0, 0.05));
+        1.0, 0.2));
     //Also highlight the in the scatter plot view too.
     d3.selectAll(".cnnDataItem").each(function () {
         let thisItem = d3.select(this);
