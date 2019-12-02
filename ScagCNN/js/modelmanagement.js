@@ -45,16 +45,11 @@ function drawTop10Items(containerId, itemIdxs) {
         .style("margin-left", imageMargins.left + "px")
         .attr("name", d => `item${d}`).each(function () {
         let theItemOriginalIdx = d3.select(this).datum();
-        let imgData = convertBlackToWhite(XArr[theItemOriginalIdx]);
-        let imgts = tf.tidy(() => tf.tensor(imgData, [40, 40, 1]));
-        renderImage(this, imgts, {width: imageSize, height: imageSize});
-        imgts.dispose();
+        renderImageForItemIdx(this, theItemOriginalIdx);
     })
         .on("mouseover", (d) => {
             let theItemOriginalIdx = d;
             highlightItem(theItemOriginalIdx);
-
-
         });
 }
 
@@ -133,14 +128,10 @@ async function drawEvaluations(arrActual, arrPredicted) {
                     let cnn = d3.select("#CNN").selectAll(".cnnDataItem").data(Array.from(investigatingItems), d => d);
                     let enterItems = cnn.enter();
                     enterItems.append("div").classed("cnnDataItem", true).style("display", "inline").attr("id", d => `item${d}`).each(function () {
-                        let imgData = convertBlackToWhite(XArr[theItemOriginalIdx]);
-                        let imgts = tf.tidy(() => tf.tensor(imgData, [40, 40, 1]));
-                        renderImage(this, imgts, {width: imageSize, height: imageSize});
-                        imgts.dispose();
-                    })
-                        .on("mouseover", () => {
-                            highlightItem(theItemOriginalIdx);
-                        });
+                        renderImageForItemIdx(this, theItemOriginalIdx);
+                    }).on("mouseover", () => {
+                        highlightItem(theItemOriginalIdx);
+                    });
                     cnn.exit().remove();
                 },
                 "mousemove": (mouseInfo) => {
@@ -148,8 +139,11 @@ async function drawEvaluations(arrActual, arrPredicted) {
                     let theItemOriginalIdx = allPredictionGraphsOrder[scoreIdx][theItemIdx];
                     highlightItem(theItemOriginalIdx);
                     //Show tip for the item.
-
+                    showTipWithPos("<div id='itemtooltip'></div>", mouseInfo.pageX, mouseInfo.pageY - imageSize).then(()=>{
+                        renderImageForItemIdx(document.getElementById("itemtooltip"), theItemOriginalIdx);
+                    });
                 },
+
                 "mouseout": (mouseInfo) => {
                     allPredictionGraphs.forEach(pg => pg.highlightMarkers([], 1.0, 1.0));
                 }
@@ -177,6 +171,12 @@ async function drawEvaluations(arrActual, arrPredicted) {
     });
 }
 
+async function renderImageForItemIdx(container, theItemOriginalIdx) {
+    let imgData = convertBlackToWhite(XArr[theItemOriginalIdx]);
+    let imgts = tf.tidy(() => tf.tensor(imgData, [40, 40, 1]));
+    renderImage(container, imgts, {width: imageSize, height: imageSize});
+    imgts.dispose();
+}
 
 async function renderImage(container, tensor, imageOpts) {
     const resized = tf.tidy(() => tf.image.resizeNearestNeighbor(tensor, [imageOpts.height, imageOpts.width]).clipByValue(0.0, 1.0));
