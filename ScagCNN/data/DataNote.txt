@@ -1,0 +1,5 @@
+Data is generated from dataexploration project (same folder name)
+- Data: all typical + real-world data * 10 => 10% for testing, 90% for training (which is further divided into training + validation with validation split = 0.33). These are stored in X_train, X_test, y_train, y_test
+- Model 2: Trained with 3 VGG Blocks + Drop-out + Do not give batch_size
+- Model 3: Trained with X_train3, y_train3, X_test3, y_test3 => these are the same data + split but we filter out the plots with number of rectangular bins < 30.
+- Model 4:
