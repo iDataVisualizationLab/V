@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../build/js/charts.min.js"></script>
+    <script src="lib/d3.v5.min.js"></script>
+
+</head>
+<body>
+<div id="lineChartContainer" style="width: 500px; height: 500px;border:1px solid red;"></div>
+<script>
+    d3.json("data/ScagnosticsTypicalData2.json").then(typicalData => {
+    d3.json("data/RealWorldData.json").then(realWorldData => {
+        typicalData = typicalData.map(d => d.slice(0, 1));
+        realWorldData = realWorldData.map(d=>d.slice(2, 3));
+        let data = realWorldData.concat(typicalData);
+        // let data = realWorldData;
+        // let data = typicalData;
+        let flattedData = data.flat();
+        let scagData = flattedData.map(d => d['scagnostics']);
+        let scatterPlotSize = 50;
+        let bp = new Biplot(document.getElementById("lineChartContainer"), scagData, {
+            paddingLeft: 0,
+            paddingTop: 0,
+            paddingRight: 0,
+            paddingBottom: 0,
+            contentPaddingLeft: scatterPlotSize,
+            contentPaddingTop: scatterPlotSize,
+            contentPaddingRight: scatterPlotSize,
+            contentPaddingBottom: scatterPlotSize,
+            // colorScheme: d3.schemeCategory10,
+            colorScheme: Array.from(new Array(9), (_)=>"red"),
+            // title: {
+            //     text: "Biplot"
+            // },
+            axisLabels: ["outlying", "skewed", "clumpy", "sparse", "striated", "convex", "skinny", "stringy", "monotonic"],
+        });
+        let scatterOptions = {width: scatterPlotSize, height: scatterPlotSize, radius: 1};
+        // //Find the 9 highest scores for each type and plot them.
+        // for (let i = 0; i < 9; i++) {
+        //     let theMaxIdx = argmax(scagData.map(d => d[i]));
+        //     let scagScores = scagData[theMaxIdx];
+        //     let theScatterData = flattedData[theMaxIdx].data;
+        //     let x = theScatterData.map(d => d[0]);
+        //     let y = theScatterData.map(d => d[1]);
+        //     bp.plotScatter({x: x, y: y}, scagScores, scatterOptions);
+        // }
+
+        // //Take 10 random plots and plots them.
+        // for (let i = 0; i < 20; i++) {
+        //     let theMaxIdx = Math.floor(scagData.length*Math.random());
+        //     let scagScores = scagData[theMaxIdx];
+        //     let theScatterData = flattedData[theMaxIdx].data;
+        //     let x = theScatterData.map(d => d[0]);
+        //     let y = theScatterData.map(d => d[1]);
+        //     bp.plotScatter({x: x, y: y}, scagScores, scatterOptions);
+        // }
+        // //Take 9 from typical data
+        // for (let i = 0; i < 9; i++) {
+        //     let scagScores = typicalData[i][0]['scagnostics'];
+        //     let theScatterData = typicalData[i][0]['data'];
+        //     let x = theScatterData.map(d => d[0]);
+        //     let y = theScatterData.map(d => d[1]);
+        //     bp.plotScatter({x: x, y: y}, scagScores, scatterOptions);
+        // }
+        // // //Take 9 from real-life data
+        // for (let i = 0; i < 9; i++) {
+        //     let flattedRealworldData = realWorldData.flat();
+        //     let theMaxIdx = argmax(flattedRealworldData.map(d=>d['scagnostics'][i]));
+        //     let scagScores = flattedRealworldData[theMaxIdx]['scagnostics'];
+        //     let theScatterData = flattedRealworldData[theMaxIdx]['data'];
+        //     let x = theScatterData.map(d => d[0]);
+        //     let y = theScatterData.map(d => d[1]);
+        //     bp.plotScatter({x: x, y: y}, scagScores, scatterOptions);
+        // }
+        //Draw all data.
+        flattedData.forEach(d=>{
+           let scagScores = d['scagnostics'];
+           let theScatterData = d['data'];
+            let x = theScatterData.map(d => d[0]);
+            let y = theScatterData.map(d => d[1]);
+            bp.plotScatter({x: x, y: y}, scagScores, scatterOptions);
+        });
+        function argmax(arr) {
+            return arr.indexOf(d3.max(arr));
+        }
+    });
+    });
+</script>
+</body>
+</html>

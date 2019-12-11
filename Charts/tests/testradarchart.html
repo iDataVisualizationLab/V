@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../build/js/charts.min.js"></script>
+    <script src="lib/d3.v5.min.js"></script>
+
+</head>
+<body>
+<div id="radarChartContainer0" style="width: 600px; height: 600px;border:1px solid red;"></div>
+<div id="radarChartContainer1" style="width: 600px; height: 600px;border:1px solid red;"></div>
+<script>
+
+
+    let radarChartSettings0 = {
+        levelStrokeColorScheme: ['green', 'orange', 'red'],
+        legend: true,
+        showLevelLabels: false,
+        showAxisLabels: false,
+        roundStrokes: true,
+        showMarkers: true,
+        showToolTip: true,
+        fillBlobs: true
+    };
+    let radarChartPoints0 = [[1, 2, 3, 4, 5], [1, 1, 1, 2, 3], [2, 3, 4, 4, 5], [1, 1, 5, 6, 2], [2, 3, 4, 5, 6]];
+    let radarChartData0 = RadarChart.pointsToRadarChartData(radarChartPoints0, ["d1", "d2", "d3", "d4", "d5"]);
+    let rc0 = new RadarChart(document.getElementById("radarChartContainer0"), radarChartData0, radarChartSettings0);
+
+
+    let radarChartSettings1 = {
+        levelStrokeColorScheme: ['green', 'orange', 'red'],
+        legend: true,
+        showAxes: false,
+        showLevelLabels: false,
+        showAxisLabels: false,
+        roundStrokes: true,
+        showMarkers: true,
+        showToolTip: true,
+        fillBlobs: true,
+        blobMode: true,
+        strokeWidth: (d) => d.data.strokeWidth
+    };
+    let radarChartPoints1 = [
+        [[1, 1], [1, 2], [2, 3], [2, 4], [3, 5]],
+        [[1, 2], [1, 3], [1, 1], [2, 3], [3, 3]],
+        [[2, 2], [3, 3], [4, 4], [4, 4], [5, 5]],
+        [[1, 2], [1, 3], [5, 6], [6, 7], [2, 8]],
+        [[2, 2], [3, 3], [5, 5], [7, 7], [8, 8]],
+        [[6, 6], [6, 6], [5, 5], [7, 7], [8, 8]]
+    ];
+    radarChartPoints1.forEach(item => {
+        item.data = {strokeWidth: 0};
+    });
+    radarChartPoints1[4].data = {strokeWidth: 2};
+    radarChartPoints1[5].data = {strokeWidth: 2};
+    let radarChartData1 = RadarChart.pointsToRadarChartBlobData(radarChartPoints1, ["d1", "d2", "d3", "d4", "d5"]);
+    let rc1 = new RadarChart(document.getElementById("radarChartContainer1"), radarChartData1, radarChartSettings1);
+</script>
+</body>
+</html>

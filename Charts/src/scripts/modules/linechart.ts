@@ -17,7 +17,7 @@ export type LineChartTrace = {
     series: string,
     marker?: string,
     type?: string,
-    abstractionLevel?: AbstractLevel
+    abstractLevel?: AbstractLevel
 }
 export type Legend = {
     x: number,
@@ -38,9 +38,17 @@ export type XAxisLabel = {
 export type YAxisLabel = {
     text: string
 }
+export type AbstractLevelOptions = {
+    numOfBins?: number,
+    curve?: any
+    bandOpacity?: number,
+    bandColor?: any,
+    lowerQuantile?: number
+    upperQuantile?: number,
+}
 export type AbstractLevel = {
     type: string,
-    options?: any
+    options?: AbstractLevelOptions
 }
 
 export interface LineChartSettings {
@@ -65,8 +73,7 @@ export interface LineChartSettings {
     yAxisLabel?: YAxisLabel,
     eventHandlers?: any,
     markerHighlightOpacity?: number,
-    markerFadeOpacity?: number,
-    abstractLevel?: AbstractLevel
+    markerFadeOpacity?: number
 }
 
 export class LineChart {
@@ -78,6 +85,7 @@ export class LineChart {
         paddingTop: 0,
         paddingBottom: 0,
         paddingRight: 0,
+        eventHandlers: {},
     };
     private colorScale;
     private canvas;
@@ -339,15 +347,24 @@ export class LineChart {
         let xScale = this.settings.xScale;
         let yScale = this.settings.yScale;
         //Check for option
-        if (trace.abstractionLevel) {
-            let abstraction = trace.abstractionLevel;
+        let binData;
+        let normalItemIdxs = [];
+        if (trace.abstractLevel) {
+            let abstraction = trace.abstractLevel;
             if (abstraction.type === "bin") {
+                //Upper and lower quantiles
+                abstraction.options.lowerQuantile = abstraction.options.lowerQuantile ? abstraction.options.lowerQuantile : 0.25;
+                abstraction.options.upperQuantile = abstraction.options.upperQuantile ? abstraction.options.upperQuantile : 0.75;
                 //Initialize bins as empty arrays
-                let bins = new Array(10).map(_ => []);
-                let numOfBins = abstraction.options.numOfBins;
+                let numOfBins = abstraction.options.numOfBins + 1;
+                let bins = [];
+                //Initialization.
+                for (let i = 0; i < numOfBins; i++) {
+                    bins[i] = [];
+                }
                 //Note, we scale as x already scaled since we may need to do binning like with dates
                 //And the x may not guarantee equal distances every step
-                let binStep = this.canvasWidth / numOfBins;
+                let binStep = this.canvasWidth / (numOfBins - 1);
                 for (let i = 0; i < x.length; i++) {
                     bins[Math.floor(xScale(x[i]) / binStep)].push(i);
                 }
@@ -357,31 +374,48 @@ export class LineChart {
                     return yValues;
                 });
                 //Bounds for each bean [lowerBound, upperBound]
-                let binYBounds = binYValues.map(binYs => {
-                    return [quantile(binYs, 0.25), quantile(binYs, 0.75)];
+                let binYQuantiles = binYValues.map(binYs => {
+                    return [quantile(binYs, abstraction.options.lowerQuantile), quantile(binYs, 0.5), quantile(binYs, abstraction.options.upperQuantile)];
                 });
                 //Now resetup the bin data.
-                let binData = bins.map((binItemIdxs, binIdx) => {
-                    let bounds = binYBounds[binIdx];
+                binData = bins.map((binItemIdxs, binIdx) => {
+                    let quantiles = binYQuantiles[binIdx];
                     let upperItemIdxs = [];
                     let normalItemIdxs = [];
                     let lowerItemIdxs = [];
                     binItemIdxs.forEach(binItemIdx => {
-                        if (y[binItemIdx] < bounds[0]) {
+                        if (y[binItemIdx] < quantiles[0]) {
                             lowerItemIdxs.push(binItemIdx);
-                        } else if (y[binItemIdx] > bounds[1]) {
+                        } else if (y[binItemIdx] > quantiles[2]) {
                             upperItemIdxs.push(binItemIdx);
                         } else {
                             normalItemIdxs.push(binItemIdx);
                         }
                     });
                     return {
-                        bounds: bounds,
+                        quantiles: quantiles,
                         upperItemIdxs: upperItemIdxs,
                         normalItemIdxs: normalItemIdxs,
                         lowerItemIdxs: lowerItemIdxs,
+                        binX: binIdx * binStep,
+                        binLowerY: yScale(quantiles[2]),
+                        binUpperY: yScale(quantiles[0])
                     };
                 });
+                //Now filter the normal items.
+                normalItemIdxs = binData.map(bin => bin.normalItemIdxs).flat();
+
+                //Move the x to the center (except for the last bin)
+                for (let i = 0; i < binData.length - 1; i++) {
+                    binData[i].binX += binStep / 2;
+                }
+                //Add one to the fist.
+                let firstBin = Object.assign({}, binData[0]);
+                firstBin.binX -= binStep / 2;
+                binData.unshift(firstBin);
+                //Fort the last bin => (this is what we added) take the previous step.
+                binData[binData.length - 1].binLowerY = binData[binData.length - 2].binLowerY;
+                binData[binData.length - 1].binUpperY = binData[binData.length - 2].binUpperY;
 
             }
         }
@@ -398,7 +432,32 @@ export class LineChart {
             }
         });
 
+
         let ctx = this.canvas.node().getContext("2d");
+
+        if (trace.abstractLevel !== undefined && trace.abstractLevel.type == "bin") {
+            //Try the band
+            let area = d3.area().x(d => d.binX).y0(d => d.binLowerY).y1(d => d.binUpperY).context(ctx);
+            if (trace.abstractLevel.options.curve) {
+                area.curve(trace.abstractLevel.options.curve);
+            }
+            ctx.beginPath();
+            //Todo: This part is for the stroke (may need to have option to enable this).
+            ctx.lineWidth = 0;
+            // ctx.lineWidth = lineWidth;
+            trace.abstractLevel.options.bandColor = trace.abstractLevel.options.bandColor ? trace.abstractLevel.options.bandColor : strokeStyle;
+            ctx.strokeStyle = trace.abstractLevel.options.bandColor;
+
+            let c = color(trace.abstractLevel.options.bandColor);
+            c.opacity = trace.abstractLevel.options.bandOpacity;
+            ctx.fillStyle = c;
+            area(binData);
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        //If type is abstraction => filter the x, y items which are inside the bound
+
 
         if (type !== 'scatter') {
             let line = d3.line().x(d => xScale(d.x)).y(d => yScale(d.y)).context(ctx);
@@ -408,7 +467,6 @@ export class LineChart {
             line(lineData);
             ctx.stroke();
         }
-
         //Marker
         if (marker) {
             let fontSize = 12;
@@ -434,9 +492,13 @@ export class LineChart {
                     c.opacity = 1.0;
                     ctx.fillStyle = c;
                 }
+                //Also if there are normal items (they are hidden)
+                if (normalItemIdxs.length > 0 && normalItemIdxs.indexOf(i) >= 0) {
+                    c.opacity = 0;
+                    ctx.fillStyle = c;
+                }
                 ctx.fillText(marker, (xScale(point.x) - mkW / 2), (yScale(point.y) + mkH / 4));
             });
-
         }
 
 

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../build/js/charts.min.js"></script>
+    <script src="lib/d3.v5.min.js"></script>
+
+</head>
+<body>
+<div id="biplotContainer" style="width: 800px; height: 300px;border:1px solid red;"></div>
+<script>
+
+    let x = Array.from(new Array(100), (_, i) => i);
+    let y1 = x;
+    let y2 = y1.map(v => v + 10 * Math.random());
+    debugger
+    let lc = new LineChart(document.getElementById('biplotContainer'), [
+        {
+            x: x,
+            y: y1,
+            series: 'line1',
+            marker: 'o'
+        },
+        {
+            x: x,
+            y: y2,
+            series: 'line2',
+            marker: 'x',
+            abstractLevel: {
+                type: "bin",
+                options: {
+                    numOfBins: 10,
+                    curve: d3.curveCardinal.tension(0.5),
+                    bandOpacity: 0.7,
+                    bandColor: 'gray'
+                }
+            }
+        }
+    ], {
+        noSvg: false,
+        showAxes: true,
+        paddingLeft: 40,
+        paddingRight: 30,
+        paddingTop: 50,
+        paddingBottom: 25
+    });
+    lc.plot();
+
+</script>
+</body>
+</html>

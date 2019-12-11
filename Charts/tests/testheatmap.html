@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../build/js/charts.min.js"></script>
+    <script src="lib/d3.v5.min.js"></script>
+
+</head>
+<body>
+<div id="heatMapContainer" style="width: 800px; height: 400px;border:1px solid red;"></div>
+<script>
+    let x = Array.from(new Array(10), (_, i) => i); //Features
+    let y = Array.from(new Array(5), (_, i) => i); //Records
+    let z = [];
+    for (let i = 0; i < y.length; i++) {
+        let row = [];
+        for (let j = 0; j < x.length; j++) {
+            row.push(Math.random());
+            if (i == 2) {
+                row[j] += 2;
+            }
+        }
+        z.push(row);
+    }
+    let hm = new HeatMap(document.getElementById('heatMapContainer'), {x: x, y: y, z: z}, {
+        noSvg: false,
+        showAxes: true,
+        paddingLeft: 40,
+        paddingRight: 50,
+        paddingTop: 50,
+        paddingBottom: 25,
+        showColorBar: true,
+        xAxisLabel: {
+            text: "Columns"
+        },
+        yAxisLabel: {
+            text: "Rows"
+        },
+        reverseY: true
+    });
+    hm.plot();
+</script>
+</body>
+</html>
