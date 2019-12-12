@@ -25,10 +25,10 @@
                 paddingTop: 0,
                 paddingRight: 0,
                 paddingBottom: 0,
-                contentPaddingLeft: scatterPlotSize,
-                contentPaddingTop: scatterPlotSize,
-                contentPaddingRight: scatterPlotSize,
-                contentPaddingBottom: scatterPlotSize,
+                contentPaddingLeft: scatterPlotSize/2,
+                contentPaddingTop: scatterPlotSize/2,
+                contentPaddingRight: scatterPlotSize/2,
+                contentPaddingBottom: scatterPlotSize/2,
                 // colorScheme: d3.schemeCategory10,
                 colorScheme: Array.from(new Array(9), (_) => "red"),
                 // title: {
@@ -38,6 +38,9 @@
             });
             let scatterOptions = {size: scatterPlotSize, radius: 1};
             bp.plotScatter({x: [1, 2, 3], y: [1, 2, 3], z: [1, 2, 3]}, [1, 0, 0, 0, 0, 0, 0, 0, 0], scatterOptions);
+            for (let i = 0; i < 9; i++) {
+                bp.plotScatter({x: Array.from(new Array(100), (_)=>Math.random()), y: Array.from(new Array(100), (_)=>Math.random()), z: Array.from(new Array(100), (_)=>Math.random())}, [Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random()], scatterOptions);
+            }
         });
     });
 </script>

@@ -240,6 +240,7 @@ export class PCA3D {
                     data: pcaUnitPoints,
                     draw: function (ctx) {
                         //This object here refers to the owner of the draw method means the 3d data object itself
+                        ctx.fillStyle = "black";
                         ctx.fillText(this.text, this.projected.x, this.projected.y);
                     }
                 });
@@ -287,8 +288,6 @@ export class PCA3D {
         for (let prop in scatterSettings) {
             options[prop] = scatterSettings[prop];
         }
-        //We don't have to draw, we push in data objects and define the draw method
-        let ctx = this.canvas.node().getContext("2d");
         //@ts-ignore
         let pcaPoint = this.pca.predict([originalPosition]).data[0];
         //Take top 3 coordinates
@@ -339,6 +338,7 @@ export class PCA3D {
             data:pointData,
             draw: function(ctx){
                 ctx.beginPath();
+                ctx.fillStyle = options.fill;
                 ctx.arc(this.projected.x, this.projected.y, options.radius, 0, Math.PI*2);
                 ctx.fill();
             }
