@@ -17,6 +17,7 @@
   "license": "ISC",
   "devDependencies": {
     "d3": "^5.9.7",
+    "d3-3d": "0.0.9",
     "rollup": "^1.17.0",
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-node-resolve": "^5.2.0",

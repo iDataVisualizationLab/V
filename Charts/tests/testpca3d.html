@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../build/js/charts.min.js"></script>
+    <script src="lib/d3.v5.min.js"></script>
+
+</head>
+<body>
+<div id="lineChartContainer" style="width: 500px; height: 500px;border:1px solid red;"></div>
+<script>
+    d3.json("data/ScagnosticsTypicalData2.json").then(typicalData => {
+        d3.json("data/RealWorldData.json").then(realWorldData => {
+            typicalData = typicalData.map(d => d.slice(0, 1));
+            realWorldData = realWorldData.map(d => d.slice(2, 3));
+            let data = realWorldData.concat(typicalData);
+            // let data = realWorldData;
+            // let data = typicalData;
+            let flattedData = data.flat();
+            let scagData = flattedData.map(d => d['scagnostics']);
+            let scatterPlotSize = 50;
+            let bp = new PCA3D(document.getElementById("lineChartContainer"), scagData, {
+                paddingLeft: 0,
+                paddingTop: 0,
+                paddingRight: 0,
+                paddingBottom: 0,
+                contentPaddingLeft: scatterPlotSize,
+                contentPaddingTop: scatterPlotSize,
+                contentPaddingRight: scatterPlotSize,
+                contentPaddingBottom: scatterPlotSize,
+                // colorScheme: d3.schemeCategory10,
+                colorScheme: Array.from(new Array(9), (_) => "red"),
+                // title: {
+                //     text: "Biplot"
+                // },
+                axisLabels: ["outlying", "skewed", "clumpy", "sparse", "striated", "convex", "skinny", "stringy", "monotonic"],
+            });
+            let scatterOptions = {size: scatterPlotSize, radius: 1};
+            bp.plotScatter({x: [1, 2, 3], y: [1, 2, 3], z: [1, 2, 3]}, [1, 0, 0, 0, 0, 0, 0, 0, 0], scatterOptions);
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,6 +1,5 @@
 import * as d3 from "d3";
 import {PCA} from "ml-pca";
-import {LineChartSettings} from "./linechart";
 
 export type Title = {
     text: string,
