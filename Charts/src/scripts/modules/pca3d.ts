@@ -228,6 +228,7 @@ export class PCA3D {
                 data: axesData,
                 draw: function (ctx) {
                     ctx.beginPath();
+                    ctx.strokeStyle = "red";
                     ctx.moveTo(this[0].projected.x, this[0].projected.y);
                     ctx.lineTo(this[1].projected.x, this[1].projected.y);
                     ctx.stroke();
@@ -241,7 +242,8 @@ export class PCA3D {
                     draw: function (ctx) {
                         //This object here refers to the owner of the draw method means the 3d data object itself
                         ctx.fillStyle = "black";
-                        ctx.fillText(this.text, this.projected.x, this.projected.y);
+                        let mt = ctx.measureText(this.text);
+                        ctx.fillText(this.text, this.projected.x-mt.width/2, this.projected.y);
                     }
                 });
             }
@@ -316,6 +318,7 @@ export class PCA3D {
             data: boundaryData,
             draw: function (ctx) {
                 ctx.beginPath();
+                ctx.strokeStyle = "black";
                 ctx.moveTo(this[0].projected.x, this[0].projected.y);
                 ctx.lineTo(this[1].projected.x, this[1].projected.y);
                 ctx.stroke();

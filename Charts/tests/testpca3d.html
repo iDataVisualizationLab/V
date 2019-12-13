@@ -10,13 +10,13 @@
 <body>
 <div id="lineChartContainer" style="width: 500px; height: 500px;border:1px solid red;"></div>
 <script>
-    d3.json("data/ScagnosticsTypicalData2.json").then(typicalData => {
-        d3.json("data/RealWorldData.json").then(realWorldData => {
-            typicalData = typicalData.map(d => d.slice(0, 1));
-            realWorldData = realWorldData.map(d => d.slice(2, 3));
-            let data = realWorldData.concat(typicalData);
+    d3.json("data/ScagnosticsTypicalData3d.json").then(typicalData => {
+        // d3.json("data/RealWorldData3d.json").then(realWorldData => {
+            typicalData = typicalData.map(d => d.slice(8, 9));//TODO: 0, 1 or 5, 6 seems to be good
+            // realWorldData = realWorldData.map(d => d.slice(0, 1));
+            // let data = realWorldData.concat(typicalData);
             // let data = realWorldData;
-            // let data = typicalData;
+            let data = typicalData;
             let flattedData = data.flat();
             let scagData = flattedData.map(d => d['scagnostics']);
             let scatterPlotSize = 50;
@@ -25,10 +25,10 @@
                 paddingTop: 0,
                 paddingRight: 0,
                 paddingBottom: 0,
-                contentPaddingLeft: scatterPlotSize/2,
-                contentPaddingTop: scatterPlotSize/2,
-                contentPaddingRight: scatterPlotSize/2,
-                contentPaddingBottom: scatterPlotSize/2,
+                contentPaddingLeft: 1.5*scatterPlotSize,
+                contentPaddingTop: 1.5*scatterPlotSize,
+                contentPaddingRight: 1.5*scatterPlotSize,
+                contentPaddingBottom: 1.5*scatterPlotSize,
                 // colorScheme: d3.schemeCategory10,
                 colorScheme: Array.from(new Array(9), (_) => "red"),
                 // title: {
@@ -37,11 +37,22 @@
                 axisLabels: ["outlying", "skewed", "clumpy", "sparse", "striated", "convex", "skinny", "stringy", "monotonic"],
             });
             let scatterOptions = {size: scatterPlotSize, radius: 1};
-            bp.plotScatter({x: [1, 2, 3], y: [1, 2, 3], z: [1, 2, 3]}, [1, 0, 0, 0, 0, 0, 0, 0, 0], scatterOptions);
-            for (let i = 0; i < 9; i++) {
-                bp.plotScatter({x: Array.from(new Array(100), (_)=>Math.random()), y: Array.from(new Array(100), (_)=>Math.random()), z: Array.from(new Array(100), (_)=>Math.random())}, [Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random(), Math.random()], scatterOptions);
-            }
-        });
+            flattedData.forEach(dt=>{
+               let scagScore = dt['scagnostics'];
+               let x = [];
+               let y = [];
+               let z = [];
+               debugger
+               dt['bins'].forEach(bin=>{
+                   //Take first point in the bin as its coordinate
+                   x.push(bin[0][0]);
+                   y.push(bin[0][1]);
+                   z.push(bin[0][2]);
+               });
+                bp.plotScatter({x: x, y: y, z: z}, scagScore, scatterOptions);
+            });
+
+        // });
     });
 </script>
 </body>
