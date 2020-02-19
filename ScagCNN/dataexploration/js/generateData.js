@@ -4,9 +4,6 @@ const startBinGridSize = 20;//TODO: consider this too.
 generateDataFromDS();
 // generateDataFromTypicalSets();
 
-// generateDataFromDS();
-generateDataFromTypicalSets();
-
 //Next method is used to generate data from typical dataexploration data.
 function generateDataFromTypicalSets() {
     let typeList = [
@@ -46,14 +43,14 @@ async function generateDataFromType(typeFunction, size) {
 //Next two methods are used to generate data from files.
 function generateDataFromDS() {
     var fileList = [
-        "UnemploymentRate",//Look at the data again
-        "LifeExpectancy263",
-        "PrevalenceOfHIV",//Look at the data again
-        "NYSEPriceVsVolume",
-        "InternationalDebtData",
-        "WorldTerrorism",
         "USUnEmpRateMenVsWomen",
         "USEmpRGoodVsService",
+        "InternationalDebtData",
+        "WorldTerrorism",
+        "NYSEPriceVsVolume",
+        "PrevalenceOfHIV",//Look at the data again, since they may contain years without having any data (null)
+        "UnemploymentRate",//Look at the data again, since they may contain years without having any data (null)
+        "LifeExpectancy263",
         "HPCCTempVsFan",
         "HPCC_04Oct",
     ];

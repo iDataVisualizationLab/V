@@ -44,7 +44,13 @@ function createControlButtons(theContainer, theOptions) {
 createControlButtons("controlButtons", optionsBinLeader);
 //Display variables
 let dataPointRadius = 3;
+//TODO: changed these for the paper display only
 let pointColor = 'steelblue';
+let pointStroke = "none";
+let contentBoundBG = "#ddd";
+// let pointColor = 'black';
+// let pointStroke = "white";
+// let contentBoundBG = "#fff";
 let dataPointOpacity = 0.9;
 let binOpacity = 0.8;
 let origPoints = null;
@@ -65,6 +71,12 @@ let v1s = null;//circle
 
 let svgWidth = 350;
 let svgHeight = 370;
+
+// //TODO: Changed size for the paper oly
+// let svgWidth = 150;
+// let svgHeight = 170;
+
+
 let scagsvg = d3.select("#scagsvg").attr("width", svgWidth).attr("height", svgHeight),
     normalizedsvg = d3.select("#normalizedsvg").attr("width", svgWidth).attr("height", svgHeight),
     // leaveoutsvg = d3.select("#leaveoutsvg").attr("width", svgWidth).attr("height", svgHeight),
@@ -145,7 +157,8 @@ function drawNormalizedDataSvg(scag, theSvg, opacity) {
         // .attr("fill", d => {
         //     return d.outliagScore < 0 ? inlierColor(d.outliagScore) : outlierColor(d.outliagScore);
         // })
-        .attr("stroke", "none")
+        .attr("stroke", pointStroke)
+        .attr("stroke-width", 0.1)
         .attr("opacity", opacity)
         /*This is for the tooltip section*/
         .on("mouseover", function (d) {
@@ -540,5 +553,5 @@ function drawContentBound(svg) {
     let y = margins.top;
     let rectWidth = +svg.attr("width") - margins.left - margins.right;
     let rectHeight = +svg.attr("height") - margins.top - margins.bottom;
-    svg.append("rect").attr("x", x).attr("y", y).attr("width", rectWidth).attr("height", rectHeight).attr("stroke", "black").attr("stroke-width", 1).attr("fill", "#ddd");
+    svg.append("rect").attr("x", x).attr("y", y).attr("width", rectWidth).attr("height", rectHeight).attr("stroke", "black").attr("stroke-width", 1).attr("fill", contentBoundBG);
 }
