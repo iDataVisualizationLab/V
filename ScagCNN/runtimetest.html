@@ -2,18 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Run-time evaluation</title>
     <script src="lib/d3.v5.min.js"></script>
+    <script src="dataexploration/lib/simple-statistics.min.js"></script>
     <!--ML Lib-->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis"></script>
+    <!--statistics-->
+    <script src="https://underscorejs.org/underscore-min.js"></script>
     <!--custom-->
+    <script src="dataexploration/js/scagnostics.min.js"></script>
     <script src="js/globalsettings.js"></script>
     <script src="js/utils.js"></script>
+    <script src="dataexploration/js/utils.js"></script>
     <script src="js/modelmanagement.js"></script>
+
 </head>
 <body>
+<div style="width: 1200px; margin-left: auto; margin-right: auto;">
+    <h3>Scagnostics algorithm calculation time vs. ML model prediction time comparison</h3>
+    <table>
+        <tr>
+            <td>Total number of plots</td>
+            <td><span id="totalNumberOfPlots" style="margin-left: 10px">calculating...</span></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <th align="left">
+                Task
+            </th>
+            <th>Time (ms)</th>
+        </tr>
 
+        <tr>
+            <td>Average Scagnostics time per plot</td>
+            <td align="right"><span id="averageScagnosticsTimePerPlot" style="margin-left: 10px">calculating...</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td>Scagnostics time per plot standard deviation</td>
+            <td align="right"><span id="scagnosticsTimePerPlotStandardDeviation"
+                                    style="margin-left: 10px">calculating...</span></td>
+        </tr>
+
+        <tr>
+            <td>Average model loading time (for 31 executions)</td>
+            <td align="right"><span id="modelLoadingTime" style="margin-left: 10px">calculating...</span></td>
+        </tr>
+
+        <tr>
+            <td>Average time for initial prediction (for 31 executions)</td>
+            <td align="right"><span id="averageInitialPrediction" style="margin-left: 10px">calculating...</span></td>
+        </tr>
+
+        <tr>
+            <td>Average time per plot, using model to predict</td>
+            <td align="right"><span id="averageModelTimePerPlot" style="margin-left: 10px">calculating...</span></td>
+        </tr>
+
+        <tr>
+            <td>Time per plot standard deviation, using model to predict</td>
+            <td align="right"><span id="modelTimePerPlotStandardDeviation"
+                                    style="margin-left: 10px">calculating...</span>
+            </td>
+        </tr>
+    </table>
+</div>
 <script src="js/runtimetest.js"></script>
 </body>
 </html>

@@ -9,14 +9,15 @@ let typeList = [
     stringyScatterPlot,
     monotonicScatterPlot,
     xLineScatterPlot,
-    yLineScatterPlot
+    yLineScatterPlot,
+    generateData,
 ];
 let datasets = typeList.map(f => {
     return f();
 })
 let defaultSetIndex = 2;
 
-let binType = "leader";
+let binType = "hexagon";
 // let binType = "hexagon";
 var startBinGridSize = 20;
 let animateTime = 20;
@@ -104,7 +105,8 @@ function changeDataset(evt) {
     let options = {
         binType: binType,
         startBinGridSize: startBinGridSize,
-        minBins: 4
+        minBins: 4,
+        maxBins: 600,
     }
     // //process outliag score
     // outliagProcessor = new SingleOutliagProcessor(scag.normalizedPoints);

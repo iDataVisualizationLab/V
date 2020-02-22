@@ -324,3 +324,18 @@ function yLineScatterPlot() {
     });
     return points;
 }
+
+/***********Generate 40x40 grid*******************/
+
+function generateData() {
+    //Just returns forty x forty points.
+    let points = [];
+    for (let i = 0; i < 41; i++) {
+        let iVal = i / 40;
+        for (let j = 0; j < 41; j++) {
+            let jVal = j / 40
+            points.push([iVal, jVal]);
+        }
+    }
+    return points;
+}

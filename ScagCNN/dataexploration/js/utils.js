@@ -6,6 +6,8 @@ function download(content, fileName, contentType) {
     a.click();
 }
 function rectangularBinner(points, options={gridNumber: 40}) {
+    //Filter out invalid data
+    points = points.filter(p=>!isNaN(p[0]) & !isNaN(p[1]));
     let gridNumber = options.gridNumber;
     let gridSize = 1.0/gridNumber;
     let bins = [];
