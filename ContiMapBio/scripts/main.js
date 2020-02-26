@@ -18,7 +18,7 @@ let startTime = new Date(),
     donePreprocess, doneResampling, doneSimilarityCalc, doneOrdering;
 let timeLineSettings = {};
 let timeLineSettingsDiff = {};
-
+let gap = 20;
 async function main() {
     let targets;
     let upregulated;
@@ -102,7 +102,7 @@ async function main() {
         //Get the size and set the sizes
 
         // width = Math.max(Math.round(window.innerWidth * 1 / 3), timeSteps.length);
-        width = document.getElementById("main-part").getBoundingClientRect().width - margins.left - margins.right;
+        width = document.getElementById("main-part").getBoundingClientRect().width - margins.left - margins.right - gap;
         let widthDiff = width / 3;
         width = width - widthDiff;
 
@@ -116,7 +116,7 @@ async function main() {
         fisheyeX = fisheye.scale(d3.scaleIdentity).domain([0, width]).focus(width / 2);
         fisheyeY = fisheye.scale(d3.scaleIdentity).domain([0, height]).focus(height / 2);
 
-        svgWidth = widthDiff + width + margins.left + margins.right;
+        svgWidth = widthDiff + width + margins.left + margins.right + gap;
         svgHeight = VARIABLES.length * height + margins.top + margins.bottom;
         //Now we can draw the timeLine.
 
@@ -151,7 +151,7 @@ async function main() {
         let mainGroup = mainSvg
             .append("g").attr("transform", `translate(${margins.left},${margins.top})`);
         let diffGroup = mainSvg
-            .append("g").attr("transform", `translate(${margins.left + width},${margins.top})`);
+            .append("g").attr("transform", `translate(${margins.left + width + gap},${margins.top})`);
         //Add the groups
         mainGroup.selectAll('.contourPlot').data(VARIABLES).enter().append("g")
             .attr('class', 'contourPlot').attr('id', (d, i) => `contourPlot${i}`)

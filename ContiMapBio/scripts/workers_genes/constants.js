@@ -1,4 +1,4 @@
-const HEAT_MAP = true;
+const HEAT_MAP = false;
 
 const NULL_VALUE = null;
 //Contains some constants for the whole program
