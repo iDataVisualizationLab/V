@@ -1,4 +1,4 @@
-const HEAT_MAP = false;
+const HEAT_MAP = true;
 
 const NULL_VALUE = null;
 //Contains some constants for the whole program
@@ -13,15 +13,19 @@ const ORDER_AVERAGE_ONLY = false;
 // const NUM_OF_NEIGHBORS = 1000;
 // const FILE_NAME = 'processed_gene_data_normalized.json';
 // const VARIABLES = ['GENE_VALUE_NORMALIZED'];
-
+const NUM_OF_RANGES = 5;
+const NUM_OF_RANGES_DIFF = 9;
+const BINNED = true;
 const ORDER_AVERAGE_STEPS = [6, 7, 8, 9, 10, 11];
 const SIMILARITY_STEPS = [6, 7, 8, 9, 10, 11];
-const NUM_OF_NEIGHBORS = 1000;
 const FILE_NAME = 'processed_gene_data_averaged_normalized.json';
 const VARIABLES = ['GENE_VALUE_AVERAGED_NORMALIZED'];
 const VARIABLES_DIFF = ['GENE_VALUE_AVERAGED_NORMALIZED_DIFF'];
 const SEQUENCE_LABELS = ['wthp6', 'wtlp6', 'wthp5', 'wtlp5', 'wtal', 'wtfe', 'stop1hp6', 'stop1lp6', 'stop1hp5', 'stop1lp5', 'stop1al', 's1fe'];
 const SEQUENCE_LABELS_DIFF = ['dfhp6', 'dflp6', 'dfhp5', 'dflp5', 'dfal', 'dffe'];
+
+let NUM_OF_NEIGHBORS = 895;
+
 
 function tickLabelFormatGene(d) {
     let idx = parseInt(d.tick);

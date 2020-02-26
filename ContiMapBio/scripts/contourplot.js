@@ -1,4 +1,3 @@
-
 function processContiMapData(orderResults, machineTimeObject, colorScheme, reversedColorScheme, smooth, width, height, numOfRanges = 5) {
     let order = orderResults.order;
     let theVar = orderResults.variable;
@@ -45,7 +44,7 @@ function processContiMapData(orderResults, machineTimeObject, colorScheme, rever
 }
 
 
-function plotHeatmap(theGroup, heatmapData, width, height, onPlotHeatmapComplete, plotYAxis = true) {
+function plotHeatmap(theGroup, heatmapData, width, height, onPlotHeatmapComplete, plotYAxis = true, strokeWidth = 0.1) {
 
     let timeSteps = heatmapData.timeSteps,
         machines = heatmapData.machines,
@@ -61,14 +60,19 @@ function plotHeatmap(theGroup, heatmapData, width, height, onPlotHeatmapComplete
             let value = data[mcI][tsI];
             if (value !== undefined && value !== null) {
                 debugger
-                theGroup.append('rect')
+                let rect = theGroup.append('rect')
                     .attr("x", tsI * cellWidth)
                     .attr("y", mcI * cellHeight)
                     .attr("width", cellWidth)
                     .attr("height", cellHeight)
-                    .attr("stroke", 'black')
-                    .attr('stroke-width', 0.1)
                     .attr("fill", colorScale(valueToThreshold(value)));
+                if (strokeWidth) {
+                    rect.attr("stroke", 'black')
+                        .attr('stroke-width', strokeWidth);
+                }
+                if (cellHeight < 1) {
+                    rect.attr('shape-rendering', "crispEdges")
+                }
             }
         });
     });

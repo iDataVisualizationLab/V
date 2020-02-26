@@ -19,6 +19,8 @@ let startTime = new Date(),
 let timeLineSettings = {};
 let timeLineSettingsDiff = {};
 let gap = 20;
+let heatmapStrokeWidth = 0.1;
+
 async function main() {
     let targets;
     let upregulated;
@@ -62,6 +64,28 @@ async function main() {
         //<editor-fold desc="filter data">
         //Filter zero base or treatment
         // data = data.filter(d => d.base_value !== 0 && d.treatment_value !== 0);
+
+        //Bin the data.
+        if (BINNED) {
+            let range = 1 / NUM_OF_RANGES;
+            let halfRange = range / 2;
+            let thresholds = [];
+            for (let i = 0; i < NUM_OF_RANGES; i++) {
+                thresholds.push(i * range);
+            }
+            //Now do the binning
+            data.forEach(item => {
+                for (let i = 0; i < NUM_OF_RANGES; i++) {
+                    let itemVal = item[VARIABLES[0]];
+                    let threshold = thresholds[i];
+                    if (itemVal >= threshold && itemVal < threshold + range) {
+                        item[VARIABLES[0]] = threshold + halfRange;
+                        break
+                    }
+                }
+            });
+        }
+
 
         // Filter for the target only.
         if (thisPage === "targets" && targets) {
@@ -109,6 +133,9 @@ async function main() {
         // width = 300;
 
         height = machines.length * pixelsPerRow;
+        if (thisPage === "all") {
+            heatmapStrokeWidth = 0;//Do not draw this since when compressed it makes the map blacken.
+        }
 
         pixelsPerColumn = Math.ceil(width / timeSteps.length);
 
@@ -213,7 +240,6 @@ async function main() {
                 //Avg variable name
                 let avgV = 'avg' + v;
                 //Add average value
-                debugger
                 d3.keys(machineTimeObject).forEach(mc => {
                     if (typeof ORDER_AVERAGE_STEPS !== "undefined" && ORDER_AVERAGE_STEPS.length > 0) {
                         let theStepValues = ORDER_AVERAGE_STEPS.map(step => {
@@ -301,7 +327,7 @@ async function main() {
             let startDrawing = new Date();
             let theVar = orderResults.variable;
             let theGroup = d3.select(`#contourPlot${VARIABLES.indexOf(theVar)}`);
-            let contiMapData = processContiMapData(orderResults, machineTimeObject, colorSchemes[theVar], true, smooth, width, height, 9);
+            let contiMapData = processContiMapData(orderResults, machineTimeObject, colorSchemes[theVar], true, smooth, width, height, NUM_OF_RANGES);
             let colorScale = contiMapData.colorScale;
             //Store it for future use
             allColorScales[theVar] = colorScale;
@@ -331,7 +357,7 @@ async function main() {
                     thresholds: contiMapData.thresholds
                 };
                 plotHeatmap(theGroup, heatmapData, width, height, () => {
-                });
+                }, true, heatmapStrokeWidth);
             }
 
             //After all, process the sticky now here (since once done display we will have the offset information.
@@ -383,7 +409,7 @@ async function main() {
             let theVarDiff = VARIABLES_DIFF[VARIABLES.indexOf(theVar)];
             orderResultsDiff.variable = theVarDiff;
 
-            let contiMapDataDiff = processContiMapData(orderResultsDiff, machineTimeObjectDiff, colorSchemes[theVarDiff], true, smooth, widthDiff, height, 9);
+            let contiMapDataDiff = processContiMapData(orderResultsDiff, machineTimeObjectDiff, colorSchemes[theVarDiff], true, smooth, widthDiff, height, NUM_OF_RANGES_DIFF);
             let colorScaleDiff = contiMapDataDiff.colorScale;
             if (!HEAT_MAP) {
                 plotContour(theGroupDiff, contiMapDataDiff, widthDiff, height, () => {
@@ -397,7 +423,7 @@ async function main() {
                     thresholds: contiMapDataDiff.thresholds
                 };
                 plotHeatmap(theGroupDiff, heatmapData, widthDiff, height, () => {
-                }, false);
+                }, false, heatmapStrokeWidth);
             }
             //</editor-fold>
         }
