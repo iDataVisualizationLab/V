@@ -1,0 +1,110 @@
+<!--The template of this page is inspired from https://playground.tensorflow.org/-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Compiled and minified CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons" rel="stylesheet"
+          type="text/css">
+
+    <script src="lib/d3.js"></script>
+    <script src="lib/underscore.js"></script>
+    <script src="lib/simple-statistics.min.js"></script>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/fisheye.js"></script>
+
+    <script src="scripts/workers_genes/constants.js"></script>
+    <script src="scripts/workers_genes/webworker.js"></script>
+    <script src="scripts/workers_genes/similarityorder_calc.js"></script>
+    <script src="scripts/contourplot.js"></script>
+    <title>ContiMap</title>
+    <style>
+        @import 'css/floatingBox.css';
+        @import 'css/floatingbutton.css';
+        @import "css/main.css";
+        @import "scripts/loader/loader.css";
+        /*section for auto-complete: adopted from w3schools*/
+        @import "lib/autocomplete/autocomplete.css";
+        /*textarea.materialize-textarea{height: 1rem;}*/
+        input[type=text]:not(.browser-default) {
+            height: 2rem;
+            border-bottom: 0px;
+        }
+    </style>
+    <script src="lib/autocomplete/autocomplete.js"></script>
+</head>
+<body>
+<script src="scripts/loader/loader.js"></script>
+<nav class="blue">
+    <div class="nav-wrapper container">
+        <a href="#" class="brand-logo left">ContiMap: Continuous Heatmap for RNA Transcription Data</a>
+        <ul class="right">
+            <li><a href="index.html"><span style="color:#aaaaaa">Targets</span></a></li>
+            <li><a href="#"><span style="color:#ffffff">Up</span></a></li>
+            <li><a href="down.html"><span style="color:#aaaaaa">Down</span></a></li>
+            <li><a href="updown.html"><span style="color:#aaaaaa">Up/Down</span></a></li>
+        </ul>
+    </div>
+</nav>
+<script>
+    showLoader();
+</script>
+<div class="page container" id="main-part" style="margin-top: 10px;">
+    <form autocomplete="off" action="none" style="position: absolute; margin-top:0px;">
+        <div class="autocomplete" style="width:100px;">
+            <input id="theWord" type="text" name="theWord" placeholder="search">
+        </div>
+    </form>
+    <div id="configurationContainer" class="floatingBox">
+        <div id="configurationContainerHeader" class="floatingBoxHeader"><span class="floatingBoxButton"
+                                                                               onclick="closeFloatingBox('btnConfiguration', 'configurationContainer')">[-]</span>
+            Configuration
+        </div>
+        <div class="floatingBoxContent">
+            <br/>
+            <b>Settings</b><br/>
+            <div id="settingDiv"></div>
+            <br/>
+            <b>Calculations</b><br/>
+            <table id="calculationTbl" style="background-color: white"></table>
+            <br/>
+            <b>Contour info</b><br/>
+            <table id="contourTbl" style="background-color: white"></table>
+        </div>
+    </div>
+    <div id="contours">
+        <div id="timeLineDiv"></div>
+        <div id="contourDiv"></div>
+    </div>
+    <!--section for the buttons-->
+    <a id="btnConfiguration" class="tab tab_right" style="opacity: 0.0;"
+       onclick="openFloatingBox('btnConfiguration', 'configurationContainer')"><img src="images/tabicon.gif" alt="">Configuration<span
+            class="screen_reader"> Will open a new window</span></a>
+    <script>
+        let thisPage = 'up';
+        let pixelsPerRow = 3;
+    </script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/floatingBox.js"></script>
+</div>
+<div class="more container center">
+    <a href="#scagStages">
+        <button class="mdl-button mdl-js-button mdl-button--fab" data-upgraded=",MaterialButton">
+            <i class="material-icons">keyboard_arrow_down</i>
+        </button>
+    </a>
+</div>
+<article id="article-text">
+    <div class="container">
+        <!--        <h5><a name="scagStages">Explanation</a></h5>-->
+    </div>
+</article>
+
+
+</body>
+</html>

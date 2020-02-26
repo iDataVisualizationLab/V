@@ -1,0 +1,28 @@
+.floatingBox {
+    position: fixed;
+    top: 10px;
+    padding: 5px;
+    box-sizing: content-box;
+    font-family: Arial;
+    box-shadow: 5px 5px 5px #444;
+    /*background-image: -webkit-linear-gradient(left, #fefefe, #eeeeee);*/
+    background-image: -webkit-linear-gradient(left, #eeeeee, #ededed);
+    border: 1px solid #ccc;
+    border-radius: 9px;
+    -moz-border-radius: 9px;
+    -webkit-border-radius: 9px ;
+    transform-origin: 100% 100% 0;
+    -webkit-transform-origin: 100% 100% 0;
+    -ms-transform-origin: 100% 100% 0;
+    z-index: 999;
+}
+.floatingBoxHeader{
+    height: 20px;
+    width: 100%;
+    cursor: move;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 1);
+}
+#controlPanel{
+    box-sizing: content-box;
+    padding: 20px;
+}
