@@ -16,9 +16,7 @@ var div = d3.select("body").append("div")
 /*End tooltip section*/
 
 //<editor-fold desc="section for display options">
-let optionsBinLeader = ["origPoints", "bins", "triangulations", "mst", "outlyingLinks", "outlyingPoints", "noOutlyingTree", "noOutlyingPoints", "v2Corners", "obtuseV2Corners",
-    // "noOutlyingTriangulations",
-    "convexHull", "concaveHull", "v1s"];
+let optionsBinLeader = ["origPoints", "bins", "triangulations", "mst", "outlyingLinks", "outlyingPoints", "noOutlyingTree", "noOutlyingPoints", "v2Corners", "obtuseV2Corners", "convexHull", "concaveHull", "v1s"];
 
 createControlButtons("controlButtons", optionsBinLeader);
 //Display variables
@@ -64,14 +62,14 @@ let scagsvg = d3.select("#scagsvg").attr("width", svgWidth).attr("height", svgHe
 //</editor-fold>
 
 document.getElementById("scagnostics").selectedIndex = defaultSetIndex;
-changeDataset(document.getElementById("scagnostics"));
-//Toggle some displays
-toggleDisplay(bins);
-toggleDisplay(triangulations);
-toggleDisplay(obtuseV2Corners);
-// toggleDisplay(noOutlyingTriangulations);
-toggleDisplay(convexHull);
-toggleDisplay(concaveHull);
+changeDataset(document.getElementById("scagnostics")).then(_=>{
+    //Toggle some displays
+    toggleDisplay(bins);
+    toggleDisplay(triangulations);
+    toggleDisplay(obtuseV2Corners);
+    toggleDisplay(convexHull);
+    toggleDisplay(concaveHull);
+});
 
 function predictUsingModel(points, model) {
     let X_test = tf.tensor([rectangularBinner((new Normalizer(points)).normalizedPoints)]);
@@ -180,6 +178,7 @@ function drawNormalizedData(scag) {
 
 //This method is called in string (creating the button using JS) so though it is displayed as unused => it is used.
 function toggleDisplay(g) {
+    debugger
     if (g && !g.empty()) {
         if (+d3.select(g.node()).style("opacity") != 10e-6) {
             g.transition().duration(1000).style("opacity", 10e-6).style("display", "none");
