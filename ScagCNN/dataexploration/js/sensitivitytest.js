@@ -17,7 +17,7 @@ var div = d3.select("body").append("div")
 
 //<editor-fold desc="section for display options">
 let optionsBinLeader = ["origPoints",
-    //"bins",
+    "bins",
     "triangulations", "mst", "outlyingLinks", "outlyingPoints", "noOutlyingTree", "noOutlyingPoints", "v2Corners", "obtuseV2Corners", "convexHull", "concaveHull", "v1s"];
 
 createControlButtons("controlButtons", optionsBinLeader);
@@ -93,7 +93,8 @@ function createControlButtons(theContainer, theOptions) {
 async function changeDataset(evt) {
     let points = datasets[evt.selectedIndex];
     let options = {
-        binType: binType
+        binType: binType,
+        minBins: 40
     }
     let scag = new scagnostics(points, options);
     update(scag);
@@ -318,6 +319,8 @@ function draw(scag) {
     // drawScores(g, scag);
     var color = d3.scaleSequential(d3.interpolateLab("#EEEEEE", "#000"))
         .domain(d3.extent(scag.bins.map(b => b.length)));
+
+    //
 
     if (scag.binner) {
         if (binType === "hexagon") {
