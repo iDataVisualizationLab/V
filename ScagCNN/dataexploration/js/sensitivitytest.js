@@ -16,7 +16,9 @@ var div = d3.select("body").append("div")
 /*End tooltip section*/
 
 //<editor-fold desc="section for display options">
-let optionsBinLeader = ["origPoints", "bins", "triangulations", "mst", "outlyingLinks", "outlyingPoints", "noOutlyingTree", "noOutlyingPoints", "v2Corners", "obtuseV2Corners", "convexHull", "concaveHull", "v1s"];
+let optionsBinLeader = ["origPoints",
+    //"bins",
+    "triangulations", "mst", "outlyingLinks", "outlyingPoints", "noOutlyingTree", "noOutlyingPoints", "v2Corners", "obtuseV2Corners", "convexHull", "concaveHull", "v1s"];
 
 createControlButtons("controlButtons", optionsBinLeader);
 //Display variables
@@ -62,9 +64,9 @@ let scagsvg = d3.select("#scagsvg").attr("width", svgWidth).attr("height", svgHe
 //</editor-fold>
 
 document.getElementById("scagnostics").selectedIndex = defaultSetIndex;
-changeDataset(document.getElementById("scagnostics")).then(_=>{
+changeDataset(document.getElementById("scagnostics")).then(_ => {
     //Toggle some displays
-    toggleDisplay(bins);
+    // toggleDisplay(bins);
     toggleDisplay(triangulations);
     toggleDisplay(obtuseV2Corners);
     toggleDisplay(convexHull);
