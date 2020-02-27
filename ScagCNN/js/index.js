@@ -24,17 +24,20 @@ async function main() {
 
     //Create divs for the scores.
     let scoreDiv = d3.select("#scores");
-    scoreDiv.style("width", `${predictionChartWidth + 10 * (imageMargins.left+imageSize) + 20}px`);
+    scoreDiv.style("width", `${predictionChartWidth + 10 * (imageMargins.left + imageSize) + 20}px`);
     scoreDiv.selectAll(".scoreDiv").data(typeList, d => d).join("div").attr("id", d => "scoreDiv" + d).classed("scoreDiv", true).classed("row", true)
         .attr("id", type => `scoreDiv${type}`);
     drawEvaluations(arrActual, arrPredicted).then(() => {
         findTop10DifferencesEachType(arrActual, arrPredicted).then((top10DifferencesEachType) => {
             drawTop10DifferencesEachType(top10DifferencesEachType);
         });
-        findTop10Differences(arrActual, arrPredicted).then((top10differences)=>{
+        findTop10Differences(arrActual, arrPredicted).then((top10differences) => {
             drawTop10Differences(top10differences);
         });
     });
 }
 
-main();
+main().then(_ => {
+    hideLoader();
+});
+
