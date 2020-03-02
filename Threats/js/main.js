@@ -9,15 +9,15 @@ const margin = {left: 0, top: 20, right: 120, bottom: 20},
 let svg = d3.select("#graphDiv").append("svg").attr("width", svgWidth).attr("height", svgHeight).style('overflow-x', 'visible');
 //Title.
 let titleG = svg.append('g').attr('transform', `translate(${(networkWidth - margin.left) / 2}, ${margin.top})`);
-titleG.append('text').text('104.12.0.0 Threat Event Log Visualization').attr('class', 'graphTitle').attr('text-anchor', 'middle');
-let legendG = svg.append('g').attr('transform', `translate(${legendSettings.margin.left}, ${margin.top + networkHeight + margin.top})`);
+titleG.append('text').text('xxx.xx.0.0 Threat Event Log Visualization').attr('class', 'graphTitle').attr('text-anchor', 'middle');
+let legendG = svg.append('g').attr('transform', `translate(${legendSettings.margin.left}, ${networkHeight})`);
 drawNodeLegends(legendG);
 let mainG = svg.append('g').attr('transform', `translate(${margin.left}, ${margin.top})`);
-let networkG = mainG.append('g').attr('transform', `translate(0, 0)`);
+let networkG = mainG.append('g').attr('transform', `translate(0, -20)`);
 let timeArcG = mainG.append('g').attr('transform', `translate(${networkWidth},0)`);
 let ipdatacsvTbl = document.getElementById('ipdatacsvTbl');
 let keep = false;
-d3.csv('data/104.12.0.0.csv').then(data => {
+d3.csv('data/xxx.xx.0.0.csv').then(data => {
     data.forEach(d => {
         d[COL_END_TIME] = new Date(d[COL_END_TIME]);
         if (d[COL_SOURCE_ADDRESS] === '') {
@@ -40,8 +40,8 @@ d3.csv('data/104.12.0.0.csv').then(data => {
     });
     //links and nodes with combinations
     let targetsOfUnknownOnly = getTargetsOfUnknownOnly(data);
-    //Remove (104.12.90.1)
-    //targetsOfUnknownOnly = targetsOfUnknownOnly.filter(d => d != '104.12.90.1');
+    //Remove (xxx.xx.90.1)
+    //targetsOfUnknownOnly = targetsOfUnknownOnly.filter(d => d != 'xxx.xx.90.1');
     let combinedNode = {id: 'combined', nodes: []};
     let tgoNodes = [];
     timeNodes.forEach(n => {
@@ -113,10 +113,10 @@ d3.csv('data/104.12.0.0.csv').then(data => {
             targetsOfUnknownOnly: 4,
             others: 5
         };
-        let targetsOfOutsideIPs = links.filter(l => l.source.id.startsWith('104.12')).map(d => d.target.id);
+        let targetsOfOutsideIPs = links.filter(l => l.source.id.startsWith('xxx.xx')).map(d => d.target.id);
 
         nodes.forEach(n => {
-            if (!n.id.startsWith('104.12')) {
+            if (!n.id.startsWith('xxx.xx')) {
                 n.orderValue = sortOrderValue.outside;
             } else if (targetsOfOutsideIPs.indexOf(n.id) >= 0) {
                 n.orderValue = sortOrderValue.targetOfOutside;
@@ -148,7 +148,7 @@ d3.csv('data/104.12.0.0.csv').then(data => {
             filterByColumnsOr(ipdatacsvTbl, [COL_SOURCE_ADDRESS, COL_DESTINATION_ADDRESS], [node.id], data);
         }
         //Also brush the timeArc
-        brushTimeArcNode(node);
+        // brushTimeArcNode(node);
     }
 
     function onNetworkLinkMouseOverCallback(link) {
@@ -186,8 +186,9 @@ function getDeviceActionColor(deviceActions) {
         return deviceActionColors[deviceAction];
     }
 }
+
 function nodeColor(node) {
-    if (node.id.startsWith('104.12')) {
+    if (node.id.startsWith('xxx.xx')) {
         return 'black';
     } else if (node.id === "unknown") {
         return 'gray';
@@ -197,4 +198,5 @@ function nodeColor(node) {
         return 'red';//outsider
     }
 }
+
 //</editor-fold>
