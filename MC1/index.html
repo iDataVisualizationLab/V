@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="lib/d3.js"></script>
+    <script src="lib/underscore-min.js"></script>
+    <script src="js/constants.js"></script>
+    <style>
+        @import "lib/tooltip/tooltip.css";
+        @import "css/main.css";
+        @import "css/switch.css";
+    </style>
+    <script src="js/node2type.js"></script>
+    <script src="js/dataProcessing.js"></script>
+    <script src="js/datatable.js"></script>
+    <script src="js/legends.js"></script>
+    <script src="js/network.js"></script>
+    <script src="js/timeArcs.js"></script>
+    <style>
+        #dataFile {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+        }
+    </style>
+<body>
+<script src="lib/tooltip/tooltip.js"></script>
+<div>
+    <select id="dataFile">
+        <option value="Q1-Graph1">Q1 Graph 1</option>
+        <option value="Q1-Graph2">Q1 Graph 2</option>
+        <option value="Q1-Graph3">Q1 Graph 3</option>
+        <option value="Q1-Graph4">Q1 Graph 4</option>
+        <option value="Q1-Graph5">Q1 Graph 5</option>
+        <option value="seed1_graph">Seed1 Graph 1</option>
+        <option value="seed2_graph">Seed2 Graph 2</option>
+        <option value="seed3_graph">Seed3 Graph 3</option>
+        <option value="CGCS-Template">Template</option>
+        <option value="Q1-Graph1_mapped_graph">graph1_mapped</option>
+        <option value="graph1_template_mapped">graph1_template_mapped</option>
+        <option value="graph2_mapped">graph2_mapped</option>
+        <option value="graph2_template_mapped">graph2_template_mapped</option>
+
+    </select>
+    <div style="visibility: visible" id="graph2TemplateDiv">
+        <label class="switch">
+            <input type="checkbox" id="switchMapping"/>
+            <span class="slider round"></span>
+        </label>
+        <div>
+            Mapping score <span id="mappingScore"></span>
+        </div>
+    </div>
+    <div style="visibility: hidden" id="template2GraphDiv">
+        <input type="radio" id="template" name="template2GraphMapping" value="male" checked>
+        <label for="template">Template</label><br>
+
+        <input type="radio" id="template2Graph1" name="template2GraphMapping" value="male">
+        <label for="template2Graph1">Q1-Graph 1, score: <span id="template2GraphScore1"></span></label><br>
+
+        <input type="radio" id="template2Graph2" name="template2GraphMapping" value="female">
+        <label for="template2Graph2">Q1-Graph 2, score: <span id="template2GraphScore2"></span></label><br>
+
+        <input type="radio" id="template2Seed3" name="template2GraphMapping" value="female">
+        <label for="template2Seed3">Q2-Seed 3, score: 0.12<span id="template2SeedScore3"></span></label><br>
+    </div>
+</div>
+<div id="graphDiv"></div>
+<div id="ipdatacsvDiv">
+    <table id="ipdatacsvTbl"></table>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>

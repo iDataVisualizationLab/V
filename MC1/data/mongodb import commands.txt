@@ -1,0 +1,27 @@
+IMPORT Qn-GRAPHn
+
+
+mongoimport -d vast2020mc1 -c Q1Graph1 --type csv --file Q1-Graph1.csv -f Source,eType,Target,Time,Weight,SourceLocation,TargetLocation,SourceLatitude,SourceLongitu --numInsertionWorkers 8
+
+
+mongoimport -d vast2020mc1 -c Q1Graph2 --type csv --file Q1-Graph2.csv -f Source,eType,Target,Time,Weight,SourceLocation,TargetLocation,SourceLatitude,SourceLongitu --numInsertionWorkers 8
+
+mongoimport -d vast2020mc1 -c Q1Graph3 --type csv --file Q1-Graph3.csv -f Source,eType,Target,Time,Weight,SourceLocation,TargetLocation,SourceLatitude,SourceLongitu --numInsertionWorkers 8
+
+
+mongoimport -d vast2020mc1 -c Q1Graph4 --type csv --file Q1-Graph4.csv -f Source,eType,Target,Time,Weight,SourceLocation,TargetLocation,SourceLatitude,SourceLongitu --numInsertionWorkers 8
+
+mongoimport -d vast2020mc1 -c Q1Graph5 --type csv --file Q1-Graph5.csv -f Source,eType,Target,Time,Weight,SourceLocation,TargetLocation,SourceLatitude,SourceLongitu --numInsertionWorkers 8
+
+
+IMPORT Q2-SEEDn
+mongoimport -d vast2020mc1 -c Q2Seed1 --type csv --file Q2-Seed1.csv -f Source,eType,Target,Time,Weight,SourceLocation,TargetLocation,SourceLatitude,SourceLongitu --numInsertionWorkers 8
+
+mongoimport -d vast2020mc1 -c Q2Seed2 --type csv --file Q2-Seed2.csv -f Source,eType,Target,Time,Weight,SourceLocation,TargetLocation,SourceLatitude,SourceLongitu --numInsertionWorkers 8
+
+mongoimport -d vast2020mc1 -c Q2Seed3 --type csv --file Q2-Seed3.csv -f Source,eType,Target,Time,Weight,SourceLocation,TargetLocation,SourceLatitude,SourceLongitu --numInsertionWorkers 8
+
+IMPORT CGCS-GraphData.csv
+mongoimport -d vast2020mc1 -c CGCSGraphData --type csv --file CGCS-GraphData.csv -f Source,eType,Target,Time,Weight,SourceLocation,TargetLocation,SourceLatitude,SourceLongitu --numInsertionWorkers 8
+
+(123895262 rows)
