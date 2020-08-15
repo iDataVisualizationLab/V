@@ -268,8 +268,16 @@ function visualizeModel(modelData, attributionScale, dispatch) {
     //Visualize the scales (xAxis)
     let maxAttribution = attributionScale.domain()[1];
     let xAxisScale = d3.scaleLinear().domain([-maxAttribution, maxAttribution]).range([0, modelVisualSettings.layerWidth]);
+    let xAxisOutputScale = d3.scaleLinear().domain([0, 1]).range([0, modelVisualSettings.layerWidth]);
     mainG.selectAll('.xAxis').data(xAxes, d => d.id).join('g')
-        .attr("transform", d => `translate(${d.x}, ${d.y})`).call(d3.axisBottom().scale(xAxisScale).ticks(5));
+        .attr("transform", d => `translate(${d.x}, ${d.y})`).each(function (d) {
+        let theAxis = d3.select(this);
+        if (d.layerName === 'output') {
+            theAxis.call(d3.axisBottom().scale(xAxisOutputScale).ticks(5));
+        } else {
+            theAxis.call(d3.axisBottom().scale(xAxisScale).ticks(5));
+        }
+    });
 
 
     //Create the bars
@@ -308,7 +316,7 @@ function visualizeModel(modelData, attributionScale, dispatch) {
             dispatch.call('startNode', this, startNode);
         })
         .on("mouseover", (d) => {
-            let msg = d.layerName === 'output' ? `Percent: ${modelVisualSettings.output[d.neuronIdx].toFixed(2)}` : `Attribution: ${d.attribution.toFixed(2)}`;
+            let msg = d.layerName === 'output' ? `Proportion: ${modelVisualSettings.output[d.neuronIdx].toFixed(2)}` : `Attribution: ${d.attribution.toFixed(2)}`;
             showTip(msg);
         })
         .on("mouseout", () => {
