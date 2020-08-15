@@ -1,0 +1,3874 @@
+[
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid2",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.08067336
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid2",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.13834049
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid2",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": 0.15223785
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid2",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": 0.10107548
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid2",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": 0.10345003
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid2",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.095979095
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid2",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.08067336
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid2",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.13834049
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid2",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": -0.15223785
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid2",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": -0.10107548
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid2",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": -0.103450015
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid2",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.09597909
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.29996055
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": -0.018226309
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.074036054
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.04180048
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.037817273
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.60083807
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.079656996
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": 0.01823927
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.29996055
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": 0.01822631
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.074036054
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.041800477
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.037817262
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.60083795
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.07965698
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": -0.018239275
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 1.0650207
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.106021486
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": 0.061227985
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.5413416
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.30526564
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.24187577
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.09552763
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.0014722501
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": 0.029342925
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.076265186
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.0583987
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.26484254
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -1.0650207
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.10602147
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": -0.061227974
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.54134154
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.30526564
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.24187574
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.09552763
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.0014722499
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": -0.029342925
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.076265186
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.0583987
+  },
+  {
+    "target_layer": "output",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.26484254
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.036441226
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": -0.0058475486
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.007694372
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.0063428297
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.0069033154
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.08024974
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.011183118
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": 0.0023919903
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.052607756
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": -0.0015861688
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.016901955
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.007162694
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.009027708
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.13795345
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.017877998
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": 0.0033052021
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.07460969
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": -0.0067325975
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.022351375
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.014548188
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.0114341555
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.15275033
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.020855129
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": 0.0036647632
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.047001123
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": -0.0013124191
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.012608073
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.0065679597
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.007518005
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.09368921
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.012710022
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": 0.0023914129
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.045494836
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": -0.0013139134
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.011802498
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.0046964022
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.0059862393
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.09208581
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.010338748
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": 0.0019066478
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.04452218
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": -0.003939238
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.009795951
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.0068914685
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.007002809
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.08889472
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.011093956
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": 0.0022967984
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.036441226
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": 0.005847548
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.007694371
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.0063428297
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.006903314
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.080249734
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.011183117
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": -0.0023919907
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.052607764
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": 0.0015861688
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.016901955
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.007162694
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.009027705
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.13795345
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.017877998
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": -0.0033052021
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.07460968
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": 0.0067325966
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.022351371
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.014548186
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.011434155
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.15275033
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.020855127
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": -0.003664763
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.047001123
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": 0.001312419
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.012608073
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.006567959
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.0075180046
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.09368921
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.012710023
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": -0.0023914122
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.045494843
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": 0.0013139134
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.011802497
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.0046964022
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.0059862384
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.0920858
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.010338746
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": -0.0019066476
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.04452218
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": 0.0039392384
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.009795951
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.0068914676
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.007002808
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.08889472
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.011093957
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "sigmoid1",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": -0.0022967986
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.13498378
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.014859748
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": 0.008437959
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.07725332
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.038435344
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.030209055
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.012275796
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.0001413221
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": 0.0034961707
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.0093805855
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.0075844796
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.032320097
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.20983277
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.022860425
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": 0.013384882
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.10399183
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.056044094
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.042604275
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.017890137
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": 5.053566e-05
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": 0.0038715058
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.013894138
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.011698017
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.048974127
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.24469244
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.024892269
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": 0.015016014
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.13367157
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.073237
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.058438096
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.022835799
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.00030979994
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": 0.007172542
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.018418042
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.01380071
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.06356947
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.15877254
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.015667273
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": 0.009334356
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.08435306
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.04628362
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.03712374
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.014470518
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.0002420231
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": 0.00478996
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.011523056
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.00868916
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.039891638
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.14768766
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.012555086
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": 0.006390517
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.06581963
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.042191867
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.034060508
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.01296005
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.00036720085
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": 0.004710367
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.010949887
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.007681402
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.037524622
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.15005395
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.014245694
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": 0.0074697877
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.07778744
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.043229282
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.03500699
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.013556487
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.00037375843
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": 0.004752551
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.010978222
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.008042105
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.037208542
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.13498378
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.014859748
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": -0.008437959
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.07725332
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.038435347
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.030209055
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.012275795
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.00014132203
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": -0.0034961707
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.0093805855
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.0075844796
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.032320097
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.20983277
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.022860425
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": -0.013384882
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.10399183
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.05604409
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.042604282
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.017890137
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": -5.0535695e-05
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": -0.0038715063
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.01389414
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.011698017
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.048974127
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.24469244
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.024892269
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": -0.015016014
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.13367157
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.073237
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.05843809
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.022835799
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.0003097999
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": -0.0071725417
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.018418042
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.0138007095
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.06356947
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.15877254
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.015667273
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": -0.009334355
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.08435306
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.04628362
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.037123736
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.014470517
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.00024202312
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": -0.004789959
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.011523055
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.00868916
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.039891638
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.14768766
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.012555087
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": -0.006390517
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.06581963
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.042191867
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.03406052
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.012960049
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.00036720085
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": -0.0047103665
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.010949887
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.007681402
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.037524622
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.15005395
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.014245694
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": -0.0074697877
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.07778744
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.043229282
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.03500699
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.013556487
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.0003737584
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": -0.004752551
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.010978222
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.008042105
+  },
+  {
+    "target_layer": "sigmoid2",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.037208546
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.20042273
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": -0.027293544
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.021476414
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": 0.04596678
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.17227505
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.17656063
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.043074403
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.0036406405
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": 0.045223698
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.05562507
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.0038152826
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.15341331
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": -0.01380515
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": -3.6238147e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": 4.1012772e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.0059601567
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": 5.762868e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": -0.00027178324
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -1.6935155e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": 6.748996e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": -0.00020333292
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -1.8973462e-06
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": 3.8335173e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": -0.00020316376
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": -0.028402343
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.00021259733
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.0005644168
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.054014996
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.0016620829
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.005449872
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.0008299893
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.0017550869
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": 0.0017841462
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": 4.6484897e-06
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.0005682851
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.00089431327
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": -0.010336999
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.0002444631
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.00032834837
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.0360026
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.0011412147
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.0026539967
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.00054142706
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.0008913873
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": 0.0012635016
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -6.932659e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.00046975588
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.0003677563
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.33470637
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.017383639
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": 0.008148167
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.39639458
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.056893356
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.03941065
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.017611546
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.0059376056
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": 0.020850278
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.0007136295
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.015287687
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.025282465
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.6273339
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.022772988
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.019298956
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": 0.004050264
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.0029679374
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": -0.014573697
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.0055607245
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.0029963437
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": -0.0101618115
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.0005139982
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.02323824
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.056192633
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": -0.13071318
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.050976183
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": 0.10585888
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.060548235
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.04199996
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": -0.0008074845
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.012853398
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": 0.016645418
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": -0.028302114
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.002996047
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.012079951
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": 0.034399774
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 0,
+    "attribution": 0.06681759
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 0,
+    "attribution": 0.040820435
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 0,
+    "attribution": -0.012346372
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 0,
+    "attribution": -0.039973382
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 0,
+    "attribution": -0.02253928
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 0,
+    "attribution": 0.02902051
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 0,
+    "attribution": -0.013500363
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 0,
+    "attribution": -0.0028754172
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 0,
+    "attribution": -0.0016612514
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 0,
+    "attribution": -0.015228612
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 0,
+    "attribution": -0.0020750153
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 0,
+    "attribution": -0.010858597
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.20042273
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": 0.027293552
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.021476416
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": -0.04596678
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.17227507
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.17656061
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.043074403
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.0036406405
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": -0.045223698
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.05562507
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.0038152826
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 0,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.1534133
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": 0.013805149
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": 3.6238147e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": -4.1012765e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.005960156
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": -5.7628677e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": 0.00027178324
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 1.6935155e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": -6.748995e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": 0.00020333288
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 1.8973458e-06
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": -3.833516e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 1,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": 0.00020316376
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": 0.028402343
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.00021259731
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.0005644167
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.05401498
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.0016620829
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.0054498715
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.0008299893
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.0017550872
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": -0.001784146
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": -4.6484884e-06
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.00056828506
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 2,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.0008943131
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": 0.010336999
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.00024446304
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.0003283483
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.0360026
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.0011412147
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.0026539972
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.000541427
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.0008913873
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": -0.0012635015
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 6.932657e-05
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.00046975588
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 3,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.0003677563
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.33470637
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.017383637
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": -0.008148167
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.39639458
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.056893356
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.039410647
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.017611546
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.0059376042
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": -0.020850278
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.0007136296
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.015287685
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 4,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.025282465
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.6273339
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.022772988
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.019298956
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": -0.004050264
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.002967937
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": 0.014573694
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.0055607245
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.0029963437
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": 0.0101618115
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.0005139982
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.02323824
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 5,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.056192636
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": 0.13071318
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.05097618
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": -0.10585887
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.060548235
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.04199996
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": 0.0008074845
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.012853397
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": -0.016645418
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": 0.028302114
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.002996047
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.0120799495
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 6,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": -0.034399774
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 0,
+    "target_label": 1,
+    "attribution": -0.06681759
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 1,
+    "target_label": 1,
+    "attribution": -0.04082043
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 2,
+    "target_label": 1,
+    "attribution": 0.012346372
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 3,
+    "target_label": 1,
+    "attribution": 0.039973386
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 4,
+    "target_label": 1,
+    "attribution": 0.02253928
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 5,
+    "target_label": 1,
+    "attribution": -0.02902051
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 6,
+    "target_label": 1,
+    "attribution": 0.013500362
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 7,
+    "target_label": 1,
+    "attribution": 0.0028754172
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 8,
+    "target_label": 1,
+    "attribution": 0.0016612515
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 9,
+    "target_label": 1,
+    "attribution": 0.015228609
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 10,
+    "target_label": 1,
+    "attribution": 0.0020750156
+  },
+  {
+    "target_layer": "sigmoid1",
+    "target_neuron": 7,
+    "source_layer": "input",
+    "source_neuron": 11,
+    "target_label": 1,
+    "attribution": 0.010858597
+  }
+]
