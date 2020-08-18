@@ -10,6 +10,7 @@ function buildBarData(attributionData, startNode, targetLabel) {
         return {
             id: `${item['source_layer']}_${item['source_neuron']}`,
             attribution: item['attribution'],
+            individual_attributions: item['individual_attributions'],
             layerName: item['source_layer'],
             neuronIdx: item['source_neuron']
         }
@@ -26,4 +27,25 @@ function findAttributionOfANodeToFinalResult(attributionData, startNode, targetL
         item['target_label'] === targetLabel
     );
     return contribution ? contribution.attribution : 0;
+}
+
+function buildNeuronYScales(modelConfig, neuronValues, height) {
+    let neuronScales = {};
+    modelConfig.layers.forEach(layer => {
+        neuronScales[layer.name] = [];
+        for (let neuronIndex = 0; neuronIndex < layer.neurons; neuronIndex++) {
+            if (layer.name === 'input') {
+                //Build for input
+                //Get the neuron values
+                let theNeuronValues = neuronValues[layer.name].map(item => item[neuronIndex]);
+                let maxVal = d3.max(theNeuronValues);
+                neuronScales[layer.name].push(d3.scaleLinear().domain([0, maxVal]).range([height, 0]));
+            } else if (layer.name === 'output') {
+                neuronScales[layer.name].push(d3.scaleLinear().domain([0, 1]).range([height, 0]));
+            } else {
+                neuronScales[layer.name].push(d3.scaleLinear().domain([0, 1]).range([height, 0]));
+            }
+        }
+    });
+    return neuronScales;
 }

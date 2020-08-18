@@ -8,16 +8,20 @@ let modelConfig = {
     output: [0.7150127226, 0.28498727736]
 }
 
-function buildModelItemsAndSettings(modelConfig, modelWeights) {
+function buildModelItemsAndSettings(modelConfig, modelWeights, neuronValues) {
     let modelVisualSettings = {
-        width: 1200,
-        height: 600,
+        width: 1600,
+        height: 900,
         margins: {top: 100, left: 50, right: 50, bottom: 50},
-        barSize: 20,
         layerLabelMargin: 30,
         axisMargin: 20,
         featureLabelMargin: 5,
-        output: modelConfig.output
+        barSize: 10,
+        output: modelConfig.output,
+        scatter: {
+            margins: {top: 5, left: 0, right: 0, bottom: 5},
+            radius: 2
+        }
     }
     //Complete computation of the settings info.
     let networkWidth = modelVisualSettings.width - modelVisualSettings.margins.left - modelVisualSettings.margins.right;
@@ -32,13 +36,28 @@ function buildModelItemsAndSettings(modelConfig, modelWeights) {
     modelVisualSettings['layerWidth'] = layerWidth;
     modelVisualSettings['barSpace'] = barSpace;
 
-
+    //Scatter info
+    modelVisualSettings.scatter.height = barSpace;
+    modelVisualSettings.scatter.width = layerWidth;
+    modelVisualSettings.scatter.displayHeight = modelVisualSettings.scatter.height - modelVisualSettings.scatter.margins.top - modelVisualSettings.scatter.margins.bottom;
+    modelVisualSettings.scatter.displayWidth = modelVisualSettings.scatter.width - modelVisualSettings.scatter.margins.left - modelVisualSettings.scatter.margins.right;
+    //The scales for the scatter
+    let neuronYScales = buildNeuronYScales(modelConfig, neuronValues, modelVisualSettings.scatter.displayHeight);
+    //Also do the sorting for the outputs here.
+    let deadArgSort = argsort(neuronValues['output'].map(d => d[0]));
+    let outputOrder = [];
+    deadArgSort.forEach((v, i) => {
+        outputOrder[v] = i;
+    })
     //Build the bars
     let bars = [];
     let features = [];
     let lines = [];
     let xAxes = [];
     let layerNames = [];
+    let scatterPoints = [];
+    let neuronYAxes = [];
+    let outputXAxisScaleForInstances = d3.scaleLinear().domain([0, neuronValues['input'].length]).range([0, modelVisualSettings.scatter.displayWidth]);
     modelConfig.layers.forEach((layer, layerIdx) => {
         let layerStartX = 2 * layerWidth * layerIdx + layerWidth / 2; //layerWidth/2 since we start at the center for positive/negative
         let layerStartY = (networkHeight - (layer.neurons * modelVisualSettings.barSize + (layer.neurons - 1) * barSpace)) / 2;
@@ -51,6 +70,7 @@ function buildModelItemsAndSettings(modelConfig, modelWeights) {
             x2: layerStartX,
             y2: modelVisualSettings.networkHeight - layerStartY
         };
+
         let xAxis = {
             x: line.x2 - layerWidth / 2,
             y: line.y2 + modelVisualSettings.axisMargin,
@@ -60,7 +80,7 @@ function buildModelItemsAndSettings(modelConfig, modelWeights) {
         let layerName = {
             name: (layer.name === 'input' || layer.name === 'output') ? layer.name : modelConfig.layer_activation_mappings[layer.name],
             x: line.x1,
-            y: line.y1 - modelVisualSettings.layerLabelMargin
+            y: 0, //line.y1 - modelVisualSettings.layerLabelMargin
         }
 
         if (layer.name === 'output') {
@@ -89,6 +109,31 @@ function buildModelItemsAndSettings(modelConfig, modelWeights) {
                 y: bar.y - modelVisualSettings.featureLabelMargin,
             }
             features.push(feature);
+            //Scatter points for the individual attributions of this feature
+
+            //Build the yScale
+            let yScale = neuronYScales[layer.name][neuronIdx];
+            let scatterX = bar.x;//TODO: the margins should come here
+            let scatterY = bar.y - modelVisualSettings.scatter.height + modelVisualSettings.scatter.margins.top;//TODO: the margins should come here
+
+            for (let instanceIdx = 0; instanceIdx < neuronValues[layer.name].length; instanceIdx++) {
+                let scatterPoint = {
+                    layerName: layer.name,
+                    neuronIdx: neuronIdx,
+                    instanceIdx: instanceIdx,
+                    scatterX: scatterX,
+                    scatterY: scatterY,
+                    x: scatterX + (layer.name === 'output' ? outputXAxisScaleForInstances(outputOrder[instanceIdx]) - layerWidth/2 : 0), //This is now the same as the base, but will be updated when there is attribution
+                    y: scatterY + yScale(neuronValues[layer.name][instanceIdx][neuronIdx]),
+                    value: neuronValues[layer.name][instanceIdx][neuronIdx],
+                    attribution: 0,
+                    color: 'steelblue',
+                    radius: modelVisualSettings.scatter.radius,
+                    id: `${layer.name}_${neuronIdx}_${instanceIdx}`
+                };
+                scatterPoints.push(scatterPoint);
+            }
+
         }
     });
 
@@ -150,14 +195,60 @@ function buildModelItemsAndSettings(modelConfig, modelWeights) {
         'paths': paths,
         'modelVisualSettings': modelVisualSettings,
         'features': features,
-        'xAxes': xAxes
+        'xAxes': xAxes,
+        'scatterPoints': scatterPoints
     };
 }
 
+function updateModel(modelConfig, modelVisualSettings, attributionData, startNode, startNodeAttribution, targetLabel, attributionScale) {
+    let activeBars = buildBarData(attributionData, startNode, targetLabel);
+    updateAttributions(activeBars, startNode, startNodeAttribution, attributionScale);
+    updateIndividualAttributions(activeBars, startNode, undefined, attributionScale);
+    updateWeights(activeBars, startNode);
+}
+
+function updateIndividualAttributions(activeBars, startNode, startNodeIndividualAttribution, attributionScale) {
+    let mainG = d3.select("#mainG");
+
+    mainG.selectAll('.individual_attribution').each(function (d) {
+        //We don't do anything to the outputs
+        if (d.layerName === 'output') {
+            return;
+        }
+
+        let scatterPoint = d3.select(this);
+
+        // //If it is the start node update its attribution to the final output
+        // if (d.layerName === startNode.layerName && d.neuronIdx === startNode.neuronIdx) {
+        //     //Update its attribution
+        //     d.attribution = startNodeAttribution;
+        //     bar.attr('x', d => d.x - (d.attribution >= 0 ? 0 : attributionScale(-d.attribution)))
+        //         .attr('fill', d => d.attribution >= 0 ? 'steelblue' : 'red');
+        //
+        //     bar.transition(1000).attr('width', d => attributionScale(Math.abs(d.attribution)));
+        //     return;
+        // }
+
+        let activeItem = activeBars.find(i => i.id === `${d.layerName}_${d.neuronIdx}`);
+
+        if (activeItem) {
+            //Copy the properties of the activeItem to the current data object
+            d.attribution = activeItem['individual_attributions'][d.instanceIdx];
+            scatterPoint.attr('cx', d => d.x + (d.attribution >= 0 ? attributionScale(d.attribution) : -attributionScale(-d.attribution)))
+                .attr('fill', d => d.attribution >= 0 ? 'steelblue' : 'red');
+
+        } else {
+            scatterPoint.transition(1000).attr('opacity', 0);
+        }
+    });
+}
+
 function updateAttributions(activeBars, startNode, startNodeAttribution, attributionScale) {
+
     let mainG = d3.select('#mainG');
 
     mainG.selectAll('.attribution').each(function (d) {
+
         //We don't do anything to the outputs
         if (d.layerName === 'output') {
             return;
@@ -176,7 +267,6 @@ function updateAttributions(activeBars, startNode, startNodeAttribution, attribu
         }
 
         let activeItem = activeBars.find(i => i.id === d.id);
-        //Do nothing for the start node
 
         if (activeItem) {
             //Copy the properties of the activeItem to the current data object
@@ -192,12 +282,6 @@ function updateAttributions(activeBars, startNode, startNodeAttribution, attribu
             bar.transition(1000).attr('width', 0);
         }
     });
-}
-
-function updateModel(modelConfig, modelVisualSettings, attributionData, startNode, startNodeAttribution, targetLabel, attributionScale) {
-    let activeBars = buildBarData(attributionData, startNode, targetLabel);
-    updateAttributions(activeBars, startNode, startNodeAttribution, attributionScale);
-    updateWeights(activeBars, startNode);
 }
 
 function updateWeights(activeBars, startNode) {
@@ -237,7 +321,8 @@ function updateWeights(activeBars, startNode) {
 
 function visualizeModel(modelData, attributionScale, dispatch) {
     let bars = modelData.bars, lines = modelData.lines, layerNames = modelData.layerNames, paths = modelData.paths,
-        modelVisualSettings = modelData.modelVisualSettings, features = modelData.features, xAxes = modelData.xAxes;
+        modelVisualSettings = modelData.modelVisualSettings, features = modelData.features, xAxes = modelData.xAxes,
+        scatterPoints = modelData.scatterPoints;
 
     let link = d3.linkHorizontal()
         .x(function (d) {
@@ -247,6 +332,8 @@ function visualizeModel(modelData, attributionScale, dispatch) {
             return d.y;
         });
     let mainSvg = d3.select('#mainSvg');
+    mainSvg.attr("width", modelVisualSettings.width).attr("height", modelVisualSettings.height);
+
     let mainG = mainSvg.append("g").attr("id", "mainG")
         .attr("transform", `translate(${modelVisualSettings.margins.left}, ${modelVisualSettings.margins.top})`);
     //Create the lines for y-axis
@@ -323,6 +410,17 @@ function visualizeModel(modelData, attributionScale, dispatch) {
             hideTip();
         });
 
+    //Visualize the scatter points for the attributions
+
+    mainG.selectAll('.individual_attribution').data(scatterPoints, d => d.id).join('circle')
+        .attr('class', 'individual_attribution')
+        .attr('id', d => d.id)
+        .attr('cx', d => d.x) //This will be updated by the attribution
+        .attr('cy', d => d.y) //Will visualize the position of the output now since it is fixed.
+        .attr('r', d => d.radius)
+        .attr('fill-opacity', 1.0)
+
+
     //Create the labels for the neurons
     mainG.selectAll('.featureName').data(features, d => d.name).join('text')
         .attr('class', 'featureName')
@@ -345,6 +443,4 @@ function visualizeModel(modelData, attributionScale, dispatch) {
         .on("mouseout", () => {
             hideTip();
         });
-
 }
-

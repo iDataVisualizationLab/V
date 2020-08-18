@@ -11,22 +11,30 @@
     <!-- Custom styles -->
     <style>
         @import "js/tooltip/tooltip.css";
+        @import "js/loader/loader.css";
     </style>
     <!-- Custom scripts -->
     <script src="lib/d3.v5.min.js"></script>
     <script src="js/eventandeventhandling.js"></script>
 </head>
 <body>
+<!--loader-->
+<script src="js/loader/loader.js"></script>
+<script>
+    showLoader();
+</script>
 <div>
     <div class="row center-align">
-        <h3>hidden attributions</h3>
+        <button onclick="switchView()">Switch view</button>
+        <!--        <h3>hidden attributions</h3>-->
     </div>
     <div id="main" class="center-align row">
-        <svg id='mainSvg' width="1200" height="600" style="border: 1px solid black;">
+        <svg id='mainSvg'>
         </svg>
     </div>
     <div class="row"></div>
     <!--Custom script-->
+    <script src="js/utils.js"></script>
     <script src="js/tooltip/tooltip.js"></script>
     <script src="js/dataprocessing.js"></script>
     <script src="js/modelconfig.js"></script>
