@@ -1,5 +1,31 @@
+let booleanTicks = {
+    tickValues: [0, 1],
+    tickFormat: (d) => d == 0 ? "false" : "true"
+};
 let modelConfig = {
     input_features: ['age', 'sibsp', 'parch', 'fare', 'female', 'male', 'embark_C', 'embark_Q', 'embark_S', 'class_1', 'class_2', 'class_3'],
+    input_types: {
+        'age': {
+            tickValues: [0, 40, 80]
+        },
+        'sibsp': {
+            tickValues: [0, 4, 8]
+        },
+        'parch': {
+            tickValues: [0, 2, 4]
+        },
+        'fare': {
+            tickValues: [0, 100, 200]
+        },
+        'female': booleanTicks,
+        'male': booleanTicks,
+        'embark_C': booleanTicks,
+        'embark_Q': booleanTicks,
+        'embark_S': booleanTicks,
+        'class_1': booleanTicks,
+        'class_2': booleanTicks,
+        'class_3': booleanTicks
+    },
     layers: [{name: 'input', neurons: 12}, {name: 'sigmoid1', neurons: 8}, {
         name: 'sigmoid2',
         neurons: 6
@@ -21,8 +47,17 @@ function buildModelItemsAndSettings(modelConfig, modelWeights, neuronValues) {
         scatter: {
             radius: 2,
             margins: {top: 5, left: 0, right: 0, bottom: 5}
-        }
+        },
+
     }
+    //Compute the instance color scheme.
+    let probColorScale = d3.interpolateRdYlGn;
+    modelVisualSettings['surviveColorScheme'] = getColorForSurviveProb;
+
+    function getColorForSurviveProb(instanceIdx) {
+        return probColorScale(neuronValues.output[instanceIdx][1]);
+    }
+
     //Complete computation of the settings info.
     let networkWidth = modelVisualSettings.width - modelVisualSettings.margins.left - modelVisualSettings.margins.right;
     let networkHeight = modelVisualSettings.height - modelVisualSettings.margins.top - modelVisualSettings.margins.bottom;
@@ -52,7 +87,19 @@ function buildModelItemsAndSettings(modelConfig, modelWeights, neuronValues) {
     let xAxes = [];
     let layerNames = [];
     let scatterPoints = [];
-    let neuronYAxes = [];
+    let inputValueAxes = [];
+    let inputNeurons = modelConfig.layers[0].neurons;
+    for (let inputIdx = 0; inputIdx < inputNeurons; inputIdx++) {
+        let inputAxis = {
+            id: `inputAxis_${inputIdx}`,
+            inputIdx: inputIdx,
+            x: 0,
+            y: inputIdx * (modelVisualSettings.size + space) + modelVisualSettings.scatter.margins.top,
+            scale: neuronYScales['input'][inputIdx]
+        };
+        inputValueAxes.push(inputAxis);
+    }
+
     let outputXAxisScaleForInstances = d3.scaleLinear().domain([0, neuronValues['output'].length]).range([0, layerWidth]);
     modelConfig.layers.forEach((layer, layerIdx) => {
         let layerStartX = 2 * layerWidth * layerIdx + layerWidth / 2; //layerWidth/2 since we start at the center for positive/negative
@@ -192,7 +239,8 @@ function buildModelItemsAndSettings(modelConfig, modelWeights, neuronValues) {
         'modelVisualSettings': modelVisualSettings,
         'features': features,
         'xAxes': xAxes,
-        'scatterPoints': scatterPoints
+        'scatterPoints': scatterPoints,
+        'inputValueAxes': inputValueAxes
     };
 }
 
@@ -222,7 +270,6 @@ function updateIndividualAttributions(activeBars, startNode, attributionScales) 
             //Copy the properties of the activeItem to the current data object
             d.attribution = activeItem['individual_attributions'][d.instanceIdx];
             scatterPoint.attr('cx', d => d.x + (d.attribution >= 0 ? attributionScales[d.layerName](d.attribution) : -attributionScales[d.layerName](-d.attribution)))
-                .attr('fill', d => d.attribution >= 0 ? 'steelblue' : 'red')
                 .attr('opacity', 1.0);
 
         } else {
@@ -314,7 +361,7 @@ function updateWeights(activeBars, startNode) {
 function visualizeModel(modelData, attributionScale, dispatch) {
     let bars = modelData.bars, lines = modelData.lines, layerNames = modelData.layerNames, paths = modelData.paths,
         modelVisualSettings = modelData.modelVisualSettings, features = modelData.features, xAxes = modelData.xAxes,
-        scatterPoints = modelData.scatterPoints;
+        scatterPoints = modelData.scatterPoints, inputValueAxes = modelData.inputValueAxes;
 
     let link = d3.linkHorizontal()
         .x(function (d) {
@@ -375,14 +422,22 @@ function visualizeModel(modelData, attributionScale, dispatch) {
         .attr('width', 0)
         .attr('fill', 'none');
     //Update the output bars
-    modelVisualSettings.output.forEach((val, i) => {
-        mainG.select(`#output_${i}`)
-            .classed('output', true)
-            .attr('x', d => d.x - modelVisualSettings.layerWidth / 2)
-            .attr('width', val * modelVisualSettings.layerWidth).attr('fill', 'none')
-            .attr("stroke-width", 1)
-            .attr("stroke", "black");
-    });
+    //For the survive
+    let deadProp = modelVisualSettings.output[0]
+    mainG.select(`#output_${0}`)
+        .classed('output', true)
+        .attr('x', d => d.x - modelVisualSettings.layerWidth / 2 + (1 - deadProp) * modelVisualSettings.layerWidth)
+        .attr('width', deadProp * modelVisualSettings.layerWidth).attr('fill', 'none')
+        .attr("stroke-width", 1)
+        .attr("stroke", "black");
+
+    let surviveProb = modelVisualSettings.output[1];
+    mainG.select(`#output_${1}`)
+        .classed('output', true)
+        .attr('x', d => d.x - modelVisualSettings.layerWidth / 2)
+        .attr('width', surviveProb * modelVisualSettings.layerWidth).attr('fill', 'none')
+        .attr("stroke-width", 1)
+        .attr("stroke", "black");
 
 
     //Create the bounding rect
@@ -402,14 +457,14 @@ function visualizeModel(modelData, attributionScale, dispatch) {
                 dispatch.call('changeTargetLabel', this, d.neuronIdx);
             }
             dispatch.call('startNode', this, startNode);
-        })
-        .on("mouseover", (d) => {
-            let msg = d.layerName === 'output' ? `Proportion: ${modelVisualSettings.output[d.neuronIdx].toFixed(2)}` : `Attribution: ${d.attribution.toFixed(2)}`;
-            showTip(msg);
-        })
-        .on("mouseout", () => {
-            hideTip();
         });
+    // .on("mouseover", (d) => {
+    //     let msg = d.layerName === 'output' ? `Proportion: ${modelVisualSettings.output[d.neuronIdx].toFixed(2)}` : `Attribution: ${d.attribution.toFixed(2)}`;
+    //     showTip(msg);
+    // })
+    // .on("mouseout", () => {
+    //     hideTip();
+    // });
 
 
     //Visualize the scatter points for the attributions
@@ -419,6 +474,7 @@ function visualizeModel(modelData, attributionScale, dispatch) {
         .attr('cx', d => d.x) //This will be updated by the attribution
         .attr('cy', d => d.y) //Will visualize the position of the output now since it is fixed.
         .attr('r', d => d.radius)
+        .attr('fill', d => modelVisualSettings.surviveColorScheme(d.instanceIdx))
         .attr('fill-opacity', 1.0);
 
 
@@ -444,4 +500,24 @@ function visualizeModel(modelData, attributionScale, dispatch) {
         .on("mouseout", () => {
             hideTip();
         });
+
+    //Visualize the input value axes
+    mainG.selectAll(".inputValueAxis").data(inputValueAxes, d => d.id).join('g')
+        .attr("class", 'inputValueAxis')
+        .attr("id", d => d.id)
+        .attr("transform", d => `translate(${d.x}, ${d.y})`)
+        .each(function (d) {
+            let theAxisG = d3.select(this);
+            let theAxis = d3.axisLeft().scale(d.scale);
+            let inputType = modelConfig.input_types[modelConfig.input_features[d.inputIdx]];
+            if(inputType.tickValues){
+                theAxis.tickValues(inputType.tickValues);
+            }
+            if(inputType.tickFormat){
+                theAxis.tickFormat(inputType.tickFormat);
+            }
+            theAxisG.call(theAxis);
+        });
+
+
 }

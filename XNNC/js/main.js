@@ -16,6 +16,7 @@ async function main(modelConfig) {
     let neuronValues = await d3.json('data/neuron_values.json');
     let predictedVsActual = await d3.json('data/predicted_vs_actual.json');
 
+
     let modelWeights = {};
     networkWeights.forEach(item => {
         modelWeights = Object.assign(modelWeights, item);
