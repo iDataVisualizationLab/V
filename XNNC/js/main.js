@@ -1,7 +1,8 @@
-main(modelConfig).then(()=>{});
+main(modelConfig).then(() => {
+});
 
 async function main(modelConfig) {
-    let displayMode = 1;
+    let viewMode = 1;
     let targetLabel = 1;
     dispatch.on("changeTargetLabel", function (newLabel) {
         targetLabel = newLabel;
@@ -25,16 +26,17 @@ async function main(modelConfig) {
 
     let maxAttribution = Math.max(...attributionData.map(item => Math.abs(item['attribution'])));
     let attributionScale = d3.scaleLinear().domain([0, maxAttribution]).range([0, modelVisualSettings.layerWidth / 2]);
-    visualizeModel(modelData, attributionScale, dispatch);
-    hideLoader();
 
+    visualizeModel(modelData, attributionScale, dispatch);
+
+    hideLoader();
     dispatch.on("startNode", function (startNode) {
-        let startNodeAttribution = findAttributionOfANodeToFinalResult(attributionData, startNode, targetLabel);
-        updateModel(modelConfig, modelVisualSettings, attributionData, startNode, startNodeAttribution, targetLabel, attributionScale);
+        // let startNodeAttribution = findAttributionOfANodeToFinalResult(attributionData, startNode, targetLabel);
+        updateModel(modelConfig, modelVisualSettings, attributionData, startNode, targetLabel);
     });
     dispatch.call("changeTargetLabel", this, targetLabel);
     dispatch.call("startNode", this, {'layerName': 'output', 'neuronIdx': 1})
+
 }
-function switchView(){
-}
+
 
