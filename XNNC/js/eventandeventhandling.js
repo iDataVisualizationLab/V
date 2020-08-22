@@ -1,1 +1,8 @@
-let dispatch = d3.dispatch("startNode", "changeTargetLabel", "switchView");
+let dispatch = d3.dispatch(
+    "startNode",
+    "changeTargetLabel",
+    "highlightInstances",
+    "highlightIncorrectInstances",
+    "highlightAllInstances",
+    'highlightAllActiveInstances'
+);

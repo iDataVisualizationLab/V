@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Hidden attributions</title>
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <link rel="stylesheet" href="lib/jquery/jquery-ui.css">
+    <script src="lib/jquery/jquery-1.12.4.js"></script>
+    <script src="lib/jquery/jquery-ui.js"></script>
     <!-- Custom styles -->
     <style>
         @import "js/tooltip/tooltip.css";
@@ -16,6 +14,7 @@
     <!-- Custom scripts -->
     <script src="lib/d3.v5.min.js"></script>
     <script src="js/eventandeventhandling.js"></script>
+
 </head>
 <body>
 <!--loader-->
@@ -27,8 +26,20 @@
     <div class="row center-align">
         <!--        <h3>hidden attributions</h3>-->
     </div>
+    <div class="ui-widget">
+        <!--        <label for="tags">Name: </label>-->
+        <!--        <input id="tags">-->
+    </div>
     <div id="main" class="center-align row">
         <svg id='mainSvg'>
+            <g id="controlPanel" transform="translate(1350, 100)">
+                <foreignObject x="0" y="0" width="200" height="50">
+                    <div>
+                        search <input id="tags"/>
+                    </div>
+                </foreignObject>
+            </g>
+
         </svg>
     </div>
     <div class="row"></div>

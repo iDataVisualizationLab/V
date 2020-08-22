@@ -43,9 +43,9 @@ function buildModelItemsAndSettings(modelConfig, modelWeights, neuronValues) {
         axisMargin: 20,
         featureLabelMargin: 5,
         output: modelConfig.output,
-        size: 40,
+        size: 45,
         scatter: {
-            radius: 2,
+            radius: 3,
             margins: {top: 5, left: 0, right: 0, bottom: 5}
         },
 
@@ -358,7 +358,7 @@ function updateWeights(activeBars, startNode) {
     });
 }
 
-function visualizeModel(modelData, attributionScale, dispatch) {
+function visualizeModel(modelData, attributionScale, dispatch, predictedVsActual) {
     let bars = modelData.bars, lines = modelData.lines, layerNames = modelData.layerNames, paths = modelData.paths,
         modelVisualSettings = modelData.modelVisualSettings, features = modelData.features, xAxes = modelData.xAxes,
         scatterPoints = modelData.scatterPoints, inputValueAxes = modelData.inputValueAxes;
@@ -466,7 +466,6 @@ function visualizeModel(modelData, attributionScale, dispatch) {
     //     hideTip();
     // });
 
-
     //Visualize the scatter points for the attributions
     mainG.selectAll('.individual_attribution').data(scatterPoints, d => d.id).join('circle')
         .attr('class', 'individual_attribution')
@@ -475,7 +474,15 @@ function visualizeModel(modelData, attributionScale, dispatch) {
         .attr('cy', d => d.y) //Will visualize the position of the output now since it is fixed.
         .attr('r', d => d.radius)
         .attr('fill', d => modelVisualSettings.surviveColorScheme(d.instanceIdx))
-        .attr('fill-opacity', 1.0);
+        .attr('fill-opacity', 0.5)
+        .attr('stroke-width', d => (predictedVsActual['actual_class'][d.instanceIdx] === predictedVsActual['predicted_class'][d.instanceIdx]) ? 0 : 1)
+        .attr('stroke', d => (predictedVsActual['actual_class'][d.instanceIdx] === predictedVsActual['predicted_class'][d.instanceIdx]) ? 'none' : 'black')
+        .on('mouseover', d => {
+            dispatch.call('highlightInstances', this, [d.instanceIdx]);
+        })
+        .on('mouseout', d => {
+            dispatch.call('highlightAllInstances', this);
+        });
 
 
     //Create the labels for the neurons
@@ -492,7 +499,7 @@ function visualizeModel(modelData, attributionScale, dispatch) {
         .attr("class", "weightLine")
         .attr("d", d => link(d))
         .attr("fill", "none")
-        .attr("stroke", d => d.weight >= 0 ? 'steelblue' : 'red')
+        .attr("stroke", d => d.weight >= 0 ? d3.rgb('steelblue').darker(0.75) : d3.rgb('red').darker(0.75))
         .attr("stroke-width", d => modelVisualSettings.weightScale(d.weight))
         .on("mouseover", (d) => {
             showTip(`Current weight: ${d.weight.toFixed(2)}`);
@@ -510,14 +517,32 @@ function visualizeModel(modelData, attributionScale, dispatch) {
             let theAxisG = d3.select(this);
             let theAxis = d3.axisLeft().scale(d.scale);
             let inputType = modelConfig.input_types[modelConfig.input_features[d.inputIdx]];
-            if(inputType.tickValues){
+            if (inputType.tickValues) {
                 theAxis.tickValues(inputType.tickValues);
             }
-            if(inputType.tickFormat){
+            if (inputType.tickFormat) {
                 theAxis.tickFormat(inputType.tickFormat);
             }
             theAxisG.call(theAxis);
         });
 
 
+}
+
+function highlightInstances(instanceIndices) {
+    d3.selectAll('.individual_attribution').attr('opacity', d => instanceIndices.indexOf(d.instanceIdx) >= 0 ? 1 : 0);
+}
+
+function highlightAllActiveInstances(instanceIndices) {
+
+}
+
+function highlightIncorrectInstances(predictedVsActual) {
+    let incorrectInstanceIndices = [];
+    predictedVsActual['actual_class'].forEach((actualClass, instanceIndex) => {
+        if (actualClass !== predictedVsActual['predicted_class'][instanceIndex]) {
+            incorrectInstanceIndices.push(instanceIndex);
+        }
+    });
+    highlightInstances(incorrectInstanceIndices);
 }
