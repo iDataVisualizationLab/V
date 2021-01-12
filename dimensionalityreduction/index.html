@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="build/js/dimensionalityreduction.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+</head>
+<body>
+<div>
+    <svg id="mainSvg"></svg>
+</div>
+<script>
+    const P_prev = [[1, 2], [2, 3], [3, 4], [4, 2], [10, 9], [8, 1]];
+    const P_curr = [[1, 8], [2, 7], [6, 6], [4, 8], [10, 1], [8, 9], [9, 9]];
+    const ids1 = [0, 1, 2, 3, 4, 5];
+    const ids2 = [0, 1, 2, 3, 4, 5, 6];
+    const plot_margins = {top: 10, right: 10, bottom: 10, left: 10};
+    const pointRadius = 3;
+    const plotSize = 200;
+    const plots = ["plot1", "plot2", "plot3"];
+
+    const mainSvg = d3.select("#mainSvg");
+    mainSvg
+        .attr("width", (plotSize + plot_margins.left + plot_margins.right) * plots.length)
+        .attr("height", plotSize + plot_margins.top + plot_margins.bottom);
+
+    mainSvg.selectAll('.plot').data(plots).enter()
+        .append("g").attr('class', 'plot')
+        .attr('id', d => d).attr('transform', (p, i) => `translate(${plot_margins.left + i * (plot_margins.left + plotSize + plot_margins.right)}, ${plot_margins.top})`)
+        .append('rect')
+        .attr("x", -plot_margins.left)
+        .attr("y", -plot_margins.top)
+        .attr("width", plotSize + plot_margins.left + plot_margins.right)
+        .attr("height", plotSize + plot_margins.top + plot_margins.bottom)
+        .attr("fill", "none")
+        .attr("stroke", "black");
+
+
+    function plot_points(g, points, width, height, color = 'blue') {
+        const minX = d3.min(points.map(d => d[0]));
+        const maxX = d3.max(points.map(d => d[0]));
+        const minY = d3.min(points.map(d => d[1]));
+        const maxY = d3.max(points.map(d => d[1]));
+
+        const xScale = d3.scaleLinear().domain([minX, maxX]).range([0, width]);
+        const yScale = d3.scaleLinear().domain([minY, maxY]).range([height, 0]);
+        g.selectAll('.circle').data(points).join('circle')
+            .attr("cx", d => xScale(d[0]))
+            .attr("cy", d => yScale(d[1]))
+            .attr('r', pointRadius)
+            .attr('stroke', 'black')
+            .attr("fill", color);
+    }
+
+    plot_points(d3.select('#plot1'), P_prev, plotSize, plotSize);
+
+    pt = new dr.ProcrustestTransformation(P_prev, P_curr, ids1, ids2);
+    console.log(pt.translatedResult());
+
+    plot_points(d3.select('#plot2'), P_curr, plotSize, plotSize, 'red');
+    plot_points(d3.select('#plot3'), pt.translatedResult(), plotSize, plotSize, 'green');
+</script>
+</body>
+</html>

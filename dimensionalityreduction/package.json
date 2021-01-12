@@ -1,0 +1,32 @@
+{
+  "name": "dimensionalityreduction",
+  "version": "1.0.0",
+  "description": "Dimensionality Reduction Lib",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iDataVisualizationLab/V/dimensionalityreduction"
+  },
+  "keywords": [
+    "Dimensionality",
+    "Reduction",
+    "PCA",
+    "Procrustes",
+    "Transformation"
+  ],
+  "author": "Vung Pham",
+  "license": "ISC",
+  "devDependencies": {
+    "rollup": "^2.36.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  },
+  "dependencies": {
+    "fsevents": "^2.3.1",
+    "mathjs": "^8.1.1",
+    "svd-js": "^1.1.1"
+  }
+}
