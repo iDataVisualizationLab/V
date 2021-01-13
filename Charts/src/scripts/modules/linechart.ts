@@ -11,13 +11,43 @@ import {quantile} from "simple-statistics";
  * marker   letter: used to mark the point
  * tye  ["scatter", "line"]: used to control whether it is a scatter plot or a line chart
  */
+export type LineAnnotation = {
+    x0: any,
+    y0: any,
+    x1: any,
+    y1: any,
+    color?: any,
+    strokeWidth?: number,
+    valueType?: string, //'paper': means pixel coordinate, 'value' means original value of x, y need to be converted using scalers, 'index' means index of the items.
+}
+export type XLineAnnotation = {
+    x: any,
+    color?: any,
+    strokeWidth?: number,
+    valueType?: string, //'paper': means pixel coordinate, 'value' means original value of x, y need to be converted using scalers, 'index' means index of the items.
+}
+export type YLineAnnotation = {
+    y: any,
+    color?: any,
+    strokeWidth?: number,
+    valueType?: string, //'paper': means pixel coordinate, 'value' means original value of x, y need to be converted using scalers, 'index' means index of the items.
+}
+
+export type Annotations = {
+    'line'?: LineAnnotation,
+    'xLine'?: XLineAnnotation,
+    'yLine'?: YLineAnnotation,
+}
+
 export type LineChartTrace = {
+    [key: string]: any;
     x: number[],
     y: number[],
     series: string,
     marker?: string,
     type?: string,
-    abstractLevel?: AbstractLevel
+    abstractLevel?: AbstractLevel,
+    colorScale?: any,
 }
 export type Legend = {
     x: number,
@@ -51,6 +81,15 @@ export type AbstractLevel = {
     options?: AbstractLevelOptions
 }
 
+export type StepSettings = {
+    chartSize: number, //Chart height for the vertical step and chart width for the horizontal step
+    stepSize?: number,
+    stepScale?: any,
+    basePositions?: any,
+    stepHandle?: any,
+}
+
+
 export interface LineChartSettings {
     [key: string]: any;
 
@@ -62,6 +101,7 @@ export interface LineChartSettings {
     yScale?: any;
     colorScheme?: any;
     colorScale?: any;
+    colorCategory?: any
     paddingLeft?: number;
     paddingRight?: number;
     paddingTop?: number;
@@ -69,11 +109,26 @@ export interface LineChartSettings {
     lineWidth?: number;
     legend?: any;
     title?: Title;
-    xAxisLabel?: XAxisLabel,
-    yAxisLabel?: YAxisLabel,
-    eventHandlers?: any,
-    markerHighlightOpacity?: number,
-    markerFadeOpacity?: number
+    xAxisLabel?: XAxisLabel;
+    yAxisLabel?: YAxisLabel;
+
+    xTickValues?: any;
+    yTickValues?: any;
+    xTickLabels?: any;
+    yTickLabels?: any;
+
+    eventHandlers?: any;
+    markerHighlightOpacity?: number;
+    markerFadeOpacity?: number;
+    stepMode?: StepSettings;
+    annotations?: Annotations;
+    orientation?: string;
+    smoothen?: any;
+}
+
+export type TraceToHighlight = {
+    traceIdx?: any,
+    color?: any,
 }
 
 export class LineChart {
@@ -94,9 +149,12 @@ export class LineChart {
     private svg;
     private data: LineChartTrace[];
     private markersToHighlight = [];
+    private traceToHighlight: TraceToHighlight = {};
+
 
     constructor(htmlContainer, lineChartData: LineChartTrace[], lineChartSettings: LineChartSettings) {
         this.data = lineChartData;
+
         let thisObject = this;
         //Copy the settings if there are.
         if (lineChartSettings != null) {
@@ -120,26 +178,26 @@ export class LineChart {
         this.canvasWidth = contentWidth;
         this.canvasHeight = contentHeight;
         //Scales
+
+
         if (!this.settings.xScale) {
-            let x = [];
-            this.data.forEach(trace => {
-                x = x.concat(trace.x);
-            });
-            this.settings.xScale = d3.scaleLinear()
-                .domain(d3.extent(x))
-                .range([0, contentWidth]);
+            this.updateXScale();
         }
+
         if (!this.settings.yScale) {
-            let yValues = [];
-            this.data.forEach(trace => {
-                yValues = yValues.concat(trace.y);
-            });
-            this.settings.yScale = d3.scaleLinear()
-                .domain(d3.extent(yValues))
-                .range([contentHeight, 0]);
+            this.updateYScale();
+        }
+
+        if (this.settings.stepMode) {
+            if (!this.settings.stepMode.stepScale) {
+                this.updateStepScale();
+            }
+            this.calculateBases();
+            this.calculateStepTickPosAndLabels();
         }
 
         //Color scales
+
         if (!this.settings.colorScale) {
             let series = this.data.map(trace => {
                 return trace.series;
@@ -153,9 +211,11 @@ export class LineChart {
             this.settings.colorScale = d3.scaleOrdinal()
                 .domain(series)
                 .range(series.map((_, i) => {
-                    return colorScale(i / seriesLength);
+                    return thisObject.settings.colorCategory ? thisObject.settings.colorCategory[i] : colorScale(i / seriesLength);
                 }));
         }
+
+
         let container = d3.select(htmlContainer).append("div")
             .style("width", `${this.settings.width}px`)
             .style("height", `${this.settings.height}px`)
@@ -172,51 +232,6 @@ export class LineChart {
                 .attr("transform", "translate(0, 0)");
         }
         let arrBisector = d3.bisector((d, x) => d - x).left;
-
-        //Closest point for all traces (the indexes not the actual values)
-        function getClosestIndicesForTraces(point) {
-            let x = point[0];
-            // console.log(point);
-            let xVal = thisObject.settings.xScale.invert(x);
-            let results = thisObject.data.map(trace => {
-                let idx = arrBisector(trace.x, xVal);
-                return idx;
-            });
-            return results;
-        }
-
-        //Closest point (traceIdx, xIdx, yIdx)
-        function getClosestPointsInfo(point) {
-            let cps = getClosestIndicesForTraces(point);
-            let x = thisObject.settings.xScale(thisObject.data[0].x[cps[0]]);
-            let y = thisObject.settings.yScale(thisObject.data[0].y[cps[0]]);
-            let closestPointIdx = cps[0];
-            let closestTraceIdx = 0;
-            let closestDistance = distance([x, y], point);
-            let closestPoint = [x, y];
-            for (let i = 1; i < cps.length; i++) {
-                x = thisObject.settings.xScale(thisObject.data[i].x[cps[i]]);
-                y = thisObject.settings.yScale(thisObject.data[i].y[cps[i]]);
-                let d = distance([x, y], point);
-                if (d < closestDistance) {
-                    closestDistance = d;
-                    closestPointIdx = cps[i];
-                    closestTraceIdx = i;
-                    closestPoint = [x, y];
-                }
-            }
-            return {
-                closestDistance: closestDistance,
-                closestPointIdx: closestPointIdx,
-                closestTraceIdx: closestTraceIdx,
-                closestPoint: closestPoint,
-                closestIndicesForTraces: cps,
-            }
-        }
-
-        function distance(p1, p2) {
-            return Math.sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]));
-        }
 
         this.canvas = container.append("canvas")
             .attr("width", contentWidth)
@@ -235,6 +250,7 @@ export class LineChart {
                 thisObject.settings.eventHandlers[event](info);
             });
         });
+
         //Show axes
         if (this.settings.showAxes) {
             let xAxis = d3.axisBottom()
@@ -243,15 +259,182 @@ export class LineChart {
             let yAxis = d3.axisLeft()
                 .scale(this.settings.yScale);
 
-            this.svg.append("g")
+            if (this.settings.xTickValues) {
+                xAxis.tickValues(this.settings.xTickValues);
+            }
+            if (this.settings.xTickLabels) {
+                xAxis.tickFormat((d, i) => this.settings.xTickLabels[i]);
+            }
+
+            if (this.settings.yTickValues) {
+                yAxis.tickValues(this.settings.yTickValues);
+            }
+            if (this.settings.yTickLabels) {
+                yAxis.tickFormat((d, i) => this.settings.yTickLabels[i]);
+            }
+
+            let xAxisG = this.svg.append("g")
                 .attr("class", "x axis")
                 .attr("transform", `translate(${this.settings.paddingLeft},${this.settings.height - this.settings.paddingBottom})`)
                 .call(xAxis);
 
-            this.svg.append("g")
+            let yAxisG = this.svg.append("g")
                 .attr("class", "y axis")
                 .attr("transform", `translate(${this.settings.paddingLeft},${this.settings.paddingTop})`)
                 .call(yAxis);
+
+            //if it is in stepMode we should also add the stepScale.
+            if (this.settings.stepMode) {
+                let thisObj = this;
+                let minChartSize = 30;
+                if (this.settings.orientation === 'vertical') {
+                    let stepAxis = d3.axisTop().scale(this.settings.stepMode.stepScale).ticks(Math.min(Math.max(2, Math.floor(this.settings.stepMode.chartSize / 20)), 5));
+                    let stepAxisG = this.svg.append("g")
+                        .attr("class", "step axis")
+                        .attr("transform", `translate(${this.settings.paddingLeft},${this.settings.paddingTop})`)
+                        .call(stepAxis);
+                    //<editor-fold desc="This section is for the drag of the step size">
+                    if (thisObj.settings.stepMode.stepHandle) {
+                        let prevHandleFill;
+                        let stepHandleMargins = {top: -13, left: 20};
+                        let drag = d3.drag()
+                            .on("start", function (d) {
+                                let thisHandle = d3.select(this);
+                                prevHandleFill = thisHandle.attr("fill");
+                                thisHandle.attr("fill", "red");
+                            })
+                            .on("drag", function (d) {
+                                d3.select(this)
+                                    .attr("cx", d.x = Math.min(Math.max(d3.event.x, stepHandleMargins.left + minChartSize), thisObj.canvasWidth))
+                                    .attr("cy", d.y);
+                                thisObj.settings.stepMode.chartSize = d.x - stepHandleMargins.left;
+                                thisObj.settings.stepMode.stepScale.range([0, thisObj.settings.stepMode.chartSize]);//Update step scale
+                                //Recalculate bases for the graph positions for all the elements
+                                thisObj.calculateBases();
+                                // Need to update the step locations and this is related to these two functions.
+                                thisObj.calculateStepTickPosAndLabels();
+                                xAxis.tickValues(thisObj.settings.xTickValues);
+                                xAxis.tickFormat((d, i) => thisObj.settings.xTickLabels[i]);
+                                xAxisG.call(xAxis);
+                                thisObj.plot();//Update
+                                //Update also the stepScale axis
+                                stepAxisG.call(stepAxis);
+                            })
+                            .on("end", function () {
+                                d3.select(this).attr("fill", prevHandleFill);
+                            });
+                        let handle = [{
+                            x: this.settings.stepMode.chartSize + stepHandleMargins.left,
+                            y: stepHandleMargins.top
+                        }];
+                        let handleContainer = this.svg.append("g")
+                            .attr("class", "stepHandleContainer")
+                            .attr('transform', `translate(${this.settings.paddingLeft},${this.settings.paddingTop})`)
+                        let handleCircle = handleContainer.append("g")
+                            .attr("class", "dot")
+                            .selectAll('circle')
+                            .data(handle)
+                            .enter().append("circle")
+                            .attr("r", 5)
+                            .attr("cx", function (d) {
+                                return d.x;
+                            })
+                            .attr("cy", function (d) {
+                                return d.y;
+                            })
+                            .attr("fill", "steelblue")
+                            .on("mouseover", function (d) {
+                                d3.select(this).raise().attr("stroke", "black");
+                            })
+                            .on("mouseout", function (d) {
+                                d3.select(this).raise().attr("stroke", null);
+                            })
+                            .style('cursor', 'col-resize')
+                            .call(drag);
+                    }
+
+                    //</editor-fold>
+                } else {
+                    let reverseStepScale = d3.scaleLinear().domain(this.settings.stepMode.stepScale.domain().slice()).range(this.settings.stepMode.stepScale.range().slice().reverse());
+                    let stepAxis = d3.axisRight().scale(reverseStepScale).ticks(Math.min(Math.max(2, Math.floor(this.settings.stepMode.chartSize / 20)), 5));
+                    let stepAxisG = this.svg.append("g")
+                        .attr("class", "step axis")
+                        .attr("transform", `translate(${this.settings.width - this.settings.paddingRight},${this.settings.height - this.settings.paddingBottom - this.settings.stepMode.chartSize})`)
+                        .call(stepAxis);
+
+                    //<editor-fold desc="This section is for the drag of the step size">
+                    if (this.settings.stepMode.stepHandle) {
+                        let prevHandleFill;
+                        let stepHandleMargins = {top: 15, left: 20};
+
+                        let drag = d3.drag()
+                            .on("start", function (d) {
+                                let thisHandle = d3.select(this);
+                                prevHandleFill = thisHandle.attr("fill");
+                                thisHandle.attr("fill", "red");
+                            })
+                            .on("drag", function (d) {
+                                console.log(d3.event.y);
+                                d3.select(this)
+                                    .attr("cx", d.x)
+                                    .attr("cy", d.y = Math.min(Math.max(d3.event.y, -thisObj.canvasHeight - stepHandleMargins.top), -minChartSize));
+                                thisObj.settings.stepMode.chartSize = -d.y - stepHandleMargins.top;
+
+                                //Recalculate bases for the graph positions for all the elements
+                                thisObj.calculateBases();
+                                // Need to update the step locations and this is related to these two functions.
+                                thisObj.calculateStepTickPosAndLabels();
+                                yAxis.tickValues(thisObj.settings.yTickValues);
+                                yAxis.tickFormat((d, i) => thisObj.settings.yTickLabels[i]);
+                                yAxisG.call(yAxis);
+                                thisObj.plot();//Update
+                                //Update also the stepScale axis
+                                //Recalculate the step scale
+                                thisObj.settings.stepMode.stepScale.range([0, thisObj.settings.stepMode.chartSize]);//Update step scale
+                                let reverseStepScale = d3.scaleLinear().domain(thisObj.settings.stepMode.stepScale.domain().slice()).range(thisObj.settings.stepMode.stepScale.range().slice().reverse());
+                                let stepAxis = d3.axisRight().scale(reverseStepScale).ticks(Math.min(Math.max(2, Math.floor(thisObj.settings.stepMode.chartSize / 20)), 5));
+                                //Also need to retranslate it
+                                stepAxisG.attr("transform", `translate(${thisObj.settings.width - thisObj.settings.paddingRight},${thisObj.settings.height - thisObj.settings.paddingBottom - thisObj.settings.stepMode.chartSize})`)
+                                stepAxisG.call(stepAxis);
+                            })
+                            .on("end", function () {
+                                d3.select(this).attr("fill", prevHandleFill);
+                            });
+                        let handle = [{
+                            x: stepHandleMargins.left,
+                            y: -thisObj.settings.stepMode.chartSize - stepHandleMargins.top
+                        }];
+                        let handleContainer = this.svg.append("g")
+                            .attr("class", "stepHandleContainer")
+                            .attr('transform', `translate(${this.settings.width - this.settings.paddingRight},${this.settings.height - this.settings.paddingBottom})`)
+                        let handleCircle = handleContainer.append("g")
+                            .attr("class", "dot")
+                            .selectAll('circle')
+                            .data(handle)
+                            .enter().append("circle")
+                            .attr("r", 5)
+                            .attr("cx", function (d) {
+                                return d.x;
+                            })
+                            .attr("cy", function (d) {
+                                return d.y;
+                            })
+                            .attr("fill", "steelblue")
+                            .on("mouseover", function (d) {
+                                d3.select(this).raise().attr("stroke", "black");
+                            })
+                            .on("mouseout", function (d) {
+                                d3.select(this).raise().attr("stroke", null);
+                            })
+                            .style('cursor', 'row-resize')
+                            .call(drag);
+                    }
+                    //</editor-fold>
+
+                }
+
+            }
+
         }
 
         //Show title
@@ -298,6 +481,141 @@ export class LineChart {
                 legendg.append("text").attr("fill", this.settings.colorScale(trace.series)).attr("dy", `${i}em`).node().innerHTML = `<tspan text-decoration=${trace.type === "scatter" ? 'none' : 'line-through'}>&nbsp;${trace.marker ? trace.marker : " "}&nbsp;</tspan> ` + trace.series;
             });
         }
+
+
+        //Closest point for all traces (the indexes not the actual values)
+        function getClosestIndicesForTraces(point) {
+            let x = point[0];
+            // console.log(point);
+            let xVal = thisObject.settings.xScale.invert(x);
+            let results = thisObject.data.map(trace => {
+                let idx = arrBisector(trace.x, xVal);
+                return idx;
+            });
+            return results;
+        }
+
+        //Closest point (traceIdx, xIdx, yIdx)
+        function getClosestPointsInfo(point) {
+            let cps = getClosestIndicesForTraces(point);
+            let x = thisObject.settings.xScale(thisObject.data[0].x[cps[0]]);
+            let y = thisObject.settings.yScale(thisObject.data[0].y[cps[0]]);
+            let closestPointIdx = cps[0];
+            let closestTraceIdx = 0;
+            let closestDistance = distance([x, y], point);
+            let closestPoint = [x, y];
+            for (let i = 1; i < cps.length; i++) {
+                x = thisObject.settings.xScale(thisObject.data[i].x[cps[i]]);
+                y = thisObject.settings.yScale(thisObject.data[i].y[cps[i]]);
+                let d = distance([x, y], point);
+                if (d < closestDistance) {
+                    closestDistance = d;
+                    closestPointIdx = cps[i];
+                    closestTraceIdx = i;
+                    closestPoint = [x, y];
+                }
+            }
+            return {
+                closestDistance: closestDistance,
+                closestPointIdx: closestPointIdx,
+                closestTraceIdx: closestTraceIdx,
+                closestPoint: closestPoint,
+                closestIndicesForTraces: cps,
+            }
+        }
+
+        function distance(p1, p2) {
+            return Math.sqrt((p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]));
+        }
+
+
+    }
+
+    calculateStepTickPosAndLabels() {
+        //Change tick labels
+        //Calculate the tick values and tick labels for steps
+        if (this.settings.stepMode) {
+            if (this.settings.orientation === 'vertical') {
+                this.settings.xTickValues = this.settings.stepMode.basePositions.map(basePos => this.settings.xScale.invert(basePos));
+                this.settings.xTickLabels = this.data.map(d => d.series);
+            } else {
+                this.settings.yTickValues = this.settings.stepMode.basePositions.map(basePos => this.settings.yScale.invert(basePos));
+                this.settings.yTickLabels = this.data.map(d => d.series);
+            }
+        }
+    }
+
+    updateXScale() {
+        let thisObject = this;
+        let x = [];
+        thisObject.data.forEach(trace => {
+            x = x.concat(trace.x);
+        });
+        thisObject.settings.xScale = d3.scaleLinear()
+            .domain(d3.extent(x))
+            .range([0, thisObject.canvasWidth]);
+    }
+
+    updateYScale() {
+        let thisObject = this;
+        let yValues = [];
+        thisObject.data.forEach(trace => {
+            yValues = yValues.concat(trace.y);
+        });
+
+        thisObject.settings.yScale = d3.scaleLinear()
+            .domain(d3.extent(yValues))
+            .range([thisObject.canvasHeight, 0]);
+    }
+
+    updateStepScale() {
+        let thisObject = this;
+        let yValues = [];
+        thisObject.data.forEach(trace => {
+            yValues = yValues.concat(trace.y);
+        });
+
+        thisObject.settings.stepMode.stepScale = d3.scaleLinear()
+            .domain(d3.extent(yValues))
+            .range([0, thisObject.settings.stepMode.chartSize]);
+
+        ///when updating step Scale we also need to update the step positions.
+    }
+
+    private calculateBases() {
+        //Calculate the stepSize
+        this.settings.stepMode.basePositions = [];
+        let canvasSize = this.settings.orientation === 'horizontal' ? this.canvasHeight : this.canvasWidth; //canvasWidth for vertical and canvasHeight for horizontal
+        this.settings.stepMode.stepSize = this.data.length > 1 ? (canvasSize - this.settings.stepMode.chartSize) / (this.data.length - 1) : 0;
+        this.data.forEach((_, traceIdx) => {
+            let basePos = 0;
+            if (this.settings.orientation === "vertical") {
+                basePos = canvasSize - (traceIdx) * this.settings.stepMode.stepSize - this.settings.stepMode.chartSize;
+            } else {
+                basePos = canvasSize - (this.data.length - 1 - traceIdx) * this.settings.stepMode.stepSize;
+            }
+            this.settings.stepMode.basePositions.push(basePos);
+        });
+
+
+    }
+
+    private async updateSteps() {
+        if (this.settings.orientation === 'vertical') {
+            this.svg.select('.x.axis').selectAll('text').data(this.data.map(d => d.series)).text(d => d);
+        } else {
+            this.svg.select('.y.axis').selectAll('text').data(this.data.map(d => d.series)).text(d => d);
+        }
+    }
+
+    public async plotDrawLine(x0, y0, x1, y1, color, strokeWidth) {
+        let ctx = this.canvas.node().getContext("2d");
+        ctx.beginPath();
+        ctx.lineWidth = strokeWidth;
+        ctx.strokeStyle = color;
+        ctx.moveTo(x0, y0);
+        ctx.lineTo(x1, y1);
+        ctx.stroke();
     }
 
     public async plot() {
@@ -307,12 +625,61 @@ export class LineChart {
         this.data.forEach((trace, traceIdx) => {
             this.draw(this.settings.lineWidth, traceIdx);
         });
+        //Also draw annotations if there is.
+        if (this.settings.annotations) {
+            let lineAnnotation = this.settings.annotations['line'];
+            if (lineAnnotation) {
+                let x0 = (lineAnnotation.valueType !== 'value') ? lineAnnotation.x0 : this.settings.xScale(lineAnnotation.x0);
+                let x1 = (lineAnnotation.valueType !== 'value') ? lineAnnotation.x1 : this.settings.xScale(lineAnnotation.x1);
+                let y0 = (lineAnnotation.valueType !== 'value') ? lineAnnotation.y0 : this.settings.xScale(lineAnnotation.y0);
+                let y1 = (lineAnnotation.valueType !== 'value') ? lineAnnotation.y1 : this.settings.xScale(lineAnnotation.y1);
+                let color = lineAnnotation.color ? lineAnnotation.color : 'black';
+                let strokeWidth = lineAnnotation.strokeWidth ? lineAnnotation.strokeWidth : 1;
+
+                this.plotDrawLine(x0, y0, x1, y1, color, strokeWidth);
+            }
+
+            let xLineAnnotation = this.settings.annotations['xLine'];
+            if (xLineAnnotation) {
+                let x0 = (xLineAnnotation.valueType !== 'value') ? xLineAnnotation.x : this.settings.xScale(xLineAnnotation.x);
+                let x1 = x0;
+                let y0 = 0;
+                let y1 = this.canvasHeight;
+                let color = xLineAnnotation.color ? xLineAnnotation.color : 'black';
+                let strokeWidth = xLineAnnotation.strokeWidth ? xLineAnnotation.strokeWidth : 1;
+
+                this.plotDrawLine(x0, y0, x1, y1, color, strokeWidth);
+            }
+
+            let yLineAnnotation = this.settings.annotations['yLine'];
+            if (yLineAnnotation) {
+                let x0 = 0;
+                let x1 = this.canvasWidth;
+                let y0 = (yLineAnnotation.valueType !== 'value') ? yLineAnnotation.y : this.settings.yScale(yLineAnnotation.y);
+                let y1 = y0;
+                let color = yLineAnnotation.color ? yLineAnnotation.color : 'black';
+                let strokeWidth = yLineAnnotation.strokeWidth ? yLineAnnotation.strokeWidth : 1;
+                this.plotDrawLine(x0, y0, x1, y1, color, strokeWidth);
+            }
+
+        }
     }
 
-    public async update(newData) {
+    public async updateAnnotations(annotations: Annotations) {
+        this.settings.annotations = annotations;
+    }
+
+    public async update(newData, updateScales) {
         this.data = newData;
-        //TODO: we may need to recalculate the scale.
+        if (updateScales) {
+            this.updateXScale();
+            this.updateYScale();
+        }
         this.plot();
+        //if stepping then also update step
+        if (this.settings.stepMode) {
+            this.updateSteps();
+        }
     }
 
     /**
@@ -335,6 +702,18 @@ export class LineChart {
 
     }
 
+    public async highlightTraceIdx(traceIdx, color) {
+        this.traceToHighlight.traceIdx = traceIdx;
+        this.traceToHighlight.color = color;
+        this.plot();
+    }
+
+    public async highlightTraceSeries(series, color) {
+        this.traceToHighlight.traceIdx = this.data.map(d => d.series).indexOf(series);
+        this.traceToHighlight.color = color;
+        this.plot();
+    }
+
     public async highlightLines(lines, highlightOpacity, fadeOpacity) {
 
     }
@@ -343,6 +722,7 @@ export class LineChart {
         let trace = this.data[traceIdx];
         let x = trace.x;
         let y = trace.y;
+        let type = trace.type;
         //TODO: Shall we update the scales when updating the data?
         let xScale = this.settings.xScale;
         let yScale = this.settings.yScale;
@@ -423,7 +803,7 @@ export class LineChart {
 
         let strokeStyle = this.settings.colorScale(trace.series);
         let marker = trace.marker;
-        let type = trace.type;
+
         //Convert data to d3 format.
         let lineData = x.map((xVal, i) => {
             return {
@@ -456,10 +836,80 @@ export class LineChart {
             ctx.stroke();
         }
 
-        //If type is abstraction => filter the x, y items which are inside the bound
 
+        if (type === 'area') {
+            let area;
 
-        if (type !== 'scatter') {
+            if (this.settings.orientation === 'vertical') {
+                area = d3.area().y(d => yScale(d.y)).x0(d => xScale(0)).x1(d => xScale(d.x)).context(ctx);
+            } else {//Default is horizontal
+                area = d3.area().x(d => xScale(d.x)).y0(d => yScale(0)).y1(d => yScale(d.y)).context(ctx);
+            }
+            let gradient;
+            if (this.settings.stepMode) {
+                let stepScale = this.settings.stepMode.stepScale;
+                let basePos = this.settings.stepMode.basePositions[traceIdx];
+                if(typeof basePos === "undefined"){
+                    return ;
+                }
+                if (this.settings.orientation === 'vertical') {
+                    //We also need to reverse the display order
+                    try {
+                        gradient = ctx.createLinearGradient(basePos, 0, basePos + this.settings.stepMode.chartSize, 0);
+                    } catch (e) {
+                        debugger
+                        console.log(basePos);
+                    }
+
+                    //If we do pass individual color scale then use it.
+                    if (this.data[traceIdx].colorScale) {
+                        this.data[traceIdx].colorScale.forEach(item => {
+                            gradient.addColorStop(item[0], item[1]);
+                        });
+                    } else {
+                        gradient.addColorStop(0, 'black');
+                        gradient.addColorStop(1, strokeStyle);
+                    }
+                    area = d3.area().y(d => yScale(d.y)).x0(d => basePos).x1(d => basePos + stepScale(d.x)).context(ctx);
+                } else {
+                    try {
+                        gradient = ctx.createLinearGradient(0, basePos, 0, basePos - this.settings.stepMode.chartSize);
+                    } catch (e) {
+                        debugger
+                        console.log(basePos);
+                    }
+
+                    //If we do pass individual color scale then use it.
+                    if (this.data[traceIdx].colorScale) {
+                        this.data[traceIdx].colorScale.forEach(item => {
+                            gradient.addColorStop(item[0], item[1]);
+                        });
+                    } else {
+                        gradient.addColorStop(0, 'black');
+                        gradient.addColorStop(1, strokeStyle);
+                    }
+                    area = d3.area().x(d => xScale(d.x)).y0(d => basePos).y1(d => basePos - stepScale(d.y)).context(ctx);
+                }
+
+            }
+            if (this.settings.smoothen) {
+                area.curve(d3.curveCardinal);
+            }
+            ctx.beginPath();
+            ctx.lineWidth = lineWidth;
+            ctx.fillStyle = (traceIdx === this.traceToHighlight.traceIdx) ? this.traceToHighlight.color : gradient;
+            ctx.strokeStyle = (traceIdx === this.traceToHighlight.traceIdx) ? this.traceToHighlight.color : gradient;
+            if (traceIdx === this.traceToHighlight.traceIdx) {
+                ctx.fillStyle = this.traceToHighlight.color;
+                ctx.strokeStyle = this.traceToHighlight.color;
+            }
+
+            area(lineData);
+            ctx.fill();
+            ctx.stroke();
+
+        } else if (type !== 'scatter') {
+            //If type is abstraction => filter the x, y items which are inside the bound
             let line = d3.line().x(d => xScale(d.x)).y(d => yScale(d.y)).context(ctx);
             ctx.beginPath();
             ctx.lineWidth = lineWidth;
@@ -500,7 +950,5 @@ export class LineChart {
                 ctx.fillText(marker, (xScale(point.x) - mkW / 2), (yScale(point.y) + mkH / 4));
             });
         }
-
-
     }
 }

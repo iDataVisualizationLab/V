@@ -27,7 +27,7 @@ export class PCA3D {
         contentPaddingTop: 0,
         contentPaddingBottom: 0,
         contentPaddingRight: 0,
-        contentPineWidth: 1,
+        contentLineWidth: 1,
     };
 
     private data;

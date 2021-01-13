@@ -19,6 +19,9 @@
 };
  */
 function drawTimeArc(theGroup, nodes, links, timeArcSettings) {
+    //TODO: For the display of the paper only
+
+
     //Expected settings from timeArcSettings.
     let width = timeArcSettings.width, height = timeArcSettings.height, linkTypes = timeArcSettings.linkTypes,
         linkTypeColor = timeArcSettings.linkTypeColor, linkStrokeWidthScale = timeArcSettings.linkStrokeWidthScale,

@@ -12,45 +12,45 @@
 <script>
     d3.json("data/ScagnosticsTypicalData3d.json").then(typicalData => {
         // d3.json("data/RealWorldData3d.json").then(realWorldData => {
-            typicalData = typicalData.map(d => d.slice(8, 9));//TODO: 0, 1 or 5, 6 seems to be good
-            // realWorldData = realWorldData.map(d => d.slice(0, 1));
-            // let data = realWorldData.concat(typicalData);
-            // let data = realWorldData;
-            let data = typicalData;
-            let flattedData = data.flat();
-            let scagData = flattedData.map(d => d['scagnostics']);
-            let scatterPlotSize = 50;
-            let bp = new PCA3D(document.getElementById("lineChartContainer"), scagData, {
-                paddingLeft: 0,
-                paddingTop: 0,
-                paddingRight: 0,
-                paddingBottom: 0,
-                contentPaddingLeft: 1.5*scatterPlotSize,
-                contentPaddingTop: 1.5*scatterPlotSize,
-                contentPaddingRight: 1.5*scatterPlotSize,
-                contentPaddingBottom: 1.5*scatterPlotSize,
-                // colorScheme: d3.schemeCategory10,
-                colorScheme: Array.from(new Array(9), (_) => "red"),
-                // title: {
-                //     text: "Biplot"
-                // },
-                axisLabels: ["outlying", "skewed", "clumpy", "sparse", "striated", "convex", "skinny", "stringy", "monotonic"],
+        typicalData = typicalData.map(d => d.slice(8, 9));//TODO: 0, 1 or 5, 6 seems to be good
+        // realWorldData = realWorldData.map(d => d.slice(0, 1));
+        // let data = realWorldData.concat(typicalData);
+        // let data = realWorldData;
+        let data = typicalData;
+        let flattedData = data.flat();
+        let scagData = flattedData.map(d => d['scagnostics']);
+        let scatterPlotSize = 50;
+        let bp = new PCA3D(document.getElementById("lineChartContainer"), scagData, {
+            paddingLeft: 0,
+            paddingTop: 0,
+            paddingRight: 0,
+            paddingBottom: 0,
+            contentPaddingLeft: 1.5 * scatterPlotSize,
+            contentPaddingTop: 1.5 * scatterPlotSize,
+            contentPaddingRight: 1.5 * scatterPlotSize,
+            contentPaddingBottom: 1.5 * scatterPlotSize,
+            // colorScheme: d3.schemeCategory10,
+            colorScheme: Array.from(new Array(9), (_) => "red"),
+            // title: {
+            //     text: "Biplot"
+            // },
+            axisLabels: ["OUTLYING", "SKEWED", "CLUMPY", "SPARSE", "STRIATED", "CONVEX", "SKINNY", "STRINGY", "MONOTONIC"],
+        });
+        let scatterOptions = {size: scatterPlotSize, radius: 1};
+        flattedData.forEach(dt => {
+            let scagScore = dt['scagnostics'];
+            let x = [];
+            let y = [];
+            let z = [];
+            debugger
+            dt['bins'].forEach(bin => {
+                //Take first point in the bin as its coordinate
+                x.push(bin[0][0]);
+                y.push(bin[0][1]);
+                z.push(bin[0][2]);
             });
-            let scatterOptions = {size: scatterPlotSize, radius: 1};
-            flattedData.forEach(dt=>{
-               let scagScore = dt['scagnostics'];
-               let x = [];
-               let y = [];
-               let z = [];
-               debugger
-               dt['bins'].forEach(bin=>{
-                   //Take first point in the bin as its coordinate
-                   x.push(bin[0][0]);
-                   y.push(bin[0][1]);
-                   z.push(bin[0][2]);
-               });
-                bp.plotScatter({x: x, y: y, z: z}, scagScore, scatterOptions);
-            });
+            bp.plotScatter({x: x, y: y, z: z}, scagScore, scatterOptions);
+        });
 
         // });
     });

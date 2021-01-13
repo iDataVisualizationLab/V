@@ -92,20 +92,8 @@ function resetBrushing() {
     }
 }
 
-function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, deviceActionColor, linkStrokeWidthScale, onNodeMouseOverCallBack, onTimeArcLinkMouseOverCallBack, orderFunction) {
-    // //TODO: Only filter a few nodes and links for the time arc for better display of the paper.
-    // let leaveout = "xxx.xx.12";
-    // nodes = nodes.filter(n => n.id.indexOf(leaveout) < 0);
-    // links = links.filter(l => l.source.indexOf(leaveout) < 0 && l.target.indexOf(leaveout) < 0);
-    // leaveout = "xxx.xx.11";
-    // nodes = nodes.filter(n => n.id.indexOf(leaveout) < 0);
-    // links = links.filter(l => l.source.indexOf(leaveout) < 0 && l.target.indexOf(leaveout) < 0);
-    // leaveout = "xxx.xx.14";
-    // nodes = nodes.filter(n => n.id.indexOf(leaveout) < 0);
-    // links = links.filter(l => l.source.indexOf(leaveout) < 0 && l.target.indexOf(leaveout) < 0);
-    // debugger
-
-    addArrowMarkers(theGroup, deviceActions, deviceActionColor);
+function drawTimeArc(theGroup, width, height, nodes, links, linkTypes, linkTypesColor, linkStrokeWidthScale, onNodeMouseOverCallBack, onTimeArcLinkMouseOverCallBack, orderFunction) {
+    addArrowMarkers(theGroup, linkTypes, linkTypesColor);
     let contentGroup = theGroup.append('g').attr("transform", `translate(0, ${margin.top})`);
     let linksGroup = contentGroup.append('g');
     let nodeLinesGroup = contentGroup.append('g');
@@ -220,11 +208,11 @@ function drawTimeArc(theGroup, width, height, nodes, links, deviceActions, devic
         let enterLink = linkElements.enter().append('path').attr('class', "tALinkElements")
             .attr("marker-end", d => {
                 if (d.source === d.target) {
-                    return `url(#markerSelfLoopTA${deviceActions.indexOf(d[COL_DEVICE_ACTION])})`;
+                    return `url(#markerSelfLoopTA${linkTypes.indexOf(d[COL_DEVICE_ACTION])})`;
                 }
-                return `url(#markerTA${deviceActions.indexOf(d[COL_DEVICE_ACTION])})`;
+                return `url(#markerTA${linkTypes.indexOf(d[COL_DEVICE_ACTION])})`;
             })
-            .attr("stroke", d => deviceActionColor(d[COL_DEVICE_ACTION]))
+            .attr("stroke", d => linkTypesColor(d[COL_DEVICE_ACTION]))
             .attr("stroke-width", d => linkStrokeWidthScale(d.threatCount));
 
         linkElements = enterLink.merge(linkElements);

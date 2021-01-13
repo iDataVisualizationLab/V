@@ -38,12 +38,12 @@ function buildModelItemsAndSettings(modelConfig, modelWeights, neuronValues) {
     let modelVisualSettings = {
         width: 1600,
         height: 900,
-        margins: {top: 100, left: 50, right: 50, bottom: 50},
+        margins: {top: 100, left: 50, right: 50, bottom: 100},
         layerLabelMargin: 30,
         axisMargin: 20,
         featureLabelMargin: 5,
         output: modelConfig.output,
-        size: 45,
+        size: 40,
         scatter: {
             radius: 3,
             margins: {top: 5, left: 0, right: 0, bottom: 5}
@@ -86,6 +86,7 @@ function buildModelItemsAndSettings(modelConfig, modelWeights, neuronValues) {
     let lines = [];
     let xAxes = [];
     let layerNames = [];
+    let layerAxisLabels = [];
     let scatterPoints = [];
     let inputValueAxes = [];
     let inputNeurons = modelConfig.layers[0].neurons;
@@ -130,6 +131,20 @@ function buildModelItemsAndSettings(modelConfig, modelWeights, neuronValues) {
             line.x1 = line.x1 - layerWidth / 2;
             line.x2 = line.x2 - layerWidth / 2;
         }
+
+        let layerAxisLabel = {
+            name: 'Attribution',
+            x: line.x1,
+            y: line.y2 + modelVisualSettings.axisMargin + 40
+        };
+        //Update for the output
+        if (layer.name === 'output') {
+            layerAxisLabel.name = 'Output proportion';
+            layerAxisLabel.x = layerAxisLabel.x + layerWidth / 2;
+        }
+
+
+        layerAxisLabels.push(layerAxisLabel);
 
         lines.push(line);
         layerNames.push(layerName);
@@ -235,6 +250,7 @@ function buildModelItemsAndSettings(modelConfig, modelWeights, neuronValues) {
         'bars': bars,
         'lines': lines,
         'layerNames': layerNames,
+        'layerAxisLabels': layerAxisLabels,
         'paths': paths,
         'modelVisualSettings': modelVisualSettings,
         'features': features,
@@ -310,7 +326,7 @@ function updateAttributions(activeBars, startNode, attributionScales) {
     mainG.selectAll('.attributionAxis').each(function (d) {
         let theAxis = d3.select(this);
         if (d.layerName === 'output') {
-            return;
+
         } else {
             // Visualize the scales (xAxis)
             // attributionScale ranging from 0 to maxAttribution, and 0 to layerWidth/2.
@@ -361,7 +377,8 @@ function updateWeights(activeBars, startNode) {
 function visualizeModel(modelData, attributionScale, dispatch, predictedVsActual) {
     let bars = modelData.bars, lines = modelData.lines, layerNames = modelData.layerNames, paths = modelData.paths,
         modelVisualSettings = modelData.modelVisualSettings, features = modelData.features, xAxes = modelData.xAxes,
-        scatterPoints = modelData.scatterPoints, inputValueAxes = modelData.inputValueAxes;
+        scatterPoints = modelData.scatterPoints, inputValueAxes = modelData.inputValueAxes,
+        layerAxisLabels = modelData.layerAxisLabels;
 
     let link = d3.linkHorizontal()
         .x(function (d) {
@@ -388,6 +405,15 @@ function visualizeModel(modelData, attributionScale, dispatch, predictedVsActual
     //Create layer names
     mainG.selectAll('.layerName').data(layerNames, d => d.name).join('text')
         .attr('class', 'layerName')
+        .attr('x', d => d.x)
+        .attr('y', d => d.y)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', '20')
+        .text(d => d.name);
+
+    //Create the attribution labels
+    mainG.selectAll('.layerAxisLabel').data(layerAxisLabels, d => d.name).join('text')
+        .attr('class', 'layerAxisLabel')
         .attr('x', d => d.x)
         .attr('y', d => d.y)
         .attr('text-anchor', 'middle')

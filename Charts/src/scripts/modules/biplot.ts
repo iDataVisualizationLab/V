@@ -152,7 +152,7 @@ export class Biplot {
         for (let i = 0; i < originalDims; i++) {
             // @ts-ignore
             // let vals = [...pcaData.data.map(d => d[i])];
-            let vals = [...pcaUnits.data.map(d => d[i]),...pcaData.data.map(d => d[i]), pcaZeros.data[0][i], pcaOnes.data[0][i]];
+            let vals = [...pcaUnits.data.map(d => d[i]), ...pcaData.data.map(d => d[i]), pcaZeros.data[0][i], pcaOnes.data[0][i]];
             maxValues.push(d3.max(vals));
             minValues.push(d3.min(vals));
         }
@@ -161,10 +161,10 @@ export class Biplot {
         // let maxVal = d3.max([maxValues[0], maxValues[1]]);
         if (!this.settings.xScale) {
             // this.settings.xScale = d3.scaleLinear().domain([-maxVal, maxVal]).range([0, contentWidth]);
-            this.settings.xScale = d3.scaleLinear().domain([minValues[0], maxValues[0]]).range([0+this.settings.contentPaddingLeft, contentWidth-this.settings.contentPaddingRight]);
+            this.settings.xScale = d3.scaleLinear().domain([minValues[0], maxValues[0]]).range([0 + this.settings.contentPaddingLeft, contentWidth - this.settings.contentPaddingRight]);
         }
         if (!this.settings.yScale) {
-            this.settings.yScale = d3.scaleLinear().domain([minValues[1], maxValues[1]]).range([contentHeight-this.settings.contentPaddingBottom, 0+this.settings.contentPaddingTop]);
+            this.settings.yScale = d3.scaleLinear().domain([minValues[1], maxValues[1]]).range([contentHeight - this.settings.contentPaddingBottom, 0 + this.settings.contentPaddingTop]);
         }
         // @ts-ignore
         let pcaZeroPoint = [this.settings.xScale(pcaZeros.data[0][0]), this.settings.yScale(pcaZeros.data[0][1])];

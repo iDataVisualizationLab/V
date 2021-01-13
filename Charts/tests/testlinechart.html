@@ -14,8 +14,7 @@
     let x = Array.from(new Array(100), (_, i) => i);
     let y1 = x;
     let y2 = y1.map(v => v + 10 * Math.random());
-    debugger
-    let lc = new LineChart(document.getElementById('biplotContainer'), [
+    let lcData = [
         {
             x: x,
             y: y1,
@@ -37,16 +36,34 @@
                 }
             }
         }
-    ], {
+    ];
+    let lc = new LineChart(document.getElementById('biplotContainer'), lcData, {
         noSvg: false,
         showAxes: true,
         paddingLeft: 40,
         paddingRight: 30,
         paddingTop: 50,
-        paddingBottom: 25
+        paddingBottom: 25,
+        annotations: {
+            'xLine': {
+                valueType: 'value',
+                color: 'red',
+                x: d3.max(x) / 2
+            },
+            'yLine':{
+                valueType: 'value',
+                color: 'blue',
+                y: d3.max(y1)/2
+            }
+        }
     });
     lc.plot();
-
+    // lc.updateAnnotations({'yLine':{
+    //         valueType: 'value',
+    //         color: 'blue',
+    //         y: d3.max(y1)/2
+    //     }});
+    // lc.update(lcData);
 </script>
 </body>
 </html>
