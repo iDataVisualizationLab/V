@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="AnswerSheet/js/latexit.js"></script>
+</head>
+<body>
+<p>
+    In this work, we developed a web application following DualnetView [1] to capture both overall structures and temporal patterns within the graphs.
+    The compact force-directed view gives an overview of the graph with communication links aggregated over time. This view provides information about communities and nodes with high centrality.
+    On the other hand, the TimeArc [2] view on the right offers temporal communications in the graph that help communicate the dynamics of the underlying network.
+    In this view, horizontal orientation represents the timeline, and horizontal lines represent nodes, and edges represent communications.
+    The edges are placed at the time the communications happened. The linked supplemental views utilize the strengths of both visualization techniques to provide useful insights into the given graphs.
+    This tool is not merely used to report the results. It also offers interactions such as linking, brushing, and filtering to aid users in exploring the results further.
+
+    Besides visual, qualitative analysis, we also adopt graph alignment evaluations to give quantitative, statistical evaluations of the matches between graphs.
+    The symmetric graph alignment evaluation symmetric score [3]. Specifically, given two graphs <span lang="latex">G_1 = (V_1, E_1), G_2 = (V_2, E_2)</span>,
+    find a mapping function <span lang="latex">f: V_1 \rightarrow V_2</span> to map nodes in the first graph to the second one.
+    The induced graph <span lang="latex">\hat G_2 = (\hat V_2, \hat E_2)</span> with nodes <span lang="latex">f(V_1) = \hat V_2 \in V_2</span>, assuming that <span lang="latex"> |V_1| \leq |V_2|</span>,
+    and edges are defined as <span lang="latex">\hat E_2 = \{(u, v) | (u, v) \in E_2; u, v \in f(V_1)\}</span>.
+    The edges of the first graph mapped into the induced graph are <span lang="latex">f(E_1) = \{(f(u), f(v))\}</span>.
+    Finally the alignment score is defined as: <div lang="latex" style="text-align: center;">\frac{|f(E_1)|}{|E_1| + |\hat E_2| - |f(E_1)|}</div>.
+
+</p>
+
+<p>
+    We combined the methods used in questions 1 and 2 to tackle this task.
+    First, we already reduce the big graph into more compact and fast-to-access adjacency list representation.
+    Second, we already have the algorithm to construct the sub-graphs from initial nodes as in question 2.
+    Thirds, to reduce the number of initial seed nodes, we only consider nodes with degrees from 2 up to 100 degrees.
+    After having the subgraphs, we will run our visual, qualitative graph mapping tools and the statistical, quantitative graph evaluation formulas to find the best graphs that match the template.
+</p>
+</body>
+</html>

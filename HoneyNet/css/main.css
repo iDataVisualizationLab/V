@@ -1,0 +1,44 @@
+/*<editor-fold desc="This section is for csv table">*/
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+thead td{
+    font-weight: bold;
+    border: 1px solid #999999;
+    background-color: #cdcdcd;
+    padding: 8px;
+    font-size: 12px;
+}
+tbody td {
+    border: 1px solid #dddddd;
+    padding: 3px;
+    font-size: 11px;
+}
+
+tr:nth-child(even) {
+    background-color: #ececec;
+}
+/*</editor-fold>*/
+
+/*<editor-fold desc="This section is for force directed layout"*/
+.nodeElements {
+    cursor: pointer;
+    stroke-width: 0.5px;
+}
+
+.linkElements {
+    fill: none;
+}
+
+.tALinkElements {
+    fill: none;
+}
+
+.graphTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/*</editor-fold>*/

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #canvas {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    window.onload = (function () {
+        var canvas = document.getElementById("canvas")
+        var ctx = canvas.getContext("2d");
+        //Create linear gradient
+        var gradient = ctx.createLinearGradient(100, 0, canvas.width - 100, 0);
+        gradient.addColorStop(0, "red");
+        gradient.addColorStop(1, 'magenta');
+        var x = 20;
+        var y = 40;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = 15;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + 30, y + 50)
+        ctx.lineTo(x + 60, y)
+        ctx.lineTo(x + 90, y + 50);
+        ctx.lineTo(x + 120, y);
+        ctx.lineTo(x + 150, y + 50);
+        ctx.lineTo(x + 180, y);
+        ctx.lineTo(x + 210, y + 50);
+        ctx.lineTo(x + 240, y);
+        ctx.lineTo(x + 270, y + 50);
+        ctx.lineTo(x + 300, y);
+        ctx.lineTo(x + 330, y + 50);
+        ctx.lineTo(x + 360, y);
+        ctx.lineTo(x + 390, y + 50);
+        ctx.strokeStyle = gradient;
+        ctx.stroke();
+
+    });
+
+</script>
+<canvas width=400, height="150" id="canvas"></canvas>
+</body>
+</html>
