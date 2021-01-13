@@ -1,6 +1,5 @@
-4.
 import resolve from 'rollup-plugin-node-resolve';
-import commonJS from 'rollup-plugin-commonjs'
+import commonjs from 'rollup-plugin-commonjs';
 
 export default {
     input: 'src/scripts/dimensionalityreduction.js',
@@ -10,9 +9,9 @@ export default {
         sourcemap: 'inline',
     },
     plugins: [
-        resolve(),
-        commonJS({
+        resolve({ preferBuiltins: true }),
+        commonjs({
             include: ['node_modules/**']
-        })
+        }),
     ]
 };

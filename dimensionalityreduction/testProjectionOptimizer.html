@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="build/js/dimensionalityreduction.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+</head>
+<body>
+<div>
+    <svg id="mainSvg"></svg>
+</div>
+<script>
+    // Prepare data
+    const optimizingIdx = 2;
+    const set1 = [[1, 2], [2, 3], [3, 4], [4, 2], [10, 9], [8, 1]];
+    const set2 = [[1, 2], [2, 3], [7, 2], [4, 2], [10, 9], [8, 1]];
+
+    // Distances
+    const x = set2[optimizingIdx];
+    const Su = [];
+    set1.forEach((item, i) => {
+        if (i !== optimizingIdx) {
+            const diff1 = item[0] - set1[optimizingIdx][0];
+            const diff2 = item[1] - set1[optimizingIdx][1];
+            Su.push(Math.sqrt(diff1 * diff1 + diff2 * diff2));
+        }
+    });
+    const Q = [];
+    set2.forEach((item, i) => {
+        if (i !== optimizingIdx) {
+            Q.push(item);
+        }
+    });
+
+
+    const plot_margins = {top: 10, right: 10, bottom: 10, left: 10};
+    const pointRadius = 3;
+    const plotSize = 200;
+    const plots = ["plot1", "plot2", "plot3", "plot4"];
+
+    const mainSvg = d3.select("#mainSvg");
+    mainSvg
+        .attr("width", (plotSize + plot_margins.left + plot_margins.right) * plots.length)
+        .attr("height", plotSize + plot_margins.top + plot_margins.bottom);
+
+    mainSvg.selectAll('.plot').data(plots).enter()
+        .append("g").attr('class', 'plot')
+        .attr('id', d => d).attr('transform', (p, i) => `translate(${plot_margins.left + i * (plot_margins.left + plotSize + plot_margins.right)}, ${plot_margins.top})`)
+        .append('rect')
+        .attr("x", -plot_margins.left)
+        .attr("y", -plot_margins.top)
+        .attr("width", plotSize + plot_margins.left + plot_margins.right)
+        .attr("height", plotSize + plot_margins.top + plot_margins.bottom)
+        .attr("fill", "none")
+        .attr("stroke", "black");
+
+
+    function plot_points(g, points, width, height, color = 'blue') {
+        const minX = d3.min(points.map(d => d[0]));
+        const maxX = d3.max(points.map(d => d[0]));
+        const minY = d3.min(points.map(d => d[1]));
+        const maxY = d3.max(points.map(d => d[1]));
+
+        const xScale = d3.scaleLinear().domain([minX, maxX]).range([0, width]);
+        const yScale = d3.scaleLinear().domain([minY, maxY]).range([height, 0]);
+        g.selectAll('.circle').data(points).join('circle')
+            .attr("cx", d => xScale(d[0]))
+            .attr("cy", d => yScale(d[1]))
+            .attr('r', pointRadius)
+            .attr('stroke', 'black')
+            .attr("fill", (d, i) => i === optimizingIdx ? 'red' : color);
+    }
+
+    function plotLosses(g, losses, width, height) {
+        const minX = 0;
+        const maxX = losses.length;
+        const minY = d3.min(losses);
+        const maxY = d3.max(losses);
+        const xScale = d3.scaleLinear().domain([minX, maxX]).range([0, width]);
+        const yScale = d3.scaleLinear().domain([minY, maxY]).range([height, 0]);
+
+        g.append('path')
+            .datum(losses)
+            .attr('fill', 'none')
+            .attr('stroke', 'steelblue')
+            .attr('stroke-width', 1.5)
+            .attr('d', d3.line().x((d, i) => xScale(i)).y((d) => yScale(d)));
+    }
+
+    plot_points(d3.select('#plot1'), set1, plotSize, plotSize);
+    plot_points(d3.select('#plot2'), set2, plotSize, plotSize);
+
+    //Perform the optimization
+    const lr = 0.001;
+    const iterations = 5000;
+    const alpha = 1.0;
+    const {alphaOptimized, xOptimized, losses} = dr.projectionOptimizer(Su, x, alpha, Q, lr, iterations);
+    const optimizedSet = set2.map((item, i) => i === optimizingIdx ? xOptimized : item);
+    console.log('losses');
+    console.log(losses);
+    console.log('xOptimized');
+    console.log(xOptimized);
+    console.log('alphaOptimized');
+    console.log(alphaOptimized);
+    plot_points(d3.select('#plot3'), optimizedSet, plotSize, plotSize);
+    plotLosses(d3.select('#plot4'), losses, plotSize, plotSize);
+
+</script>
+</body>
+</html>

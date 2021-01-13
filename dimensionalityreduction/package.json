@@ -20,13 +20,18 @@
   "author": "Vung Pham",
   "license": "ISC",
   "devDependencies": {
+    "@rollup/plugin-babel": "^5.2.2",
+    "@rollup/plugin-json": "^4.1.0",
     "rollup": "^2.36.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0"
   },
   "dependencies": {
+    "@babel/core": "^7.12.10",
+    "crypto": "^1.0.1",
     "fsevents": "^2.3.1",
     "mathjs": "^8.1.1",
+    "seedrandom": "^3.0.5",
     "svd-js": "^1.1.1"
   }
 }

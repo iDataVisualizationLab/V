@@ -12,8 +12,8 @@
     <svg id="mainSvg"></svg>
 </div>
 <script>
-    const P_prev = [[1, 2], [2, 3], [3, 4], [4, 2], [10, 9], [8, 1]];
-    const P_curr = [[1, 8], [2, 7], [6, 6], [4, 8], [10, 1], [8, 9], [9, 9]];
+    const set1 = [[1, 2], [2, 3], [3, 4], [4, 2], [10, 9], [8, 1]];
+    const set2 = [[1, 8], [2, 7], [6, 6], [4, 8], [10, 1], [8, 9], [9, 9]];
     const ids1 = [0, 1, 2, 3, 4, 5];
     const ids2 = [0, 1, 2, 3, 4, 5, 6];
     const plot_margins = {top: 10, right: 10, bottom: 10, left: 10};
@@ -54,13 +54,17 @@
             .attr("fill", color);
     }
 
-    plot_points(d3.select('#plot1'), P_prev, plotSize, plotSize);
+    plot_points(d3.select('#plot1'), set1, plotSize, plotSize);
 
-    pt = new dr.ProcrustestTransformation(P_prev, P_curr, ids1, ids2);
+    pt = new dr.ProcrustestTransformation(set1, set2, ids1, ids2);
     console.log(pt.translatedResult());
 
-    plot_points(d3.select('#plot2'), P_curr, plotSize, plotSize, 'red');
+    plot_points(d3.select('#plot2'), set2, plotSize, plotSize, 'red');
     plot_points(d3.select('#plot3'), pt.translatedResult(), plotSize, plotSize, 'green');
+
+    //Another section
+    let pcaData = set1.map((item, i)=>[...item, ...set2[i]]);
+    console.log(pcaData);
 </script>
 </body>
 </html>
