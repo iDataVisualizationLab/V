@@ -52,6 +52,7 @@ function dX(Su, alpha, diffD, xQDistance, xMQ) {
  * @return {{alphaOptimized: *, xOptimized: *, , losses: []}}
  */
 export function projectionOptimizer(Su, x, alpha, Q, lr, iterations) {
+    //TODO: can also implement the Adadelta version: https://www.sravikiran.com/GSOC18//2018/07/20/adagradandadadelta/
     const losses = [];
     for (let i = 0; i < iterations; i++) {
         // Loss

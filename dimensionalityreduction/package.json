@@ -31,6 +31,7 @@
     "crypto": "^1.0.1",
     "fsevents": "^2.3.1",
     "mathjs": "^8.1.1",
+    "ml-pca": "^4.0.1",
     "seedrandom": "^3.0.5",
     "svd-js": "^1.1.1"
   }

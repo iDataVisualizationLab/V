@@ -85,8 +85,8 @@ function projectionOptimizer(Su, x, alpha, Q, lr, iterations) {
 }
 
 console.log("===============Optimize===================");
-lr = 0.001;
-iterations = 5000;
+const lr = 0.001;
+const iterations = 5000;
 const {xOptimized, alphaOptimized, losses} = projectionOptimizer(Su, x, alpha, Q, lr, iterations);
 console.log(losses[losses.length - 1]);
 console.log(xOptimized);

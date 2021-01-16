@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="build/js/dimensionalityreduction.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+
+</head>
+<body>
+<div>
+    <svg id="mainSvg"></svg>
+</div>
+<script>
+    // Prepare data
+    const set1 = [[1, 2], [2, 3], [3, 4], [4, 2], [10, 9], [8, 1]];
+    const set2 = [[1, 2], [2, 3], [7, 2], [4, 2], [10, 9], [8, 1]];
+    // Test incremental mean and var
+    console.log(dr.incremental_mean_and_var(set1, [0, 0], [0, 0], [0, 0]));
+    console.log(dr.incremental_mean_and_var(set2, [4.666666667, 3.5], [10.55555556, 6.916666667], [6, 6]));
+
+</script>
+</body>
+</html>
