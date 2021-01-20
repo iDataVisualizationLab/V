@@ -52,14 +52,12 @@ export class ProcrustesTransformation {
         let v = ones(n, 1);
         processedPointsFrom = subtract(processedPointsFrom, multiply(v, reshape(meanPointsFrom, [1, k])));
         processedPointsTo = subtract(processedPointsTo, multiply(v, reshape(meanPointsTo, [1, k])));
-        console.log(processedPointsFrom);
-        console.log(processedPointsTo);
+
         // Uniform scaling
         // sum the squared values for every values in columns, then sum them
         let scalePointsFrom = sum(sqrt(transpose(square(processedPointsFrom._data)).map((row) => row.reduce((a, b) => a + b))));
         let scalePointsTo = sum(sqrt(transpose(square(processedPointsTo._data)).map((row) => row.reduce((a, b) => a + b))));
-        console.log(scalePointsFrom);
-        console.log(scalePointsTo);
+
 
         scalePointsFrom /= n;
         scalePointsTo /= n;
@@ -70,15 +68,11 @@ export class ProcrustesTransformation {
         processedPointsFrom = divide(processedPointsFrom, scalePointsFrom);
         processedPointsTo = divide(processedPointsTo, scalePointsTo);
 
-        console.log(processedPointsFrom);
-        console.log(processedPointsTo);
-
         const covMat = multiply(transpose(processedPointsFrom), processedPointsTo)._data;
         const svdRet = SVD(covMat);
         const V = svdRet['v'];
         const U = svdRet['u'];
         const R = multiply(V, transpose(U));
-        console.log(R);
 
         //TODO: Apply transform for the common points and the new points separately may save some time.
         // //Apply the transform only to the common points

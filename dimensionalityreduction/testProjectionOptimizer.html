@@ -93,7 +93,7 @@
     plot_points(d3.select('#plot2'), set2, plotSize, plotSize);
 
     //Perform the optimization
-    const lr = 0.001;
+    const lr = 0.1;
     const iterations = 5000;
     const alpha = 1.0;
     const {alphaOptimized, xOptimized, losses} = dr.projectionOptimizer(Su, x, alpha, Q, lr, iterations);

@@ -3,12 +3,15 @@ import {
     subtract,
     ones,
     sum,
+    add,
     square,
     sqrt,
     multiply,
     reshape,
     dotMultiply,
-    dotDivide
+    dotDivide,
+    mean,
+    divide
 } from "mathjs";
 
 function distance(x, Q) {
@@ -22,13 +25,13 @@ function loss(Su, x, alpha, Q) {
     const {xQDistance, xMQ} = distance(x, Q);
     const alphaxQDistance = multiply(alpha, xQDistance);
     const diffD = subtract(Su, alphaxQDistance);
-    const l = sum(square(diffD))
+    const l = mean(square(diffD))
     return {'l': l, 'diffD': diffD, 'xQDistance': xQDistance, 'xMQ': xMQ}
 }
 
 function dAlpha(diffD, xQDistance) {
     const dm = dotMultiply(diffD, xQDistance);
-    return sum(multiply(-2, dm));
+    return mean(multiply(-2, dm));
 }
 
 function dX(Su, alpha, diffD, xQDistance, xMQ) {
@@ -38,7 +41,7 @@ function dX(Su, alpha, diffD, xQDistance, xMQ) {
     let firstPart = reshape(multiply(2, multiply(alpha, subtract(SuOverxQDistance, alpha))), [n, 1]);
     const h = ones(1, k);
     firstPart = multiply(firstPart, h); //repeat the firstPart to do dotMultiply
-    return multiply(-1, transpose(dotMultiply(firstPart, xMQ))._data.map(row => row.reduce((a, b) => a + b)));
+    return divide(multiply(-1, transpose(dotMultiply(firstPart, xMQ))._data.map(row => row.reduce((a, b) => a + b))), n);
 }
 
 /**
@@ -52,7 +55,28 @@ function dX(Su, alpha, diffD, xQDistance, xMQ) {
  * @return {{alphaOptimized: *, xOptimized: *, , losses: []}}
  */
 export function projectionOptimizer(Su, x, alpha, Q, lr, iterations) {
-    //TODO: can also implement the Adadelta version: https://www.sravikiran.com/GSOC18//2018/07/20/adagradandadadelta/
+    let vtAlpha = 0;
+    let vtX = x.map(() => 0);
+    let epsilon = 1e-8;
+    const losses = [];
+
+    for (let i = 0; i < iterations; i++) {
+        // Loss
+        const {l, diffD, xQDistance, xMQ} = loss(Su, x, alpha, Q);
+        // Gradients
+        const d_alpha = dAlpha(diffD, xQDistance);
+        const d_x = dX(Su, alpha, diffD, xQDistance, xMQ);
+        //Update the squared gradient
+        vtAlpha += d_alpha * d_alpha;
+        vtX = add(vtX, square(d_x));
+        // Update
+        alpha = alpha - lr * d_alpha / vtAlpha;
+        x = subtract(x, multiply(lr, dotDivide(d_x, sqrt(add(vtX, epsilon)))));
+        losses.push(l);
+    }
+    return {'alphaOptimized': alpha, 'xOptimized': x, 'losses': losses};
+}
+export function projectionOptimizerSGD(Su, x, alpha, Q, lr, iterations) {
     const losses = [];
     for (let i = 0; i < iterations; i++) {
         // Loss
