@@ -5,6 +5,8 @@ function mse(y_true, y_pred) {
 }
 
 function processPredictions(processedData) {
+    const startTime = new Date().getTime();
+    let predCount = 0;
     const timedData = processedData.data;
     const varScalers = processedData.varScalers;
     //Try to predict the first temperature variable.
@@ -20,7 +22,7 @@ function processPredictions(processedData) {
             y_pred.push(minMaxScaler.invert(timedData[timeStep - 1][machineIdx][predictIdx]));
         }
     }
-    let msg1 = `MSE for the baseline ${mse(y_true, y_pred)}`;
+    let baselineMsg = `MSE for the baseline ${mse(y_true, y_pred)}`;
 
     //Prepare data for predictions
     //Create the data with missing feature
@@ -74,10 +76,13 @@ function processPredictions(processedData) {
             console.log(alphaOptimized);
             console.log(losses[losses.length - 1]);
             y_pred.push(minMaxScaler.invert(predictedDData[0][predictIdx]));
+            predCount += 1;
         }
     }
-    let msg2 = `<br/>PCA Projection Optimizer ${mse(y_true, y_pred)}`;
-    document.getElementById('msg').innerHTML = msg1 + msg2;
+    const totalTime = new Date().getTime() - startTime;
+    let timeMsg = `<br/> Total preds ${predCount}, total time ${totalTime / 1000}s, time per pred ${totalTime / (1000 * predCount)}s`
+    let MSEMsg = `<br/>PCA Projection Optimizer ${mse(y_true, y_pred)}`;
+    document.getElementById('msg').innerHTML = baselineMsg + MSEMsg + timeMsg;
 }
 
 function distance(x, y) {

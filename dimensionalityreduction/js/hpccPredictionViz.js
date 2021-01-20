@@ -1,6 +1,6 @@
 const optimizingIdx = 0
 const pointRadius = 3;
-loadData(2, processPredictions);
+loadData(2, processPredictions, true);
 
 function processPredictions(processedData) {
     const timedData = processedData.data;
@@ -12,8 +12,16 @@ function processPredictions(processedData) {
     const y_true = timedData[timeStep][machineIdx][predictIdx];
     let y_pred = timedData[timeStep - 1][machineIdx][predictIdx];
 
+    function invertData(value) {
+        if (varScalers[predictIdx]) {
+            return varScalers[predictIdx].invert(value);
+        } else {
+            return value;
+        }
 
-    let msg1 = `Baseline true: ${varScalers[predictIdx].invert(y_true).toFixed(4)}, pred: ${varScalers[predictIdx].invert(y_pred).toFixed(4)}`;
+    }
+
+    let msg1 = `Baseline true: ${invertData(y_true).toFixed(4)}, pred: ${invertData(y_pred).toFixed(4)}`;
 
     //Prepare data for predictions
     //Create the data with missing feature
@@ -51,7 +59,7 @@ function processPredictions(processedData) {
 
     let x = [...lProjection[machineIdx]];//Set the default x to be the l projected.;
     let alpha = 1.0;
-    let lr = 0.0001;
+    let lr = 0.001;
     let iterations = 5000;
     const {
         alphaOptimized,
@@ -60,11 +68,10 @@ function processPredictions(processedData) {
     } = dr.projectionOptimizer(Su, x, alpha, DProjection, lr, iterations);
     //Invert it back to original D space using DDimPCA
     const predictedDData = dr.invertToOriginalSpace(DDimPCA, [xOptimized]);
-    console.log(alphaOptimized);
-    console.log(losses[losses.length - 1]);
+
     y_pred = (predictedDData[0][predictIdx]);
 
-    let msg2 = `<br/>PCA Projection prediction ${varScalers[predictIdx].invert(y_true).toFixed(4)}, vs ${varScalers[predictIdx].invert(y_pred).toFixed(4)}`;
+    let msg2 = `<br/>PCA Projection prediction ${invertData(y_true).toFixed(4)}, vs ${invertData(y_pred).toFixed(4)}`;
 
     //Prepare data for visualization
     const DProjectionCopied1 = DProjection.map(machineData => [...machineData]);
@@ -81,8 +88,9 @@ function processPredictions(processedData) {
     const invertedDDimData = dr.invertToOriginalSpace(AllDDimPCA, AllDProjection);
     //Get the predicted value.
     y_pred = invertedDDimData[machineIdx][predictIdx];
-    const msg3 = `<br/>Even with known feature, projection from PCA back is: ${varScalers[predictIdx].invert(y_pred).toFixed(4)}`;
+    const msg3 = `<br/>Even with known feature, projection from PCA back is: ${invertData(y_pred).toFixed(4)}`;
     document.getElementById('msg').innerHTML = msg1 + msg2 + msg3;
+    console.log(`original x ${x}, optimized x ${xOptimized}`);
 }
 
 function distance(x, y) {

@@ -31,7 +31,7 @@ function loss(Su, x, alpha, Q) {
 
 function dAlpha(diffD, xQDistance) {
     const dm = dotMultiply(diffD, xQDistance);
-    return mean(multiply(-2, dm));
+    return sum(multiply(-2, dm));
 }
 
 function dX(Su, alpha, diffD, xQDistance, xMQ) {
@@ -41,7 +41,7 @@ function dX(Su, alpha, diffD, xQDistance, xMQ) {
     let firstPart = reshape(multiply(2, multiply(alpha, subtract(SuOverxQDistance, alpha))), [n, 1]);
     const h = ones(1, k);
     firstPart = multiply(firstPart, h); //repeat the firstPart to do dotMultiply
-    return divide(multiply(-1, transpose(dotMultiply(firstPart, xMQ))._data.map(row => row.reduce((a, b) => a + b))), n);
+    return (multiply(-1, transpose(dotMultiply(firstPart, xMQ))._data.map(row => row.reduce((a, b) => a + b))));
 }
 
 /**
