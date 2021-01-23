@@ -89,8 +89,11 @@ function processPredictions(processedData) {
     //Get the predicted value.
     y_pred = invertedDDimData[machineIdx][predictIdx];
     const msg3 = `<br/>Even with known feature, projection from PCA back is: ${invertData(y_pred).toFixed(4)}`;
-    document.getElementById('msg').innerHTML = msg1 + msg2 + msg3;
-    console.log(`original x ${x}, optimized x ${xOptimized}`);
+    const msg4 = `<br/>Original x ${x.map(d => d.toFixed(4))}, optimized x ${xOptimized.map(d => d.toFixed(4))}` +
+        `<br/>Original alpha ${alpha.toFixed(4)}, optimized alpha ${alphaOptimized.toFixed(4)}` +
+        `<br/>Loss ${losses[losses.length - 1].toFixed(4)}`;
+    document.getElementById('msg').innerHTML = msg1 + msg2 + msg3 + msg4;
+
 }
 
 function distance(x, y) {

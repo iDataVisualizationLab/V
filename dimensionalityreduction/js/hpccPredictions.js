@@ -1,4 +1,4 @@
-loadData(25, processPredictions);
+loadData(12, processPredictions);
 
 function mse(y_true, y_pred) {
     return d3.mean(y_true.map((yVal, i) => (yVal - y_pred[i]) * (yVal - y_pred[i])));

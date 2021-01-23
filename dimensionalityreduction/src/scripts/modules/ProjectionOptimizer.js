@@ -55,6 +55,7 @@ function dX(Su, alpha, diffD, xQDistance, xMQ) {
  * @return {{alphaOptimized: *, xOptimized: *, , losses: []}}
  */
 export function projectionOptimizer(Su, x, alpha, Q, lr, iterations) {
+    //Adadelta
     let vtAlpha = 0;
     let vtX = x.map(() => 0);
     let epsilon = 1e-8;
@@ -76,6 +77,7 @@ export function projectionOptimizer(Su, x, alpha, Q, lr, iterations) {
     }
     return {'alphaOptimized': alpha, 'xOptimized': x, 'losses': losses};
 }
+
 export function projectionOptimizerSGD(Su, x, alpha, Q, lr, iterations) {
     const losses = [];
     for (let i = 0; i < iterations; i++) {
