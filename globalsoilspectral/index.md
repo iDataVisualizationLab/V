@@ -8,6 +8,8 @@ Besides common Python packages, the followings are the main packages that we use
 Please, download the data and put the notebooks at the same folder to execute.
 
 ### Data
+The data is originally from [here](https://www.worldagroforestry.org/sd/landhealth/soil-plant-spectral-diagnostics-laboratory/soil-spectra-library).
+The following are the three tables that we extracted from that database for the purposes of this project:<br/> 
 [ASD Spectra.csv](data/ASD%20Spectra.csv) <br/>
 [Chemical_properties.csv](data/Chemical_properties.csv) <br/>
 [ICRAF sample codes.csv](data/ICRAF%20sample%20codes.csv)
