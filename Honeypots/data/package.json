@@ -18,7 +18,7 @@
   "dependencies": {
     "btoa": "^1.2.1",
     "d3": "^5.9.2",
-    "jsdom": "^15.1.1",
+    "jsdom": "^16.5.0",
     "node-fetch-polyfill": "^2.0.6",
     "svg2img": "^0.6.0"
   }
